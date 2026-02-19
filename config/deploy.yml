@@ -2,8 +2,11 @@
 service: csci3100_group_proj31
 
 # Name of the container image (use your-user/app-name on external registries).
-image: cuttlefish256/grp_proj
+image: cuttlefish256/CSCI3100GroupProj31
 
+
+# Refer to https://kamal-deploy.org/docs/upgrading/secrets-changes/#environment-variables-in-deployyml.
+# Kamal would load neither .env or .kamal/secrets to ENV, we have to load it manually.
 <% require "dotenv"; Dotenv.load(".kamal/secrets") %>
 
 # Deploy to these servers.
@@ -29,7 +32,7 @@ servers:
 # Where you keep your container images.
 registry:
     # Alternatives: hub.docker.com / registry.digitalocean.com / ghcr.io / ...
-    # server: index.docker.io
+    server: ghcr.io
 
     # Needed for authenticated registries.
     username: cuttlefish256
@@ -81,6 +84,8 @@ asset_path: /rails/public/assets
 # Configure the image builder.
 builder:
     arch: amd64
+    cache:
+        type: gha
 
     # # Build image via remote server (useful for faster amd64 builds on arm64 computers)
     # remote: ssh://docker@docker-builder-server

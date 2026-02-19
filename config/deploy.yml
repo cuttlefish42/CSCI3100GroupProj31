@@ -2,7 +2,7 @@
 service: csci3100_group_proj31
 
 # Name of the container image (use your-user/app-name on external registries).
-image: cuttlefish256/CSCI3100GroupProj31
+image: cuttlefish42/csci3100_group_proj31
 
 
 # Refer to https://kamal-deploy.org/docs/upgrading/secrets-changes/#environment-variables-in-deployyml.

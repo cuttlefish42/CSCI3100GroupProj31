@@ -4,6 +4,7 @@ on:
     pull_request:
     push:
         branches: [main]
+    workflow_dispatch:
 
 jobs:
     scan_ruby:
@@ -125,14 +126,17 @@ jobs:
 
     deploy:
         runs-on: ubuntu-latest
+        needs: [scan_ruby, scan_js, lint, test]
+        if: github.ref == 'refs/heads/main'
 
-        permission:
+        permissions: 
             contents: read
             packages: write
 
         env:
             RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-            KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+            KAMAL_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+            EC2_INSTANCE_ADDRESS: ${{ secrets.EC2_INSTANCE_ADDRESS }}
 
         steps:
             - name: Checkout code
@@ -155,4 +159,4 @@ jobs:
                   ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
             - name: Deploy with Kamal
-              run: kamal deploy
+              run: bin/kamal deploy

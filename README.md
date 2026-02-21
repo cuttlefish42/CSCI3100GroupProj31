@@ -1,4 +1,5 @@
 # README
+[Proposal](https://docs.google.com/document/d/1oOtpxZJiM1y9OBDHpL1dVIxfQdqSu73XgRC2idw4MRA)
 
 # Ruby version
 Uses 3.3.8. Recommended to install it via [rvm](https://rvm.io)

@@ -1,24 +1,33 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Ruby version
+Uses 3.3.8. Recommended to install it via [rvm](https://rvm.io)
 
-Things you may want to cover:
+# System dependencies
+Run `bundle install` to install all necessary gems.
 
-* Ruby version
+# Configuration
+Make sure rails secret is put at `config/master.key`. Obtain the rails secret in repo's `Settings > Secrets and variables > Actions > RAILS_MASTER_KEY`
 
-* System dependencies
+# Database creation
+Create database: `bin/rails db:create`
+Initialize schema: `bin/rails db:migrate`
 
-* Configuration
+# Database initialization
+Populate dummy data: `bin/rails db:seed` (None for now)
 
-* Database creation
+# Running test suite
+## Unit tests
+To run unit test, use `bin/rails test`.
 
-* Database initialization
+## System test
+To run sysmtem test, use `bin/rails test:system`. (None for now)
 
-* How to run the test suite
+# Services
+None for now
 
-* Services (job queues, cache servers, search engines, etc.)
+# Run locally
+Use `bin/rails server`
 
-* Deployment instructions
-
-* ...
+# Deployment
+The deployment is automated via github actions and kamal. It would be automatically pushed to production server after it passes all the tests.

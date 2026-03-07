@@ -3,6 +3,8 @@ require "test_helper"
 class ItemsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @item = items(:one)
+    @user = users(:one)
+    post session_url, params: { email_address: @user.email_address, password: "password" }
   end
 
   test "should get index" do

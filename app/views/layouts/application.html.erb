@@ -2,7 +2,7 @@
 <html>
   <head>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  
+
     <title><%= content_for(:title) || "Csci3100 Group Proj31" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -26,6 +26,13 @@
   </head>
 
   <body>
+    <% if notice.present? %>
+      <div style="color: green; background-color: #d4edda; padding: 10px; text-align: center; margin: 0;"><%= notice %></div>
+    <% end %>
+    <% if alert.present? %>
+      <div style="color: red; background-color: #f8d7da; padding: 10px; text-align: center; margin: 0;"><%= alert %></div>
+    <% end %>
+  
     <%= yield %>
   </body>
 </html>

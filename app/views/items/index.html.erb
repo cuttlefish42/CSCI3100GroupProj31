@@ -2,12 +2,12 @@
   <h2 style="margin: 0;">CUHK Marketplace</h2>
   
   <div>
-    <% if user_signed_in? %>
-      <span style="margin-right: 15px;">Welcome, <%= current_user.email %></span>
-      <%= button_to "Log Out", destroy_user_session_path, method: :delete, style: "background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;" %>
+    <% if Current.session %>
+      <span style="margin-right: 15px;">Welcome, <%= Current.session.user.email_address %></span>
+      <%= button_to "Log Out", logout_path, method: :delete, style: "background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;" %>
     <% else %>
-      <%= link_to "Log In", new_user_session_path, style: "margin-right: 15px; text-decoration: none; color: #007bff;" %>
-      <%= link_to "Sign Up", new_user_registration_path, style: "background-color: #28a745; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px;" %>
+      <%= link_to "Log In", login_path, style: "margin-right: 15px; text-decoration: none; color: #007bff;" %>
+      <%= link_to "Sign Up", new_registration_path, style: "background-color: #28a745; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px;" %>
     <% end %>
   </div>
 </div>

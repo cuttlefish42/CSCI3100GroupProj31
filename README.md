@@ -5,18 +5,14 @@
 # Ruby version
 Uses 3.3.8. Recommended to install it via [rvm](https://rvm.io)
 
-# System dependencies
-Run `bundle install` to install all necessary gems.
-
 # Configuration
 Make sure rails secret is put at `config/master.key`. Obtain the rails secret in repo's `Settings > Secrets and variables > Actions > RAILS_MASTER_KEY`
 
-# Database creation
-Create database: `bin/rails db:create`
-Initialize schema: `bin/rails db:migrate`
+# Development
+Run `bin/setup` to setup dependencies and database.
 
-# Database initialization
-Populate dummy data: `bin/rails db:seed` (None for now)
+If you want to reset your local db, use `bin/rails db:reset`
+
 
 # Running test suite
 ## Unit tests

@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  price: 9.99
+  condition: 1
+  status: 1
+  category: one
+  community: one
+  seller: one
+
+two:
+  title: MyString
+  price: 9.99
+  condition: 1
+  status: 1
+  category: two
+  community: two
+  seller: two

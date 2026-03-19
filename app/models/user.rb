@@ -3,4 +3,5 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
+  belongs_to :default_community, class_name: Community, dependent: :destroy
 end

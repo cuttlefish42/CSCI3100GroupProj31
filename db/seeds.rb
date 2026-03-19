@@ -7,3 +7,13 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# db/seeds.rb
+puts "🌱 Starting database seed..."
+
+Dir[Rails.root.join('db', 'seeds', '*.rb')].sort.each do |file|
+  puts "Processing #{File.basename(file)}..."
+  require file
+end
+
+puts "✅ All seeds planted successfully!"

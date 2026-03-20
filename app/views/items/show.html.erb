@@ -1,0 +1,17 @@
+<h1><%= @item.title %></h1>
+
+<p><strong><%= number_to_currency(@item.price) %></strong></p>
+
+<p>
+	Category: <%= @item.category.name %><br>
+	Condition: <%= @item.condition.humanize %><br>
+	Community: <%= @item.community&.name || "Any" %><br>
+	Status: <%= @item.status.humanize %><br>
+	Seller: <%= @item.seller.username %>
+</p>
+
+<p>
+	<%= link_to "Back", items_path %>
+    | <%= link_to "Edit", edit_item_path(@item) %>
+    | <%= link_to "Delete", @item, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+</p>

@@ -1,0 +1,25 @@
+<h1>Marketplace Items</h1>
+
+<p>
+  <%= link_to "New Item", new_item_path if authenticated? %>
+</p>
+
+<% if @items.any? %>
+  <ul>
+    <% @items.each do |item| %>
+      <li style="margin-bottom: 1rem;">
+        <h3><%= link_to item.title, item %></h3>
+        <p><strong><%= number_to_currency(item.price) %></strong></p>
+        <p>
+          Seller: <%= item.seller.username %><br>
+          Category: <%= item.category.name %><br>
+          Condition: <%= item.condition.humanize %><br>
+          Community: <%= item.community&.name || "Any" %><br>
+          Status: <%= item.status.humanize %>
+        </p>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No items yet.</p>
+<% end %>

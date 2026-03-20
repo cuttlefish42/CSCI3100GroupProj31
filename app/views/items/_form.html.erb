@@ -1,0 +1,47 @@
+<% if item.errors.any? %>
+  <div class="errors">
+    <p><strong><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</strong></p>
+    <ul>
+      <% item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: item do |form| %>
+  <div>
+    <%= form.label :title %><br>
+    <%= form.text_field :title, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :price %><br>
+    <%= form.number_field :price, step: 0.1, min: 0, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :category_id, "Category" %><br>
+    <%= form.collection_select :category_id, Category.all, :id, :name, prompt: "Select category", required: true %>
+  </div>
+
+  <div>
+    <%= form.label :community_id, "Community" %><br>
+    <%= form.collection_select :community_id, Community.all, :id, :name, include_blank: "Any community" %>
+  </div>
+
+  <div>
+    <%= form.label :condition %><br>
+    <%= form.select :condition, Item.conditions.keys.map { |c| [c.humanize, c] }, {}, required: true %>
+  </div>
+
+  <%# TODO: Status would be by default Available. Change after state management is implemented. %>
+  <div>
+    <%= form.label :status %><br>
+    <%= form.select :status, Item.statuses.keys.map { |s| [s.humanize, s] }, {}, required: true %>
+  </div>
+
+  <div style="margin-top: 1rem;">
+    <%= form.submit %>
+  </div>
+<% end %>

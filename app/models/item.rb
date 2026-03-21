@@ -1,5 +1,6 @@
 class Item < ApplicationRecord
   belongs_to :category
+  # Item is listed on "Global" community unless specified.
   belongs_to :community, optional: true
   belongs_to :seller, class_name: "User"
 

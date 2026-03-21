@@ -4,6 +4,7 @@ class User < ApplicationRecord
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
-  belongs_to :default_community, class_name: "Community", dependent: :destroy
+  # Allow default to no community
+  belongs_to :default_community, class_name: "Community", dependent: :destroy, optional: true
   has_many :items, foreign_key: :seller_id, dependent: :destroy
 end

@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: %i[ show edit update destroy ]
+  before_action :authorize_owner!, only: %i[ edit update destroy ]
   allow_unauthenticated_access only: %i[ index show ]
 
   def index
@@ -43,6 +44,10 @@ class ItemsController < ApplicationController
   private
     def set_item
       @item = Item.find(params[:id])
+    end
+
+    def authorize_owner!
+      redirect_to items_path, alert: "Not authorized." unless @item.seller == Current.user
     end
 
     def item_params

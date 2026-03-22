@@ -18,4 +18,3 @@ communities.each do |community_attr|
     c.community_type = community_attr[:community_type]
   end
 end
-

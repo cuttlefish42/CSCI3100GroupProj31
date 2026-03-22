@@ -1,0 +1,86 @@
+<%= render "items/header" %>
+
+<h1>My Offers</h1>
+
+<h2>Offers I've Made</h2>
+<% if @sent_offers.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Seller</th>
+        <th>My Offer</th>
+        <th>Message</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @sent_offers.each do |offer| %>
+        <tr>
+          <td><%= link_to offer.item.title, item_path(offer.item) %></td>
+          <td><%= offer.item.seller.email_address %></td>
+          <td><%= number_to_currency(offer.price_offered) %></td>
+          <td><%= offer.message.presence || "—" %></td>
+          <td>
+            <%= offer.status.humanize %>
+            <% if offer.countered? && offer.counter_price %>
+              (<%= number_to_currency(offer.counter_price) %>)
+            <% end %>
+          </td>
+          <td><%= time_ago_in_words(offer.created_at) %> ago</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>You haven't made any offers yet.</p>
+<% end %>
+
+<h2>Offers I've Received</h2>
+<% if @received_offers.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Buyer</th>
+        <th>Amount</th>
+        <th>Message</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @received_offers.each do |offer| %>
+        <tr>
+          <td><%= link_to offer.item.title, item_path(offer.item) %></td>
+          <td><%= offer.buyer.email_address %></td>
+          <td><%= number_to_currency(offer.price_offered) %></td>
+          <td><%= offer.message.presence || "—" %></td>
+          <td>
+            <%= offer.status.humanize %>
+            <% if offer.countered? && offer.counter_price %>
+              (<%= number_to_currency(offer.counter_price) %>)
+            <% end %>
+          </td>
+          <td><%= time_ago_in_words(offer.created_at) %> ago</td>
+          <td>
+            <% if offer.pending? %>
+              <%= button_to "Accept", item_offer_path(offer.item, offer),
+                    method: :patch,
+                    params: { offer: { status: "accepted" } },
+                    data: { turbo_confirm: "Accept this offer?" } %>
+              <%= button_to "Reject", item_offer_path(offer.item, offer),
+                    method: :patch,
+                    params: { offer: { status: "rejected" } },
+                    data: { turbo_confirm: "Reject this offer?" } %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>You haven't received any offers yet.</p>
+<% end %>

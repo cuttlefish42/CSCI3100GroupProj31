@@ -8,6 +8,8 @@ class ItemsController < ApplicationController
   end
 
   def show
+    @offers = @item.offers.includes(:buyer).order(created_at: :desc)
+    @offer = @item.offers.build
   end
 
   def new

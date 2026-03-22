@@ -9,4 +9,3 @@ class Item < ApplicationRecord
   enum :condition, { poor: 0, fair: 1, good: 2, like_new: 3, brand_new: 4 }
   enum :status, { available: 0, reserved: 1, sold: 2 }
 end
-

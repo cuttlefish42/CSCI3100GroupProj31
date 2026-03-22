@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
+  # Offers dashboard
+  get "offers", to: "offers#dashboard", as: :offers_dashboard
+
   # Items
   resources :items do
     resources :offers, only: [ :create, :update, :destroy ]

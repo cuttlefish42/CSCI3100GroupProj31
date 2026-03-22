@@ -1,13 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  buyer_id: one
-  item_id: one
+  buyer: two
+  item: one
   price_offered: 9.99
-  status: 1
+  status: 0
 
 two:
-  buyer_id: two
-  item_id: two
+  buyer: one
+  item: two
   price_offered: 9.99
-  status: 1
+  status: 0

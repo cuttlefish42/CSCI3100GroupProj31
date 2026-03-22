@@ -1,0 +1,5 @@
+pre-commit:
+  commands:
+    rubocop-autofix:
+      glob: "*.rb"
+      run: bin/rubocop -a --force-exclusion {staged_files} && git add {staged_files}

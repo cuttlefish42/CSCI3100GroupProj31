@@ -2,6 +2,7 @@
 
 users = [
   { email: "admin@link.cuhk.edu.hk", username: "admin", community_name: "Chung Chi College" },
+
   { email: "student1@link.cuhk.edu.hk", username: "student1", community_name: "New Asia College" },
   { email: "student2@link.cuhk.edu.hk", username: "student2", community_name: "United College" },
   { email: "student3@link.cuhk.edu.hk", username: "student3", community_name: "Shaw College" }
@@ -10,7 +11,7 @@ users = [
 puts "Seeding users..."
 users.each do |user_attr|
   community = Community.find_by(name: user_attr[:community_name])
-  
+
   User.find_or_create_by!(email_address: user_attr[:email]) do |u|
     u.username = user_attr[:username]
     u.password = "password123"
@@ -18,4 +19,3 @@ users.each do |user_attr|
     u.default_community_id = community&.id
   end
 end
-

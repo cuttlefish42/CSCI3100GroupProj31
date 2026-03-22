@@ -1,4 +1,6 @@
-<h1>Marketplace Items</h1>
+<%= render "header" %>
+
+<h2>Marketplace Items</h2>
 
 <p>
   <%= link_to "New Item", new_item_path if authenticated? %>
@@ -10,13 +12,15 @@
       <li style="margin-bottom: 1rem;">
         <h3><%= link_to item.title, item %></h3>
         <p><strong><%= number_to_currency(item.price) %></strong></p>
+
         <p>
-          Seller: <%= item.seller.username %><br>
           Category: <%= item.category.name %><br>
           Condition: <%= item.condition.humanize %><br>
           Community: <%= item.community&.name || "Any" %><br>
           Status: <%= item.status.humanize %>
+          Seller: <%= item.seller.username %><br>
         </p>
+
       </li>
     <% end %>
   </ul>

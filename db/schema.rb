@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_19_185949) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_22_155301) do
   create_table "categories", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
@@ -39,6 +39,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_185949) do
     t.index ["seller_id"], name: "index_items_on_seller_id"
   end
 
+  create_table "offers", force: :cascade do |t|
+    t.integer "buyer_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "item_id", null: false
+    t.decimal "price_offered", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["buyer_id"], name: "index_offers_on_buyer_id"
+    t.index ["item_id"], name: "index_offers_on_item_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -62,6 +73,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_185949) do
   add_foreign_key "items", "categories"
   add_foreign_key "items", "communities"
   add_foreign_key "items", "users", column: "seller_id"
+  add_foreign_key "offers", "items"
+  add_foreign_key "offers", "users", column: "buyer_id"
   add_foreign_key "sessions", "users"
   add_foreign_key "users", "communities", column: "default_community_id"
 end

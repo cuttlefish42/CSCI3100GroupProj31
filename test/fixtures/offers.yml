@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  buyer_id: one
+  item_id: one
+  price_offered: 9.99
+  status: 1
+
+two:
+  buyer_id: two
+  item_id: two
+  price_offered: 9.99
+  status: 1

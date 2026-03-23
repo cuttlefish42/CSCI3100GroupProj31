@@ -84,28 +84,42 @@
   </table>
 <% end %>
 
-<%# === Buyer's own offers on this item === %>
-<% if Current.user && Current.user != @item.seller %>
-  <% my_offers = @offers.select { |o| o.buyer_id == Current.user.id } %>
-  <% if my_offers.any? %>
-    <h2>Your Offers</h2>
-    <% my_offers.each do |offer| %>
-      <p>
-        <%= number_to_currency(offer.price_offered) %> —
-        <strong><%= offer.status.humanize %></strong>
-        <% if offer.countered? && offer.counter_price %>
-          (Seller countered: <%= number_to_currency(offer.counter_price) %>)
-        <% end %>
-        <% if offer.message.present? %>
-          <br><em>"<%= offer.message %>"</em>
-        <% end %>
-        <br><small><%= time_ago_in_words(offer.created_at) %> ago</small>
-        <% if offer.pending? %>
-          <%= button_to "Withdraw", item_offer_path(@item, offer),
-                method: :delete,
-                data: { turbo_confirm: "Withdraw this offer?" } %>
-        <% end %>
-      </p>
-    <% end %>
-  <% end %>
+<%# === All offers on this item (visible to any logged-in user who is not the seller) === %>
+<% if Current.user && Current.user != @item.seller && @offers.any? %>
+  <h2>Offers on This Item</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Buyer</th>
+        <th>Amount</th>
+        <th>Message</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @offers.each do |offer| %>
+        <tr>
+          <td><%= offer.buyer == Current.user ? "You" : offer.buyer.email_address %></td>
+          <td><%= number_to_currency(offer.price_offered) %></td>
+          <td><%= offer.message.presence || "—" %></td>
+          <td>
+            <%= offer.status.humanize %>
+            <% if offer.countered? && offer.counter_price %>
+              (<%= number_to_currency(offer.counter_price) %>)
+            <% end %>
+          </td>
+          <td><%= time_ago_in_words(offer.created_at) %> ago</td>
+          <td>
+            <% if offer.buyer == Current.user && offer.pending? %>
+              <%= button_to "Withdraw", item_offer_path(@item, offer),
+                    method: :delete,
+                    data: { turbo_confirm: "Withdraw this offer?" } %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 <% end %>

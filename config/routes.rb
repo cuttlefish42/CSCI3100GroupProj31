@@ -6,7 +6,12 @@ Rails.application.routes.draw do
 
   # Items
   resources :items do
-    resources :offers, only: [ :create, :update, :destroy ]
+    # Offers
+    resources :offers, only: [ :create, :destroy ] do
+      resources :acceptance, only: [ :create ], module: :offers
+      resources :rejection, only: [ :create ], module: :offers
+      resources :counter, only: [ :create ], module: :offers
+    end
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

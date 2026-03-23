@@ -8,9 +8,10 @@ Rails.application.routes.draw do
   resources :items do
     # Offers
     resources :offers, only: [ :create, :destroy ] do
-      resources :acceptance, only: [ :create ], module: :offers
-      resources :rejection, only: [ :create ], module: :offers
-      resources :counter, only: [ :create ], module: :offers
+      # 1to1 relation no s
+      resource :acceptance, only: [ :create ], module: :offers
+      resource :rejection, only: [ :create ], module: :offers
+      resource :counter, only: [ :create ], module: :offers
     end
   end
 

@@ -67,13 +67,11 @@
           <td><%= time_ago_in_words(offer.created_at) %> ago</td>
           <td>
             <% if offer.pending? %>
-              <%= button_to "Accept", item_offer_path(offer.item, offer),
-                    method: :patch,
-                    params: { offer: { status: "accepted" } },
+              <%= button_to "Accept", item_offer_acceptance_path(offer.item, offer),
+                    method: :post,
                     data: { turbo_confirm: "Accept this offer?" } %>
-              <%= button_to "Reject", item_offer_path(offer.item, offer),
-                    method: :patch,
-                    params: { offer: { status: "rejected" } },
+              <%= button_to "Reject", item_offer_rejection_path(offer.item, offer),
+                    method: :post,
                     data: { turbo_confirm: "Reject this offer?" } %>
             <% end %>
           </td>

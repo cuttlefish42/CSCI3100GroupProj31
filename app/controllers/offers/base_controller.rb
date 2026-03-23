@@ -1,4 +1,4 @@
-class Offers::BaseController < Offers::BaseController
+class Offers::BaseController < ApplicationController
   before_action :set_item
   before_action :set_offer
   before_action :authorize_seller!
@@ -17,7 +17,7 @@ class Offers::BaseController < Offers::BaseController
   end
 
   def set_offer
-    @offer = @item.offers.find(params[:id])
+    @offer = @item.offers.find(params[:offer_id])
   end
 
   def ensure_offer_is_pending!

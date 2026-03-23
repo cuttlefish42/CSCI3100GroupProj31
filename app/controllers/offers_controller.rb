@@ -5,10 +5,9 @@ class OffersController < ApplicationController
 
   def dashboard
     @sent_offers = Current.user.offers.includes(item: :seller).order(created_at: :desc)
-    @received_offers = Offer.joins(:item)
-                            .where(items: { seller_id: Current.user.id })
+    @received_offers = Offer.received_by(Current.user)
                             .includes(:buyer, :item)
-                            .order(created_at: :desc)
+                            .recent
   end
 
   def create
@@ -69,7 +68,6 @@ class OffersController < ApplicationController
   def authorize_seller!
     unless @item.seller == Current.user
       redirect_to @item, alert: "Not authorized."
-      return
     end
   end
 end

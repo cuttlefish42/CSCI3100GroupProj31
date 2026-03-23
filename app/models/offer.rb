@@ -9,6 +9,9 @@ class Offer < ApplicationRecord
   validates :counter_price, numericality: { greater_than: 0 }, allow_nil: true
   validate :no_duplicate_pending_offer, on: :create
 
+  scope :received_by, ->(user) { joins(:item).where(items: { seller_id: user.id }) }
+  scope :recent, -> { order(created_at: :desc) }
+
   def accept!
     transaction do
       accepted!

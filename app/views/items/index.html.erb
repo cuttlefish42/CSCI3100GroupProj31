@@ -7,23 +7,9 @@
 </p>
 
 <% if @items.any? %>
-  <ul>
-    <% @items.each do |item| %>
-      <li style="margin-bottom: 1rem;">
-        <h3><%= link_to item.title, item %></h3>
-        <p><strong><%= number_to_currency(item.price) %></strong></p>
-
-        <p>
-          Category: <%= item.category.name %><br>
-          Condition: <%= item.condition.humanize %><br>
-          Community: <%= item.community&.name || "Any" %><br>
-          Status: <%= item.status.humanize %>
-          Seller: <%= item.seller.username %><br>
-        </p>
-
-      </li>
-    <% end %>
-  </ul>
+  <% @items.each do |item| %>
+    <%= render item, link_title: true %>
+  <% end %>
 <% else %>
   <p>No items yet.</p>
 <% end %>

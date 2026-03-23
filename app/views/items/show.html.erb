@@ -1,16 +1,6 @@
 <%= render "header" %>
 
-<h1><%= @item.title %></h1>
-
-<p><strong><%= number_to_currency(@item.price) %></strong></p>
-
-<p>
-	Category: <%= @item.category.name %><br>
-	Condition: <%= @item.condition.humanize %><br>
-	Community: <%= @item.community&.name || "Any" %><br>
-	Status: <%= @item.status.humanize %><br>
-	Seller: <%= @item.seller.username %>
-</p>
+<%= render @item %>
 
 <p>
 	<%= link_to "Back", items_path %>

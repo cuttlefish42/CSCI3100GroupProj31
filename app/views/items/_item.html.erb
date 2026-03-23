@@ -1,0 +1,21 @@
+<%# locals: (item:, link_title: false) %>
+
+<div class="item-info">
+  <h2>
+    <% if link_title %>
+      <%= link_to item.title, item %>
+    <% else %>
+      <%= item.title %>
+    <% end %>
+  </h2>
+
+  <p><strong><%= number_to_currency(item.price) %></strong></p>
+
+  <p>
+    Category: <%= item.category.name %><br>
+    Condition: <%= item.condition.humanize %><br>
+    Community: <%= item.community&.name || "Any" %><br>
+    Status: <%= item.status.humanize %><br>
+    Seller: <%= item.seller.username %><br>
+  </p>
+</div>

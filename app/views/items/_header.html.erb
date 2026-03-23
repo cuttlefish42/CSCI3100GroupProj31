@@ -1,11 +1,15 @@
 <header>
   <h1>CUHK Marketplace</h1>
-    <div style="display:flex; gap:1rem;">
-      <div><%= link_to "Items", "#items" %></div>
-      <div><%= link_to "Karma Leaderboard", "#karma" %></div>
-      <div><%= link_to "Profile", "#profile" %></div>
-    </div>
+  <div style="display:flex; gap:1rem;">
+    <div><%= link_to "Items", items_path %></div>
+    <div><%= link_to "Offers Dashboard", offers_dashboard_path %></div>
+    <div><%= link_to "Karma Leaderboard", "#karma" %></div>
+    <% if authenticated? %>
+      <div><%= link_to "Log out", session_path, data: { turbo_method: :delete } %></div>
+    <% else %>
+      <div><%= link_to "Log in", new_session_path %></div>
+    <% end %>
+  </div>
 </header>
-
 <br>
 <hr>

@@ -26,8 +26,19 @@
       (<%= number_to_currency(@existing_offer.price_offered) %> &mdash; <%= @existing_offer.status.humanize %>).</strong>
       <% if @existing_offer.countered? && @existing_offer.counter_price %>
         <br><span style="color: #b36b00;">The seller has countered with <strong><%= number_to_currency(@existing_offer.counter_price) %></strong>.</span>
+        <br>
+        <%= button_to "Accept Counter", item_offer_path(@item, @existing_offer),
+              method: :patch,
+              params: { offer: { status: "accept_counter" } },
+              data: { turbo_confirm: "Accept the counter-offer of #{number_to_currency(@existing_offer.counter_price)}?" },
+              style: "display:inline-block; margin-top: 8px;" %>
+        <%= button_to "Reject Counter", item_offer_path(@item, @existing_offer),
+              method: :patch,
+              params: { offer: { status: "reject_counter" } },
+              data: { turbo_confirm: "Reject the counter-offer? You can make a new offer afterwards." },
+              style: "display:inline-block; margin-top: 8px;" %>
       <% end %>
-      <br>Use the edit form below to update your offer.
+      <br>Or use the edit form below to propose a different price.
     </div>
     <h2>Edit Your Offer</h2>
     <%= form_with url: item_offer_path(@item, @existing_offer), method: :patch do |f| %>
@@ -138,7 +149,19 @@
           </td>
           <td><%= time_ago_in_words(offer.created_at) %> ago</td>
           <td>
-            <% if offer.buyer == Current.user && (offer.pending? || offer.countered?) %>
+            <% if offer.buyer == Current.user && offer.countered? %>
+              <%= button_to "Accept Counter", item_offer_path(@item, offer),
+                    method: :patch,
+                    params: { offer: { status: "accept_counter" } },
+                    data: { turbo_confirm: "Accept the counter-offer of #{number_to_currency(offer.counter_price)}?" } %>
+              <%= button_to "Reject Counter", item_offer_path(@item, offer),
+                    method: :patch,
+                    params: { offer: { status: "reject_counter" } },
+                    data: { turbo_confirm: "Reject the counter-offer? You can make a new offer afterwards." } %>
+              <%= button_to "Withdraw", item_offer_path(@item, offer),
+                    method: :delete,
+                    data: { turbo_confirm: "Withdraw this offer?" } %>
+            <% elsif offer.buyer == Current.user && offer.pending? %>
               <%= button_to "Withdraw", item_offer_path(@item, offer),
                     method: :delete,
                     data: { turbo_confirm: "Withdraw this offer?" } %>

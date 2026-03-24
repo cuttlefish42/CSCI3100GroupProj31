@@ -21,8 +21,22 @@ class OffersController < ApplicationController
   end
 
   def update
-    # Buyer editing their own offer (price/message)
+    # Buyer editing their own offer (price/message) or responding to counter
     if @offer.buyer == Current.user
+      # Buyer accepts the seller's counter-offer
+      if params[:offer][:status] == "accept_counter" && @offer.countered?
+        @offer.accept_counter!
+        redirect_to @item, notice: "You accepted the counter-offer of #{ActionController::Base.helpers.number_to_currency(@offer.counter_price)}. Item is now reserved."
+        return
+      end
+
+      # Buyer rejects the seller's counter-offer
+      if params[:offer][:status] == "reject_counter" && @offer.countered?
+        @offer.rejected!
+        redirect_to @item, notice: "Counter-offer rejected. You can make a new offer if you'd like."
+        return
+      end
+
       if @offer.pending? || @offer.countered?
         new_price = params[:offer][:price_offered]
         new_message = params[:offer][:message]

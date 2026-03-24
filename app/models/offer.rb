@@ -26,6 +26,14 @@ class Offer < ApplicationRecord
     end
   end
 
+  def accept_counter!
+    transaction do
+      update!(price_offered: counter_price, status: :accepted)
+      item.reserved!
+      item.offers.pending.where.not(id: id).find_each(&:rejected!)
+    end
+  end
+
   private
 
   def buyer_is_not_seller

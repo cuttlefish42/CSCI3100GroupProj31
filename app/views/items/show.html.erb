@@ -10,17 +10,40 @@
 
 <%# === Offer Form (for logged-in buyers, only on available items) === %>
 <% if Current.user && Current.user != @item.seller && @item.available? %>
-  <h2>Make an Offer</h2>
-  <%= form_with model: [@item, @offer] do |f| %>
-    <p>
-      <%= f.label :price_offered, "Your Offer ($)" %><br>
-      <%= f.number_field :price_offered, step: 0.01, min: 0.01, required: true %>
-    </p>
-    <p>
-      <%= f.label :message, "Message (optional)" %><br>
-      <%= f.text_area :message, rows: 3, placeholder: "Add a note to the seller..." %>
-    </p>
-    <p><%= f.submit "Submit Offer" %></p>
+  <% if @existing_offer %>
+    <div style="border: 1px solid #cc8800; background: #fff8e1; padding: 12px; margin: 12px 0; border-radius: 4px;">
+      <strong>You already have an active offer on this item
+      (<%= number_to_currency(@existing_offer.price_offered) %> &mdash; <%= @existing_offer.status.humanize %>).</strong>
+      <% if @existing_offer.countered? && @existing_offer.counter_price %>
+        <br><span style="color: #b36b00;">The seller has countered with <strong><%= number_to_currency(@existing_offer.counter_price) %></strong>.</span>
+      <% end %>
+      <br>Use the edit form below to update your offer.
+    </div>
+    <h2>Edit Your Offer</h2>
+    <%= form_with url: item_offer_path(@item, @existing_offer), method: :patch do |f| %>
+      <p>
+        <%= f.label :price_offered, "Your Offer ($)" %><br>
+        <%= f.number_field :price_offered, step: 0.01, min: 0.01, required: true, value: @existing_offer.price_offered, name: "offer[price_offered]" %>
+      </p>
+      <p>
+        <%= f.label :message, "Message (optional)" %><br>
+        <%= f.text_area :message, rows: 3, placeholder: "Add a note to the seller...", name: "offer[message]", value: @existing_offer.message %>
+      </p>
+      <p><%= f.submit "Update Offer" %></p>
+    <% end %>
+  <% else %>
+    <h2>Make an Offer</h2>
+    <%= form_with model: [@item, @offer] do |f| %>
+      <p>
+        <%= f.label :price_offered, "Your Offer ($)" %><br>
+        <%= f.number_field :price_offered, step: 0.01, min: 0.01, required: true %>
+      </p>
+      <p>
+        <%= f.label :message, "Message (optional)" %><br>
+        <%= f.text_area :message, rows: 3, placeholder: "Add a note to the seller..." %>
+      </p>
+      <p><%= f.submit "Submit Offer" %></p>
+    <% end %>
   <% end %>
 <% end %>
 
@@ -93,17 +116,24 @@
           <td><%= number_to_currency(offer.price_offered) %></td>
           <td><%= offer.message.presence || "—" %></td>
           <td>
-            <%= offer.status.humanize %>
             <% if offer.countered? && offer.counter_price %>
-              (<%= number_to_currency(offer.counter_price) %>)
+              <span style="color: #b36b00; font-weight: bold;">
+                Seller countered: <%= number_to_currency(offer.counter_price) %>
+              </span>
+            <% else %>
+              <%= offer.status.humanize %>
             <% end %>
           </td>
           <td><%= time_ago_in_words(offer.created_at) %> ago</td>
           <td>
-            <% if offer.buyer == Current.user && offer.pending? %>
+            <% if offer.buyer == Current.user && (offer.pending? || offer.countered?) %>
               <%= button_to "Withdraw", item_offer_path(@item, offer),
                     method: :delete,
                     data: { turbo_confirm: "Withdraw this offer?" } %>
+              <%= form_with url: item_offer_path(@item, offer), method: :patch, style: "display:inline" do |f| %>
+                <%= f.number_field :price_offered, step: 0.01, min: 0.01, placeholder: "New price $", name: "offer[price_offered]", style: "width:100px", value: offer.price_offered %>
+                <%= f.submit "Edit Offer $" %>
+              <% end %>
             <% end %>
           </td>
         </tr>

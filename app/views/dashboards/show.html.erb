@@ -13,6 +13,7 @@
         <th>Message</th>
         <th>Status</th>
         <th>Date</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -23,12 +24,26 @@
           <td><%= number_to_currency(offer.price_offered) %></td>
           <td><%= offer.message.presence || "—" %></td>
           <td>
-            <%= offer.status.humanize %>
             <% if offer.countered? && offer.counter_price %>
-              (<%= number_to_currency(offer.counter_price) %>)
+              <span style="color: #b36b00; font-weight: bold;">
+                Seller countered: <%= number_to_currency(offer.counter_price) %>
+              </span>
+            <% else %>
+              <%= offer.status.humanize %>
             <% end %>
           </td>
           <td><%= time_ago_in_words(offer.created_at) %> ago</td>
+          <td>
+            <% if offer.pending? || offer.countered? %>
+              <%= button_to "Withdraw", item_offer_path(offer.item, offer),
+                    method: :delete,
+                    data: { turbo_confirm: "Withdraw this offer?" } %>
+              <%= form_with url: item_offer_path(offer.item, offer), method: :patch, style: "display:inline" do |f| %>
+                <%= f.number_field :price_offered, step: 0.01, min: 0.01, placeholder: "New price $", name: "offer[price_offered]", style: "width:100px", value: offer.price_offered %>
+                <%= f.submit "Edit Offer $" %>
+              <% end %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>
@@ -73,6 +88,11 @@
               <%= button_to "Reject", item_offer_rejection_path(offer.item, offer),
                     method: :post,
                     data: { turbo_confirm: "Reject this offer?" } %>
+              <%= form_with url: item_offer_path(offer.item, offer), method: :patch, style: "display:inline" do |f| %>
+                <%= f.hidden_field :status, value: "countered", name: "offer[status]" %>
+                <%= f.number_field :counter_price, step: 0.01, min: 0.01, placeholder: "Counter $", name: "offer[counter_price]", style: "width:100px" %>
+                <%= f.submit "Counter" %>
+              <% end %>
             <% end %>
           </td>
         </tr>

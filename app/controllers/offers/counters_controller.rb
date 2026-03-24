@@ -1,4 +1,6 @@
-class Offers::CountersController < Offers::BaseController
+class Offers::CountersController < ApplicationController
+  include OfferManageable
+
   def create
     if params[:counter_price].to_f > 0
       @offer.counter!(counter_price.to_f)

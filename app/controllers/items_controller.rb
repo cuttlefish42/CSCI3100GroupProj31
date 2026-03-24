@@ -9,6 +9,7 @@ class ItemsController < ApplicationController
 
   def show
     @offers = @item.offers.includes(:buyer).order(created_at: :desc)
+    @existing_offer = Current.user ? @item.offers.where(buyer_id: Current.user.id, status: [ :pending, :countered ]).first : nil
     @offer = @item.offers.build
   end
 

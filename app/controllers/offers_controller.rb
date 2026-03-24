@@ -1,8 +1,6 @@
 class OffersController < ApplicationController
   before_action :set_item, except: [ :dashboard ]
   before_action :set_offer, only: [ :update, :destroy ]
-  before_action :authorize_seller!, only: [ :update ]
-
   def dashboard
     @sent_offers = Current.user.offers.includes(item: :seller).order(created_at: :desc)
     @received_offers = Offer.joins(:item)
@@ -23,6 +21,33 @@ class OffersController < ApplicationController
   end
 
   def update
+    # Buyer editing their own offer (price/message)
+    if @offer.buyer == Current.user
+      if @offer.pending? || @offer.countered?
+        new_price = params[:offer][:price_offered]
+        new_message = params[:offer][:message]
+        updates = {}
+        updates[:price_offered] = new_price.to_f if new_price.present? && new_price.to_f > 0
+        updates[:message] = new_message if params[:offer].key?(:message)
+        updates[:status] = :pending if @offer.countered?
+
+        if updates.any? && @offer.update(updates)
+          redirect_to @item, notice: "Offer updated."
+        else
+          redirect_to @item, alert: "Could not update offer. Make sure the price is greater than zero."
+        end
+      else
+        redirect_to @item, alert: "You can only edit pending or countered offers."
+      end
+      return
+    end
+
+    # Seller actions (accept/reject/counter)
+    unless @item.seller == Current.user
+      redirect_to @item, alert: "Not authorized."
+      return
+    end
+
     case params[:offer][:status]
     when "accepted"
       @offer.accept!
@@ -63,13 +88,7 @@ class OffersController < ApplicationController
   end
 
   def offer_params
-    params.require(:offer).permit(:price_offered, :message)
+    params.require(:offer).permit(:price_offered, :message, :status, :counter_price)
   end
 
-  def authorize_seller!
-    unless @item.seller == Current.user
-      redirect_to @item, alert: "Not authorized."
-      return
-    end
-  end
 end

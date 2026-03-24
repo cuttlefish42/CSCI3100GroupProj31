@@ -59,7 +59,7 @@ class OfferTest < ActiveSupport::TestCase
 
     duplicate = Offer.new(buyer: existing.buyer, item: existing.item, price_offered: 20.00)
     assert_not duplicate.valid?
-    assert_includes duplicate.errors[:base], "You already have a pending offer on this item"
+    assert_includes duplicate.errors[:base], "You already have an active offer on this item. Please edit your existing offer instead."
   end
 
   test "can create offer if previous offer was rejected" do

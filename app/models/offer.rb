@@ -30,8 +30,8 @@ class Offer < ApplicationRecord
   end
 
   def no_duplicate_pending_offer
-    if item && buyer_id && item.offers.pending.where(buyer_id: buyer_id).exists?
-      errors.add(:base, "You already have a pending offer on this item")
+    if item && buyer_id && item.offers.where(buyer_id: buyer_id).where(status: [ :pending, :countered ]).exists?
+      errors.add(:base, "You already have an active offer on this item. Please edit your existing offer instead.")
     end
   end
 end

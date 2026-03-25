@@ -1,19 +1,6 @@
 class OffersController < ApplicationController
-  before_action :set_item, except: [ :dashboard ]
+  before_action :set_item
   before_action :set_offer, only: [ :update, :destroy ]
-  def dashboard
-  @sent_sort = params[:sent_sort] || "date"
-  @sent_dir = params[:sent_dir] || "desc"
-  @recv_sort = params[:recv_sort] || "date"
-  @recv_dir = params[:recv_dir] || "desc"
-
-  @sent_offers = Current.user.offers.includes(item: :seller)
-  @sent_offers = apply_offer_sort(@sent_offers, @sent_sort, @sent_dir, scope: :sent)
-
-  @received_offers = Offer.received_by(Current.user).includes(:buyer, :item)
-  @received_offers = apply_offer_sort(@received_offers, @recv_sort, @recv_dir, scope: :received)
-end
-
 
   def create
     @offer = @item.offers.build(offer_params)
@@ -99,34 +86,8 @@ end
     @item = Item.find(params[:item_id])
   end
 
-    def set_offer
+  def set_offer
     @offer = @item.offers.find(params[:id])
-  end
-
-  def apply_offer_sort(offers, sort_by, direction, scope: nil)
-    dir = direction == "asc" ? :asc : :desc
-    case sort_by
-    when "price"
-      offers.order(price_offered: dir)
-    when "item"
-      offers.joins(:item).order("items.title #{dir == :asc ? 'ASC' : 'DESC'}")
-    when "buyer"
-      if scope == :received
-        offers.joins(:buyer).order("users.email_address #{dir == :asc ? 'ASC' : 'DESC'}")
-      else
-        offers.order(created_at: :desc)
-      end
-    when "seller"
-      if scope == :sent
-        offers.joins(item: :seller).order("users.email_address #{dir == :asc ? 'ASC' : 'DESC'}")
-      else
-        offers.order(created_at: :desc)
-      end
-    when "status"
-      offers.order(status: dir)
-    else
-      offers.order(created_at: dir)
-    end
   end
 
   def offer_params

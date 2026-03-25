@@ -28,33 +28,55 @@
               data: { turbo_confirm: "Reject the counter-offer? You can make a new offer afterwards." },
               style: "display:inline-block; margin-top: 8px;" %>
       <% end %>
-      <br>Or use the edit form below to propose a different price.
+      <br>Or use the form below to propose a different price.
     </div>
-    <h2>Edit Your Offer</h2>
-    <%= form_with model: [@item, @existing_offer] do |f| %>
-      <p>
-        <%= f.label :price_offered, "Your Offer ($)" %><br>
-        <%= f.number_field :price_offered, step: 0.01, min: 0.01, required: true %>
-      </p>
-      <p>
-        <%= f.label :message, "Message (optional)" %><br>
-        <%= f.text_area :message, rows: 3, placeholder: "Add a note to the seller..." %>
-      </p>
-      <p><%= f.submit "Update Offer" %></p>
-    <% end %>
+    <h2 id="offer-form">Edit Your Offer</h2>
+    <div data-controller="offer-price" data-offer-price-listing-value="<%= @item.price %>">
+      <%= form_with model: [@item, @existing_offer] do |f| %>
+        <p>
+          <%= f.label :price_offered, "Your Offer ($)" %><br>
+          <%= f.number_field :price_offered, step: 0.01, min: 0.01, required: true,
+                data: { offer_price_target: "input" } %>
+        </p>
+        <p style="margin-top: 4px;">
+          <strong>Quick set:</strong>
+          <button type="button" data-action="offer-price#adjust" data-pct="0.5" style="margin: 2px;">50%</button>
+          <button type="button" data-action="offer-price#adjust" data-pct="0.75" style="margin: 2px;">75%</button>
+          <button type="button" data-action="offer-price#adjust" data-pct="0.9" style="margin: 2px;">90%</button>
+          <button type="button" data-action="offer-price#adjust" data-pct="1.0" style="margin: 2px;">100%</button>
+          <span style="color: #666; font-size: 0.9em;">(of listing price <%= number_to_currency(@item.price) %>)</span>
+        </p>
+        <p>
+          <%= f.label :message, "Message (optional)" %><br>
+          <%= f.text_area :message, rows: 3, placeholder: "Add a note to the seller..." %>
+        </p>
+        <p><%= f.submit "Update Offer" %></p>
+      <% end %>
+    </div>
   <% else %>
-    <h2>Make an Offer</h2>
-    <%= form_with model: [@item, @offer] do |f| %>
-      <p>
-        <%= f.label :price_offered, "Your Offer ($)" %><br>
-        <%= f.number_field :price_offered, step: 0.01, min: 0.01, required: true %>
-      </p>
-      <p>
-        <%= f.label :message, "Message (optional)" %><br>
-        <%= f.text_area :message, rows: 3, placeholder: "Add a note to the seller..." %>
-      </p>
-      <p><%= f.submit "Submit Offer" %></p>
-    <% end %>
+    <h2 id="offer-form">Make an Offer</h2>
+    <div data-controller="offer-price" data-offer-price-listing-value="<%= @item.price %>">
+      <%= form_with model: [@item, @offer] do |f| %>
+        <p>
+          <%= f.label :price_offered, "Your Offer ($)" %><br>
+          <%= f.number_field :price_offered, step: 0.01, min: 0.01, required: true,
+                data: { offer_price_target: "input" } %>
+        </p>
+        <p style="margin-top: 4px;">
+          <strong>Quick set:</strong>
+          <button type="button" data-action="offer-price#adjust" data-pct="0.5" style="margin: 2px;">50%</button>
+          <button type="button" data-action="offer-price#adjust" data-pct="0.75" style="margin: 2px;">75%</button>
+          <button type="button" data-action="offer-price#adjust" data-pct="0.9" style="margin: 2px;">90%</button>
+          <button type="button" data-action="offer-price#adjust" data-pct="1.0" style="margin: 2px;">100%</button>
+          <span style="color: #666; font-size: 0.9em;">(of listing price <%= number_to_currency(@item.price) %>)</span>
+        </p>
+        <p>
+          <%= f.label :message, "Message (optional)" %><br>
+          <%= f.text_area :message, rows: 3, placeholder: "Add a note to the seller..." %>
+        </p>
+        <p><%= f.submit "Submit Offer" %></p>
+      <% end %>
+    </div>
   <% end %>
 <% end %>
 
@@ -153,10 +175,7 @@
               <%= button_to "Withdraw", item_offer_path(@item, offer),
                     method: :delete,
                     data: { turbo_confirm: "Withdraw this offer?" } %>
-              <%= form_with model: [@item, offer], style: "display:inline" do |f| %>
-                <%= f.number_field :price_offered, step: 0.01, min: 0.01, placeholder: "New price $", style: "width:100px" %>
-                <%= f.submit "Edit Offer $" %>
-              <% end %>
+              <a href="#offer-form" style="margin-left: 6px;">Edit Offer</a>
             <% end %>
           </td>
         </tr>

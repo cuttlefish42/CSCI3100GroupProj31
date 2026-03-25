@@ -3,9 +3,9 @@ module ApplicationHelper
     new_dir = (current_sort == sort_key && current_dir == "asc") ? "desc" : "asc"
     arrow = if current_sort == sort_key
               current_dir == "asc" ? " ▲" : " ▼"
-            else
+    else
               ""
-            end
+    end
     link_to("#{label}#{arrow}".html_safe, request.params.merge(sort_param => sort_key, dir_param => new_dir, **extra_params))
   end
 end

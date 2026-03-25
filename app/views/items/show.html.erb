@@ -31,14 +31,14 @@
       <br>Or use the edit form below to propose a different price.
     </div>
     <h2>Edit Your Offer</h2>
-    <%= form_with url: item_offer_path(@item, @existing_offer), method: :patch do |f| %>
+    <%= form_with model: [@item, @existing_offer] do |f| %>
       <p>
         <%= f.label :price_offered, "Your Offer ($)" %><br>
-        <%= f.number_field :price_offered, step: 0.01, min: 0.01, required: true, value: @existing_offer.price_offered, name: "offer[price_offered]" %>
+        <%= f.number_field :price_offered, step: 0.01, min: 0.01, required: true %>
       </p>
       <p>
         <%= f.label :message, "Message (optional)" %><br>
-        <%= f.text_area :message, rows: 3, placeholder: "Add a note to the seller...", name: "offer[message]", value: @existing_offer.message %>
+        <%= f.text_area :message, rows: 3, placeholder: "Add a note to the seller..." %>
       </p>
       <p><%= f.submit "Update Offer" %></p>
     <% end %>
@@ -153,8 +153,8 @@
               <%= button_to "Withdraw", item_offer_path(@item, offer),
                     method: :delete,
                     data: { turbo_confirm: "Withdraw this offer?" } %>
-              <%= form_with url: item_offer_path(@item, offer), method: :patch, style: "display:inline" do |f| %>
-                <%= f.number_field :price_offered, step: 0.01, min: 0.01, placeholder: "New price $", name: "offer[price_offered]", style: "width:100px", value: offer.price_offered %>
+              <%= form_with model: [@item, offer], style: "display:inline" do |f| %>
+                <%= f.number_field :price_offered, step: 0.01, min: 0.01, placeholder: "New price $", style: "width:100px" %>
                 <%= f.submit "Edit Offer $" %>
               <% end %>
             <% end %>

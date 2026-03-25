@@ -44,17 +44,13 @@ end
       end
 
       if @offer.pending? || @offer.countered?
-        new_price = params[:offer][:price_offered]
-        new_message = params[:offer][:message]
-        updates = {}
-        updates[:price_offered] = new_price.to_f if new_price.present? && new_price.to_f > 0
-        updates[:message] = new_message if params[:offer].key?(:message)
-        updates[:status] = :pending if @offer.countered?
+        permitted = params.require(:offer).permit(:price_offered, :message)
+        permitted[:status] = :pending if @offer.countered?
 
-        if updates.any? && @offer.update(updates)
+        if @offer.update(permitted)
           redirect_to @item, notice: "Offer updated."
         else
-          redirect_to @item, alert: "Could not update offer. Make sure the price is greater than zero."
+          redirect_to @item, alert: @offer.errors.full_messages.to_sentence
         end
       else
         redirect_to @item, alert: "You can only edit pending or countered offers."

@@ -14,21 +14,23 @@ class OffersController < ApplicationController
   end
 
   def update
-    if @offer.buyer == Current.user
-      if @offer.pending? || @offer.countered?
-        permitted = params.require(:offer).permit(:price_offered, :message)
-        permitted[:status] = :pending if @offer.countered?
-
-        if @offer.update(permitted)
-          redirect_to @item, notice: "Offer updated."
-        else
-          redirect_to @item, alert: @offer.errors.full_messages.to_sentence
-        end
-      else
-        redirect_to @item, alert: "You can only edit pending or countered offers."
-      end
-    else
+    unless @offer.buyer == Current.user
       redirect_to @item, alert: "Not authorized."
+      return
+    end
+
+    unless @offer.pending? || @offer.countered?
+      redirect_to @item, alert: "You can only edit pending or countered offers."
+      return
+    end
+
+    permitted = params.require(:offer).permit(:price_offered, :message)
+    permitted[:status] = :pending if @offer.countered?
+
+    if @offer.update(permitted)
+      redirect_to @item, notice: "Offer updated."
+    else
+      redirect_to @item, alert: @offer.errors.full_messages.to_sentence
     end
   end
 

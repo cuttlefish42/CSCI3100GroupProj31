@@ -3,13 +3,17 @@ module OfferManageable
 
   included do
     before_action :set_item_and_offer
-    before_action :authorize_seller!
-    before_action :ensure_offer_is_pending!
   end
 
   private
   def authorize_seller!
     unless @item.seller == Current.user
+      redirect_to @item, alert: "Not authorized."
+    end
+  end
+
+  def authorize_buyer!
+    unless @offer.buyer == Current.user
       redirect_to @item, alert: "Not authorized."
     end
   end

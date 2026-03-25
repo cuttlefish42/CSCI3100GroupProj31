@@ -3,6 +3,17 @@ class OffersController < ApplicationController
   before_action :set_offer, only: [ :update, :destroy ]
 
   def create
+    existing = @item.offers.where(buyer_id: Current.user.id, status: [ :pending, :countered ]).first
+    if existing
+      # Buyer already has an active offer — update it instead of creating a duplicate
+      if existing.update(offer_params.merge(status: :pending))
+        redirect_to @item, notice: "Offer updated."
+      else
+        redirect_to @item, alert: existing.errors.full_messages.to_sentence
+      end
+      return
+    end
+
     @offer = @item.offers.build(offer_params)
     @offer.buyer = Current.user
 

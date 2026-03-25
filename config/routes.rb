@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   # Items
   resources :items do
     # Offers
-    resources :offers, only: [ :create, :destroy ] do
+    resources :offers, only: [ :create, :update, :destroy ] do
       # 1to1 relation no s
       resource :acceptance, only: [ :create ], module: :offers
       resource :rejection, only: [ :create ], module: :offers

@@ -12,6 +12,35 @@ class Offer < ApplicationRecord
   scope :received_by, ->(user) { joins(:item).where(items: { seller_id: user.id }) }
   scope :recent, -> { order(created_at: :desc) }
 
+  # ---------- Ordering ----------
+  scope :order_by_price, ->(dir) { order(price_offered: dir) }
+  scope :order_by_status, ->(dir) { order(status: dir) }
+  scope :order_by_date, ->(dir) { order(created_at: dir) }
+  scope :order_by_item_title, ->(dir) {
+    joins(:item).order("items.title #{dir == :asc ? 'ASC' : 'DESC'}")
+  }
+  scope :order_by_buyer_email, ->(dir) {
+    joins(:buyer).order("users.email_address #{dir == :asc ? 'ASC' : 'DESC'}")
+  }
+  scope :order_by_seller_email, ->(dir) {
+    joins(item: :seller).order("users.email_address #{dir == :asc ? 'ASC' : 'DESC'}")
+  }
+  # --------------------
+
+  def self.sorted_by(sort_by, dir, scope: nil)
+    case sort_by
+    when "price"  then order_by_price(dir)
+    when "item"   then order_by_item_title(dir)
+    when "status" then order_by_status(dir)
+    when "buyer"
+      scope == :received ? order_by_buyer_email(dir) : order_by_date(:desc)
+    when "seller"
+      scope == :sent ? order_by_seller_email(dir) : order_by_date(:desc)
+    else
+      order_by_date(dir)
+    end
+  end
+
   def accept!
     transaction do
       accepted!

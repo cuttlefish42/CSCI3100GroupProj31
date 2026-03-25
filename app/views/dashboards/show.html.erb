@@ -35,13 +35,11 @@
           <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
           <td>
             <% if offer.countered? %>
-              <%= button_to "Accept Counter", item_offer_path(offer.item, offer),
-                    method: :patch,
-                    params: { offer: { status: "accept_counter" } },
+              <%= button_to "Accept Counter", item_offer_counter_acceptance_path(offer.item, offer),
+                    method: :post,
                     data: { turbo_confirm: "Accept the counter-offer of #{number_to_currency(offer.counter_price)}?" } %>
-              <%= button_to "Reject Counter", item_offer_path(offer.item, offer),
-                    method: :patch,
-                    params: { offer: { status: "reject_counter" } },
+              <%= button_to "Reject Counter", item_offer_counter_rejection_path(offer.item, offer),
+                    method: :post,
                     data: { turbo_confirm: "Reject the counter-offer? You can make a new offer afterwards." } %>
               <%= button_to "Withdraw", item_offer_path(offer.item, offer),
                     method: :delete,
@@ -100,9 +98,8 @@
               <%= button_to "Reject", item_offer_rejection_path(offer.item, offer),
                     method: :post,
                     data: { turbo_confirm: "Reject this offer?" } %>
-              <%= form_with url: item_offer_path(offer.item, offer), method: :patch, style: "display:inline" do |f| %>
-                <%= f.hidden_field :status, value: "countered", name: "offer[status]" %>
-                <%= f.number_field :counter_price, step: 0.01, min: 0.01, placeholder: "Counter $", name: "offer[counter_price]", style: "width:100px" %>
+              <%= form_with url: item_offer_counter_path(offer.item, offer), method: :post, style: "display:inline" do |f| %>
+                <%= f.number_field :counter_price, step: 0.01, min: 0.01, placeholder: "Counter $", name: "counter_price", style: "width:100px" %>
                 <%= f.submit "Counter" %>
               <% end %>
             <% end %>

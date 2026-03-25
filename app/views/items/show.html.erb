@@ -64,11 +64,11 @@
   <table>
     <thead>
       <tr>
-        <th>Buyer</th>
-        <th>Amount</th>
+        <th><%= sortable_header("Buyer", "buyer", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+        <th><%= sortable_header("Amount", "price", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
         <th>Message</th>
-        <th>Status</th>
-        <th>Date</th>
+        <th><%= sortable_header("Status", "status", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+        <th><%= sortable_header("Date", "date", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -112,11 +112,11 @@
   <table>
     <thead>
       <tr>
-        <th>Buyer</th>
-        <th>Amount</th>
+        <th><%= sortable_header("Buyer", "buyer", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+        <th><%= sortable_header("Amount", "price", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
         <th>Message</th>
-        <th>Status</th>
-        <th>Date</th>
+        <th><%= sortable_header("Status", "status", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+        <th><%= sortable_header("Date", "date", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
         <th>Actions</th>
       </tr>
     </thead>

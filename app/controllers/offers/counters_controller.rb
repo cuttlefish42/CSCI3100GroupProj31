@@ -1,5 +1,7 @@
 class Offers::CountersController < ApplicationController
   include OfferManageable
+  before_action :authorize_seller!
+  before_action :ensure_offer_is_pending!
 
   def create
     if params[:counter_price].to_f > 0

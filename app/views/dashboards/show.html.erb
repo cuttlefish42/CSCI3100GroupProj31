@@ -7,12 +7,12 @@
   <table>
     <thead>
       <tr>
-        <th>Item</th>
-        <th>Seller</th>
-        <th>My Offer</th>
+        <th><%= sortable_header("Item", "item", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
+        <th><%= sortable_header("Seller", "seller", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
+        <th><%= sortable_header("My Offer", "price", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
         <th>Message</th>
-        <th>Status</th>
-        <th>Date</th>
+        <th><%= sortable_header("Status", "status", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
+        <th><%= sortable_header("Date", "date", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -69,12 +69,12 @@
   <table>
     <thead>
       <tr>
-        <th>Item</th>
-        <th>Buyer</th>
-        <th>Amount</th>
+        <th><%= sortable_header("Item", "item", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>
+        <th><%= sortable_header("Buyer", "buyer", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>
+        <th><%= sortable_header("Amount", "price", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>
         <th>Message</th>
-        <th>Status</th>
-        <th>Date</th>
+        <th><%= sortable_header("Status", "status", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>
+        <th><%= sortable_header("Date", "date", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>
         <th>Actions</th>
       </tr>
     </thead>

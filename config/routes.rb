@@ -12,6 +12,8 @@ Rails.application.routes.draw do
       resource :acceptance, only: [ :create ], module: :offers
       resource :rejection, only: [ :create ], module: :offers
       resource :counter, only: [ :create ], module: :offers
+      resource :counter_acceptance, only: [ :create ], module: :offers
+      resource :counter_rejection, only: [ :create ], module: :offers
     end
   end
 

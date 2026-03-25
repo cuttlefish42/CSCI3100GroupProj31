@@ -84,7 +84,7 @@
               (<%= number_to_currency(offer.counter_price) %>)
             <% end %>
           </td>
-          <td><%= time_ago_in_words(offer.created_at) %> ago</td>
+          <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
           <td>
             <% if offer.pending? %>
                 <%= button_to "Accept", item_offer_acceptance_path(offer.item, offer),
@@ -135,7 +135,7 @@
               <%= offer.status.humanize %>
             <% end %>
           </td>
-          <td><%= time_ago_in_words(offer.created_at) %> ago</td>
+          <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
           <td>
             <% if offer.buyer == Current.user && offer.countered? %>
               <%= button_to "Accept Counter", item_offer_path(@item, offer),

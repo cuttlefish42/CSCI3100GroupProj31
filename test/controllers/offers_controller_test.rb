@@ -68,7 +68,7 @@ class OffersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Is this negotiable?", Offer.last.message
   end
 
-  test "cannot create offer with zero price" do
+    test "cannot create offer with zero price" do
     sign_in_as(@buyer)
     @item.offers.where(buyer: @buyer).destroy_all
 
@@ -77,5 +77,26 @@ class OffersControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to item_url(@item)
+  end
+
+  test "buyer can edit pending offer price" do
+    sign_in_as(@buyer)
+    offer = offers(:one)
+
+    patch item_offer_path(@item, offer), params: { offer: { price_offered: "25.00" } }
+
+    assert_redirected_to item_url(@item)
+    assert_equal 25.0, offer.reload.price_offered.to_f
+  end
+
+  test "dashboard requires authentication" do
+    get offers_dashboard_path
+    assert_redirected_to new_session_path
+  end
+
+  test "authenticated user can view dashboard" do
+    sign_in_as(@buyer)
+    get offers_dashboard_path
+    assert_response :success
   end
 end

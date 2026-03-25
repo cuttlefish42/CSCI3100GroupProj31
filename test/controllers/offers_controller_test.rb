@@ -90,13 +90,13 @@ class OffersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "dashboard requires authentication" do
-    get offers_dashboard_path
+    get dashboard_path
     assert_redirected_to new_session_path
   end
 
   test "authenticated user can view dashboard" do
     sign_in_as(@buyer)
-    get offers_dashboard_path
+    get dashboard_path
     assert_response :success
   end
 end

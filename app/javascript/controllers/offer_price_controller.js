@@ -1,14 +1,28 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Quick-calc buttons for offer price fields.
-// Set data-offer-price-listing-value to the item's listing price.
+// Popup modal with quick-calc buttons for offer price fields.
+// data-offer-price-base-value: the base price for quick-set calculations
+//   - For "Make an Offer": the item listing price
+//   - For "Edit Your Offer": the current offer price
 export default class extends Controller {
-  static targets = ["input"]
-  static values = { listing: Number }
+  static targets = ["modal", "input"]
+  static values = { base: Number }
+
+  open() {
+    this.modalTarget.style.display = "flex"
+  }
+
+  close() {
+    this.modalTarget.style.display = "none"
+  }
+
+  stopPropagation(event) {
+    event.stopPropagation()
+  }
 
   adjust(event) {
     const pct = parseFloat(event.currentTarget.dataset.pct)
-    const price = (this.listingValue * pct).toFixed(2)
+    const price = (this.baseValue * pct).toFixed(2)
     this.inputTarget.value = price
     this.inputTarget.focus()
   }

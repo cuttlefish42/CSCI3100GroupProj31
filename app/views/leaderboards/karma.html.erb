@@ -1,6 +1,16 @@
 <%= render "items/header" %>
 
-<h2>Reputation leaderboard</h2>
+<h2>Karma Leaderboard</h2>
+
+<div style="width: 100%; max-width: 800px; height: 400px;">
+  <canvas
+      data-controller="chart"
+      data-chart-type-value="bar"
+      data-chart-label-value="Karma Scores"
+      data-chart-labels-value="<%= @labels %>"
+      data-chart-data-value="<%= @values %>">
+  </canvas>
+</div>
 
 <% if @users.any? %>
     <% @users.each do |u| %>

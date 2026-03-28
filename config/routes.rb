@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   # About Us
   get "aboutus", to: "items#aboutus", as: :aboutus
 
+  # Karma Leaderboard
+  get "leaderboard/karma", to: "leaderboards#karma", as: :karma_leaderboard
+
   # Items
   resources :items do
     # Offers

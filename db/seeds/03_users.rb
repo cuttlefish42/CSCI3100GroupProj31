@@ -12,10 +12,13 @@ puts "Seeding users..."
 users.each do |user_attr|
   community = Community.find_by(name: user_attr[:community_name])
 
+  k = 1
   User.find_or_create_by!(email_address: user_attr[:email]) do |u|
     u.username = user_attr[:username]
     u.password = "password123"
     u.password_confirmation = "password123"
     u.default_community_id = community&.id
+    u.karma = k
+    k = k + 1
   end
 end

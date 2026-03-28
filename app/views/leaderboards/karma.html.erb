@@ -1,0 +1,14 @@
+<%= render "items/header" %>
+
+<h2>Reputation leaderboard</h2>
+
+<% if @users.any? %>
+    <% @users.each do |u| %>
+        <div>
+            Username: <%= u.username %> <br>
+            Karma: <%= u.karma %> <br>
+            Join date: <%= u.created_at %> <br>
+        </div>
+        <br>
+    <% end %>
+<% end %>

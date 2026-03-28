@@ -10,6 +10,7 @@ export default class extends Controller {
   }
 
   connect() {
+    // ---------- debug start ----------
     console.log("Chart controller connected");
     
     // Get Chart from window (UMD module)
@@ -54,6 +55,8 @@ export default class extends Controller {
 
     console.log("Creating chart with labels:", labels, "data:", data);
 
+    // ---------- debug end ----------
+
     this.chart = new Chart(ctx, {
       type: this.typeValue || "bar",
       data: {
@@ -67,13 +70,6 @@ export default class extends Controller {
         }]
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: true
-          }
-        },
         scales: {
           y: {
             beginAtZero: true

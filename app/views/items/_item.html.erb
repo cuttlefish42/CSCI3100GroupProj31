@@ -16,6 +16,6 @@
     Condition: <%= item.condition.humanize %><br>
     Community: <%= item.community&.name || "Any" %><br>
     Status: <%= item.status.humanize %><br>
-    Seller: <%= item.seller.username %><br>
+    Seller: <%= item.seller.username %> [<%= item.seller.karma %>]<br>
   </p>
 </div>

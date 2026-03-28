@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
+  # About Us
+  get "aboutus", to: "items#aboutus", as: :aboutus
+
   # Items
   resources :items do
     # Offers

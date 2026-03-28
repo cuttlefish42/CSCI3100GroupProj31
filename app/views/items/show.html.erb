@@ -158,7 +158,7 @@
 <%# === All offers on this item (visible to any logged-in user who is not the seller) === %>
 <% if Current.user && Current.user != @item.seller && @offers.any? %>
   <h2>Offers on This Item</h2>
-  <table>
+  <table style="width: 100%; table-layout: fixed; text-align: center">
     <thead>
       <tr>
         <th><%= sortable_header("Buyer", "buyer", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>

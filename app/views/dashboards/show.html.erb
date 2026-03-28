@@ -4,7 +4,7 @@
 
 <h2>Offers I've Made</h2>
 <% if @sent_offers.any? %>
-  <table>
+  <table style="width: 100%; table-layout: fixed; text-align: center">
     <thead>
       <tr>
         <th><%= sortable_header("Item", "item", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
@@ -64,7 +64,7 @@
 
 <h2>Offers I've Received</h2>
 <% if @received_offers.any? %>
-  <table>
+  <table style="width: 100%; table-layout: fixed; text-align: center">
     <thead>
       <tr>
         <th><%= sortable_header("Item", "item", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>

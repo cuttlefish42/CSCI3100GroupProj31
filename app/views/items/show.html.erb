@@ -1,26 +1,12 @@
 <%= render "header" %>
 
-<<<<<<< HEAD
-<%= render @item %>
-=======
-<h1><%= @item.title %></h1>
-
 <% if @item.photo.attached? %>
   <div style="margin: 12px 0;">
     <%= image_tag @item.photo, style: "max-width: 400px; max-height: 400px; border-radius: 4px;" %>
   </div>
 <% end %>
 
-<p><strong><%= number_to_currency(@item.price) %></strong></p>
-
-<p>
-	Category: <%= @item.category.name %><br>
-	Condition: <%= @item.condition.humanize %><br>
-	Community: <%= @item.community&.name || "Any" %><br>
-	Status: <%= @item.status.humanize %><br>
-	Seller: <%= @item.seller.username %>
-</p>
->>>>>>> 08d8820 (Add product photo upload for sellers (single image))
+<%= render @item %>
 
 <p>
 	<%= link_to "Back", items_path %>

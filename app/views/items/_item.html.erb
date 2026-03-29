@@ -1,8 +1,12 @@
-<%# locals: (item:, link_title: false) %>
+<%# locals: (item:, link_title: false, large_photo: false) %>
 
 <% if item.photo.attached? %>
-  <div>
-    <%= image_tag item.photo, style: "max-width: 150px; max-height: 150px; border-radius: 4px;" %>
+  <div <%= large_photo ? 'style="margin: 12px 0;"'.html_safe : "" %>>
+    <% if large_photo %>
+      <%= image_tag item.photo, style: "max-width: 400px; max-height: 400px; border-radius: 4px;" %>
+    <% else %>
+      <%= image_tag item.photo, style: "max-width: 150px; max-height: 150px; border-radius: 4px;" %>
+    <% end %>
   </div>
 <% end %>
 

@@ -1,12 +1,6 @@
 <%= render "header" %>
 
-<% if @item.photo.attached? %>
-  <div style="margin: 12px 0;">
-    <%= image_tag @item.photo, style: "max-width: 400px; max-height: 400px; border-radius: 4px;" %>
-  </div>
-<% end %>
-
-<%= render @item %>
+<%= render @item, large_photo: true %>
 
 <p>
 	<%= link_to "Back", items_path %>

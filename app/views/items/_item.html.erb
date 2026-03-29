@@ -1,5 +1,11 @@
 <%# locals: (item:, link_title: false) %>
 
+<% if item.photo.attached? %>
+  <div>
+    <%= image_tag item.photo, style: "max-width: 150px; max-height: 150px; border-radius: 4px;" %>
+  </div>
+<% end %>
+
 <div class="item-info">
   <h2>
     <% if link_title %>

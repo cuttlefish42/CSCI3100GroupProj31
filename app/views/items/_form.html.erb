@@ -41,6 +41,14 @@
     <%= form.select :status, Item.statuses.keys.map { |s| [s.humanize, s] }, {}, required: true %>
   </div>
 
+  <div>
+    <%= form.label :photo, "Product Photo" %><br>
+    <% if item.photo.attached? %>
+      <p>Current photo: <%= image_tag item.photo, style: "max-width: 200px; max-height: 200px;" %></p>
+    <% end %>
+    <%= form.file_field :photo, accept: "image/*" %>
+  </div>
+
   <div style="margin-top: 1rem;">
     <%= form.submit %>
   </div>

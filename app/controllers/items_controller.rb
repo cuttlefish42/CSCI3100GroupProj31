@@ -71,6 +71,6 @@ class ItemsController < ApplicationController
     end
 
     def item_params
-      params.expect(item: [ :title, :price, :condition, :status, :category_id, :community_id ])
+      params.expect(item: [ :title, :price, :condition, :status, :category_id, :community_id, :photo ])
     end
 end

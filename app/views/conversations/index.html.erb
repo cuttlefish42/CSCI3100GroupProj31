@@ -1,2 +1,16 @@
-<h1>Conversations#index</h1>
-<p>Find me in app/views/conversations/index.html.erb</p>
+<h1>Your Inbox</h1>
+
+<% if @conversations.any? %>
+  <ul>
+    <% @conversations.each do |conversation| %>
+      <% other_user = conversation.sender == Current.user ? conversation.receiver : conversation.sender %>
+      <li>
+        <h3><%= other_user.username %></h3>
+        <p>Last active <%= time_ago_in_words(conversation.updated_at) %> ago</p>
+        <%= link_to "Open Chat", conversation_path(conversation) %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No Messages Yet. When you start chatting with other users, your conversations will appear here.</p>
+<% end %>

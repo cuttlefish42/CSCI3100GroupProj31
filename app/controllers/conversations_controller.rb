@@ -1,16 +1,13 @@
 class ConversationsController < ApplicationController
+  include ConversationAuthorizable
+  before_action :set_conversation, only: [ :show ]
+  before_action :authorize_conversation_participation, only: [ :show ]
+
   def index
     @conversations = Conversation.involves(Current.user).recent
   end
 
   def show
-    @conversation = Conversation.find(params[:id])
-
-    unless @conversation.participates?(Current.user)
-      redirect_to conversations_path, alert: "You do not have permission to view this conversation."
-      return
-    end
-
     # it's already in asc order
     @messages = @conversation.messages
   end

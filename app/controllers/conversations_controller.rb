@@ -1,14 +1,12 @@
 class ConversationsController < ApplicationController
-  before_action :require_login
-
   def index
-    @conversations = Conversation.involves(current_user).recent
+    @conversations = Conversation.involves(Current.user).recent
   end
 
   def show
     @conversation = Conversation.find(params[:id])
 
-    unless @conversation.participates?(current_user)
+    unless @conversation.participates?(Current.user)
       redirect_to conversations_path, alert: "You do not have permission to view this conversation."
       return
     end
@@ -20,7 +18,7 @@ class ConversationsController < ApplicationController
   def create
     receiver = User.find(params[:receiver_id])
 
-    @conversation = Conversation.find_or_create_between(current_user, receiver)
+    @conversation = Conversation.find_or_create_between(Current.user, receiver)
 
     redirect_to conversation_path(@conversation)
   end

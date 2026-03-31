@@ -10,9 +10,9 @@
     <% end %>
 </div>
 
-<%= form_with(model: [@conversation, @message]) do |f| %>
+<%= form_with(model: [@conversation, @message], data: { controller: "chat-form", action: "turbo:submit-end->chat-form#reset" }) do |f| %>
   <div>
-    <%= f.text_area :content, placeholder: "Type a message...", rows: 3, required: true %>
+    <%= f.text_area :content, placeholder: "Type a message...", rows: 3, required: true, data: { action: "keydown->chat-form#submitOnEnter" } %>
     <%= f.submit "Send" %>
   </div>
 <% end %>

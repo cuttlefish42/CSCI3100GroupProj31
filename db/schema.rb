@@ -77,11 +77,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_172946) do
   end
 
   create_table "messages", force: :cascade do |t|
-    t.text "context"
+    t.text "content"
     t.integer "conversation_id", null: false
     t.datetime "created_at", null: false
-    t.integer "item_id", null: false
-    t.integer "offer_id", null: false
+    t.integer "item_id"
+    t.integer "offer_id"
     t.integer "sender_id", null: false
     t.datetime "updated_at", null: false
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
@@ -126,13 +126,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_172946) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "conversations", "users", column: "receiver_id"
+  add_foreign_key "conversations", "users", column: "sender_id"
   add_foreign_key "items", "categories"
   add_foreign_key "items", "communities"
   add_foreign_key "items", "users", column: "seller_id"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "items"
   add_foreign_key "messages", "offers"
-  add_foreign_key "messages", "senders"
+  add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "offers", "items"
   add_foreign_key "offers", "users", column: "buyer_id"
   add_foreign_key "sessions", "users"

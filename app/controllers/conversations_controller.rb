@@ -10,6 +10,7 @@ class ConversationsController < ApplicationController
   def show
     # it's already in asc order
     @messages = @conversation.messages
+    @message = Message.new
   end
 
   def create

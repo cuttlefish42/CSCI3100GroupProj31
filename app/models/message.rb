@@ -1,5 +1,6 @@
 class Message < ApplicationRecord
-  belongs_to :conversation
+  # touch: true ensure the timestamp is updated so we know the last conversation's time.
+  belongs_to :conversation, touch: true
   belongs_to :sender, class_name: "User"
 
   belongs_to :item, optional: true

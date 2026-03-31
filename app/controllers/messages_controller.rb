@@ -8,15 +8,11 @@ class MessagesController < ApplicationController
     @message = @conversation.messages.build(message_params)
     @message.sender = Current.user # Attach the current user as the sender
 
+    # No need redirection since turbo handles the ui update.
     if @message.save
-      # Update the conversation's updated_at timestamp so it jumps to the top of the inbox
-      @conversation.touch
-
-      # Standard Rails redirect (we will replace this with Hotwire/Turbo later)
-      redirect_to conversation_path(@conversation)
+      head :created
     else
-      # If the message fails to save (e.g., content is blank)
-      redirect_to conversation_path(@conversation), alert: "Message could not be sent."
+      head :unprocessable_entity
     end
   end
 

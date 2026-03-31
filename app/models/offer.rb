@@ -2,6 +2,8 @@ class Offer < ApplicationRecord
   belongs_to :buyer, class_name: "User"
   belongs_to :item
 
+  has_many :messages, dependent: :nullify
+
   enum :status, { pending: 0, accepted: 1, rejected: 2, countered: 3 }
 
   validate :buyer_is_not_seller

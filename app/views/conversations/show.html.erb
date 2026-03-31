@@ -1,20 +1,16 @@
 <h1>Chat with <%= @conversation.sender == Current.user ? @conversation.receiver.username : @conversation.sender.username %></h1>
 
+<%= turbo_stream_from @conversation %>
+
 <div id="messages">
-  <% if @messages.any? %>
-    <% @messages.each do |message| %>
-      <div class="message">
-        <strong><%= message.sender == Current.user ? "You" : message.sender.username %>:</strong>
-        <p><%= message.content %></p>
-        <small><%= time_ago_in_words(message.created_at) %> ago</small>
-      </div>
+    <% if @messages.any? %>
+      <%= render @messages %>
+    <% else %>
+      <p>No messages yet. Start the conversation!</p>
     <% end %>
-  <% else %>
-    <p>No messages yet. Start the conversation!</p>
-  <% end %>
 </div>
 
-<%= form_with(model: [@conversation, @message], data: { turbo: false }) do |f| %>
+<%= form_with(model: [@conversation, @message]) do |f| %>
   <div>
     <%= f.text_area :content, placeholder: "Type a message...", rows: 3, required: true %>
     <%= f.submit "Send" %>

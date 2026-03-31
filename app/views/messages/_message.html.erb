@@ -1,0 +1,11 @@
+<%# locals: (message:) %>
+
+<div id="<%= dom_id(message) %>" class="message">
+    <strong>
+        <%= message.sender == Current.user ?
+        "You" : message.sender.username
+        %>:
+    </strong>
+    <span><%= message.content %></span>
+    <small><%= time_ago_in_words(message.created_at) %> ago</small>
+</div>

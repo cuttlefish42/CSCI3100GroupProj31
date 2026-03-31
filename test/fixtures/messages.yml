@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  conversation: one
+  sender: one
+  context: MyText
+  item: one
+  offer: one
+
+two:
+  conversation: two
+  sender: two
+  context: MyText
+  item: two
+  offer: two

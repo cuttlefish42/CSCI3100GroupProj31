@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_29_162655) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_30_172946) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -52,6 +52,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_162655) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "conversations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "receiver_id", null: false
+    t.integer "sender_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["receiver_id"], name: "index_conversations_on_receiver_id"
+    t.index ["sender_id"], name: "index_conversations_on_sender_id"
+  end
+
   create_table "items", force: :cascade do |t|
     t.integer "category_id", null: false
     t.integer "community_id"
@@ -65,6 +74,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_162655) do
     t.index [ "category_id" ], name: "index_items_on_category_id"
     t.index [ "community_id" ], name: "index_items_on_community_id"
     t.index [ "seller_id" ], name: "index_items_on_seller_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "context"
+    t.integer "conversation_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "item_id", null: false
+    t.integer "offer_id", null: false
+    t.integer "sender_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["item_id"], name: "index_messages_on_item_id"
+    t.index ["offer_id"], name: "index_messages_on_offer_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
   create_table "offers", force: :cascade do |t|
@@ -106,6 +129,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_29_162655) do
   add_foreign_key "items", "categories"
   add_foreign_key "items", "communities"
   add_foreign_key "items", "users", column: "seller_id"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "items"
+  add_foreign_key "messages", "offers"
+  add_foreign_key "messages", "senders"
   add_foreign_key "offers", "items"
   add_foreign_key "offers", "users", column: "buyer_id"
   add_foreign_key "sessions", "users"

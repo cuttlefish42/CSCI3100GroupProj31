@@ -6,7 +6,7 @@ class Conversation < ApplicationRecord
 
   scope :involves, ->(user) { where(sender: user).or(where(receiver: user)) }
 
-  scope :recent, -> { order(updated_at: desc) }
+  scope :recent, -> { order(updated_at: :desc) }
 
   # instance methods
   def participates?(user)

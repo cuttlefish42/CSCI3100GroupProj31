@@ -5,6 +5,7 @@ class Item < ApplicationRecord
   belongs_to :seller, class_name: "User"
 
   has_many :offers, dependent: :destroy
+  has_many :messages, dependent: :nullify
   has_one_attached :photo
 
   enum :condition, { poor: 0, fair: 1, good: 2, like_new: 3, brand_new: 4 }

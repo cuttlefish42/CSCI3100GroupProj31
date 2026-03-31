@@ -1,31 +1,39 @@
 <%# locals: (item:, link_title: false, large_photo: false) %>
 
-<% if item.photo.attached? %>
-  <div <%= large_photo ? 'style="margin: 12px 0;"'.html_safe : "" %>>
-    <% if large_photo %>
-      <%= image_tag item.photo, style: "max-width: 400px; max-height: 400px; border-radius: 4px;" %>
-    <% else %>
-      <%= image_tag item.photo, style: "max-width: 150px; max-height: 150px; border-radius: 4px;" %>
-    <% end %>
+<div class="card bg-base-100 border border-base-200 <%= large_photo ? 'w-full max-w-2xl' : '' %>">
+  <% if item.photo.attached? %>
+    <figure class="px-4 pt-4">
+      <% if large_photo %>
+        <%= image_tag item.photo, class: "rounded-xl max-h-96 object-contain" %>
+      <% else %>
+        <%= image_tag item.photo, class: "rounded-xl max-h-48 object-cover" %>
+      <% end %>
+    </figure>
+  <% end %>
+
+  <div class="card-body">
+    <h1 class="card-title">
+      <% if link_title %>
+        <%= link_to item.title, item, class: "hover:text-secondary transition-colors" %>
+      <% else %>
+        <%= item.title %>
+      <% end %>
+    </h1>
+
+    <p class="text-xl font-bold text-secondary mb-2"><%= number_to_currency(item.price) %></p>
+
+    <div class="text-sm space-y-1">
+      <p><strong>Category:</strong> <%= item.category.name %></p>
+      <p><strong>Condition:</strong> <%= item.condition.humanize %></p>
+      <p><strong>Community:</strong> <%= item.community&.name || "Any" %></p>
+      <p>
+        <strong>Status:</strong>
+        <span class="badge badge-info badge-sm"><%= item.status.humanize %></span>
+      </p>
+      <p>
+        <strong>Seller:</strong> <%= item.seller.username %>
+        <span class="badge badge-ghost badge-sm">[<%= item.seller.karma %>]</span>
+      </p>
+    </div>
   </div>
-<% end %>
-
-<div class="item-info">
-  <h2>
-    <% if link_title %>
-      <%= link_to item.title, item %>
-    <% else %>
-      <%= item.title %>
-    <% end %>
-  </h2>
-
-  <p><strong><%= number_to_currency(item.price) %></strong></p>
-
-  <p>
-    Category: <%= item.category.name %><br>
-    Condition: <%= item.condition.humanize %><br>
-    Community: <%= item.community&.name || "Any" %><br>
-    Status: <%= item.status.humanize %><br>
-    Seller: <%= item.seller.username %> [<%= item.seller.karma %>]<br>
-  </p>
 </div>

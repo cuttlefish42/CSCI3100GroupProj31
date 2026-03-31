@@ -3,6 +3,7 @@
 @source not "./daisyui{,*}.mjs";
 
 @plugin "./daisyui.mjs" {
+    themes: bumblebee --default;
 }
 
 /* Optional for custom themes – Docs: https://daisyui.com/docs/themes/#how-to-add-a-new-custom-theme */
@@ -43,25 +44,25 @@
 
 @layer base {
     body {
-        @apply text-base text-base-content bg-base-100 font-sans;
+        @apply text-base text-neutral bg-base-200 font-sans;
     }
 
     h1 {
-        @apply text-4xl font-bold mb-6 text-base-content;
+        @apply text-4xl font-bold mb-6 text-neutral;
     }
 
     h2 {
-        @apply text-3xl font-semibold mt-8 mb-4 text-base-content;
+        @apply text-3xl font-semibold mt-8 mb-4 text-neutral;
     }
 
     h3 {
-        @apply text-2xl font-semibold mt-6 mb-3 text-base-content;
+        @apply text-2xl font-semibold mt-6 mb-3 text-neutral;
     }
 
     h4,
     h5,
     h6 {
-        @apply text-xl font-medium mt-4 mb-2 text-base-content;
+        @apply text-xl font-medium mt-4 mb-2 text-neutral;
     }
 
     a {
@@ -69,7 +70,7 @@
     }
 
     p {
-        @apply text-base-content/80;
+        @apply text-neutral/80;
     }
 
     button,
@@ -88,10 +89,15 @@
     input[type="url"],
     textarea,
     select {
-        @apply input;
+        @apply input border border-base-300 px-4 py-2;
     }
 
     table {
         @apply table;
+    }
+
+    th,
+    td {
+        @apply p-3;
     }
 }

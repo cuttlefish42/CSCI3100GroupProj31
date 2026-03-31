@@ -1,55 +1,60 @@
 <% if item.errors.any? %>
-  <div class="errors">
-    <p><strong><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</strong></p>
-    <ul>
-      <% item.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
+  <div class="alert alert-error mb-6 shadow-md">
+    <div>
+      <h3 class="font-bold"><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</h3>
+      <ul class="list-disc list-inside ml-2">
+        <% item.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 <% end %>
 
-<%= form_with model: item do |form| %>
-  <div>
-    <%= form.label :title %><br>
-    <%= form.text_field :title, required: true %>
+<%= form_with model: item, class: "flex flex-col gap-4" do |form| %>
+  <div class="form-control">
+    <%= form.label :title, class: "label font-semibold" %>
+    <%= form.text_field :title, required: true, class: "w-full" %>
   </div>
 
-  <div>
-    <%= form.label :price %><br>
-    <%= form.number_field :price, step: 0.1, min: 0, required: true %>
+  <div class="form-control">
+    <%= form.label :price, class: "label font-semibold" %>
+    <%= form.number_field :price, step: 0.1, min: 0, required: true, class: "w-full" %>
   </div>
 
-  <div>
-    <%= form.label :category_id, "Category" %><br>
-    <%= form.collection_select :category_id, Category.all, :id, :name, prompt: "Select category", required: true %>
+  <div class="form-control">
+    <%= form.label :category_id, "Category", class: "label font-semibold" %>
+    <%= form.collection_select :category_id, Category.all, :id, :name, { prompt: "Select category" }, required: true, class: "w-full" %>
   </div>
 
-  <div>
-    <%= form.label :community_id, "Community" %><br>
-    <%= form.collection_select :community_id, Community.all, :id, :name, include_blank: "Any community" %>
+  <div class="form-control">
+    <%= form.label :community_id, "Community", class: "label font-semibold" %>
+    <%= form.collection_select :community_id, Community.all, :id, :name, { include_blank: "Any community" }, class: "w-full" %>
   </div>
 
-  <div>
-    <%= form.label :condition %><br>
-    <%= form.select :condition, Item.conditions.keys.map { |c| [c.humanize, c] }, {}, required: true %>
+  <div class="form-control">
+    <%= form.label :condition, class: "label font-semibold" %>
+    <%= form.select :condition, Item.conditions.keys.map { |c| [c.humanize, c] }, {}, required: true, class: "w-full" %>
   </div>
 
   <%# TODO: Status would be by default Available. Change after state management is implemented. %>
-  <div>
-    <%= form.label :status %><br>
-    <%= form.select :status, Item.statuses.keys.map { |s| [s.humanize, s] }, {}, required: true %>
+  <div class="form-control">
+    <%= form.label :status, class: "label font-semibold" %>
+    <%= form.select :status, Item.statuses.keys.map { |s| [s.humanize, s] }, {}, required: true, class: "w-full" %>
   </div>
 
-  <div>
-    <%= form.label :photo, "Product Photo" %><br>
+  <div class="form-control">
+    <%= form.label :photo, "Product Photo", class: "label font-semibold" %>
     <% if item.photo.attached? %>
-      <p>Current photo: <%= image_tag item.photo, style: "max-width: 200px; max-height: 200px;" %></p>
+      <div class="mb-2">
+        <span class="text-sm text-neutral/70">Current photo:</span>
+        <%= image_tag item.photo, class: "max-h-48 rounded-lg mt-1 object-cover" %>
+      </div>
     <% end %>
-    <%= form.file_field :photo, accept: "image/*" %>
+    <%= form.file_field :photo, accept: "image/*", class: "file-input file-input-bordered w-full" %>
   </div>
 
-  <div style="margin-top: 1rem;">
-    <%= form.submit %>
+  <div class="mt-4">
+    <%= form.submit class: "btn btn-primary w-full" %>
   </div>
 <% end %>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="emerald">
   <head>
     <title><%= content_for(:title) || "Csci3100 Group Proj31" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -26,10 +26,10 @@
 
   <body>
     <% if flash[:notice] %>
-      <div style="background: #d4edda; color: #155724; padding: 10px; margin: 10px 0; border-radius: 4px;"><%= flash[:notice] %></div>
+      <div class="alert alert-success shadow-lg mb-4"><%= flash[:notice] %></div>
     <% end %>
     <% if flash[:alert] %>
-      <div style="background: #f8d7da; color: #721c24; padding: 10px; margin: 10px 0; border-radius: 4px;"><%= flash[:alert] %></div>
+      <div class="alert alert-error shadow-lg mb-4"><%= flash[:alert] %></div>
     <% end %>
     <%= yield %>
   </body>

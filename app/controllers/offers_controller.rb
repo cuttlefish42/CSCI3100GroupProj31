@@ -18,6 +18,14 @@ class OffersController < ApplicationController
     @offer.buyer = Current.user
 
     if @offer.save
+      # Automatically send a message in the chat
+      conversation = Conversation.find_or_create_between(Current.user, @item.seller)
+      conversation.messages.create!(
+        sender: Current.user,
+        content: "I made an offer for $#{@offer.price_offered}",
+        offer: @offer
+      )
+
       redirect_to @item, notice: "Offer submitted."
     else
       redirect_to @item, alert: @offer.errors.full_messages.to_sentence

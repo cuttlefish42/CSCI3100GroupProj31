@@ -1,0 +1,12 @@
+<%# locals: (item:) %>
+<div>
+  <div>
+    <strong>Item: <%= link_to item.title, item_path(item) %></strong>
+    <% if item.price.present? %>
+      <span><%= number_to_currency(item.price) %></span>
+    <% end %>
+  </div>
+  <p>
+    Status: <%= item.status.humanize %>
+  </p>
+</div>

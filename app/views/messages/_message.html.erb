@@ -1,6 +1,12 @@
 <%# locals: (message:) %>
 
 <div id="<%= dom_id(message) %>" class="message">
+    <% if message.offer.present? %>
+      <%= render "messages/attachments/offer", offer: message.offer %>
+    <% elsif message.item.present? %>
+      <%= render "messages/attachments/item", item: message.item %>
+    <% end %>
+
     <strong>
         <%= message.sender == Current.user ?
         "You" : message.sender.username

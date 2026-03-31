@@ -1,10 +1,10 @@
-<%= render "items/header" %>
+<div class="container mx-auto p-4">
+  <h1>My Offers</h1>
 
-<h1>My Offers</h1>
-
-<h2>Offers I've Made</h2>
-<% if @sent_offers.any? %>
-  <table style="width: 100%; table-layout: fixed; text-align: center">
+  <h2>Offers I've Made</h2>
+  <% if @sent_offers.any? %>
+    <div class="overflow-x-auto bg-base-100 rounded-xl shadow">
+      <table class="table-zebra w-full text-center">
     <thead>
       <tr>
         <th><%= sortable_header("Item", "item", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
@@ -25,7 +25,7 @@
           <td><%= offer.message.presence || "—" %></td>
           <td>
             <% if offer.countered? && offer.counter_price %>
-              <span style="color: #b36b00; font-weight: bold;">
+              <span class="text-warning font-bold">
                 Seller countered: <%= number_to_currency(offer.counter_price) %>
               </span>
             <% else %>
@@ -35,36 +35,46 @@
           <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
           <td>
             <% if offer.countered? %>
-              <%= button_to "Accept Counter", item_offer_counter_acceptance_path(offer.item, offer),
-                    method: :post,
-                    data: { turbo_confirm: "Accept the counter-offer of #{number_to_currency(offer.counter_price)}?" } %>
-              <%= button_to "Reject Counter", item_offer_counter_rejection_path(offer.item, offer),
-                    method: :post,
-                    data: { turbo_confirm: "Reject the counter-offer? You can make a new offer afterwards." } %>
-              <%= button_to "Withdraw", item_offer_path(offer.item, offer),
-                    method: :delete,
-                    data: { turbo_confirm: "Withdraw this offer?" } %>
+              <div class="flex flex-col gap-2 items-center justify-center">
+                <%= button_to "Accept Counter", item_offer_counter_acceptance_path(offer.item, offer),
+                      method: :post,
+                      class: "btn btn-sm btn-success w-full",
+                      data: { turbo_confirm: "Accept the counter-offer of #{number_to_currency(offer.counter_price)}?" } %>
+                <%= button_to "Reject Counter", item_offer_counter_rejection_path(offer.item, offer),
+                      method: :post,
+                      class: "btn btn-sm btn-error w-full",
+                      data: { turbo_confirm: "Reject the counter-offer? You can make a new offer afterwards." } %>
+                <%= button_to "Withdraw", item_offer_path(offer.item, offer),
+                      method: :delete,
+                      class: "btn btn-sm btn-outline w-full",
+                      data: { turbo_confirm: "Withdraw this offer?" } %>
+              </div>
             <% elsif offer.pending? %>
-              <%= button_to "Withdraw", item_offer_path(offer.item, offer),
-                    method: :delete,
-                    data: { turbo_confirm: "Withdraw this offer?" } %>
-              <%= form_with model: [offer.item, offer], style: "display:inline" do |f| %>
-                <%= f.number_field :price_offered, step: 0.01, min: 0.01, placeholder: "New price $", style: "width:100px" %>
-                <%= f.submit "Edit Offer $" %>
-              <% end %>
+              <div class="flex flex-col gap-2 items-center justify-center">
+                <%= button_to "Withdraw", item_offer_path(offer.item, offer),
+                      method: :delete,
+                      class: "btn btn-sm btn-outline w-full",
+                      data: { turbo_confirm: "Withdraw this offer?" } %>
+                <%= form_with model: [offer.item, offer], class: "flex gap-2 w-full" do |f| %>
+                  <%= f.number_field :price_offered, step: 0.01, min: 0.01, placeholder: "New price $", class: "input-sm flex-1" %>
+                  <%= f.submit "Edit", class: "btn btn-sm btn-primary" %>
+                <% end %>
+              </div>
             <% end %>
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
+  </div>
 <% else %>
-  <p>You haven't made any offers yet.</p>
+  <p class="text-gray-500">You haven't made any offers yet.</p>
 <% end %>
 
 <h2>Offers I've Received</h2>
 <% if @received_offers.any? %>
-  <table style="width: 100%; table-layout: fixed; text-align: center">
+  <div class="overflow-x-auto bg-base-100 rounded-xl shadow">
+    <table class="table-zebra w-full text-center">
     <thead>
       <tr>
         <th><%= sortable_header("Item", "item", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>
@@ -92,22 +102,28 @@
           <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
           <td>
             <% if offer.pending? %>
-              <%= button_to "Accept", item_offer_acceptance_path(offer.item, offer),
-                    method: :post,
-                    data: { turbo_confirm: "Accept this offer?" } %>
-              <%= button_to "Reject", item_offer_rejection_path(offer.item, offer),
-                    method: :post,
-                    data: { turbo_confirm: "Reject this offer?" } %>
-              <%= form_with url: item_offer_counter_path(offer.item, offer), method: :post, style: "display:inline" do |f| %>
-                <%= f.number_field :counter_price, step: 0.01, min: 0.01, placeholder: "Counter $", name: "counter_price", style: "width:100px" %>
-                <%= f.submit "Counter" %>
-              <% end %>
+              <div class="flex flex-col gap-2 items-center justify-center">
+                <%= button_to "Accept", item_offer_acceptance_path(offer.item, offer),
+                      method: :post,
+                      class: "btn btn-sm btn-success w-full",
+                      data: { turbo_confirm: "Accept this offer?" } %>
+                <%= button_to "Reject", item_offer_rejection_path(offer.item, offer),
+                      method: :post,
+                      class: "btn btn-sm btn-error w-full",
+                      data: { turbo_confirm: "Reject this offer?" } %>
+                <%= form_with url: item_offer_counter_path(offer.item, offer), method: :post, class: "flex gap-2 w-full" do |f| %>
+                  <%= f.number_field :counter_price, step: 0.01, min: 0.01, placeholder: "Counter $", name: "counter_price", class: "input-sm flex-1" %>
+                  <%= f.submit "Counter", class: "btn btn-sm btn-warning" %>
+                <% end %>
+              </div>
             <% end %>
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
+  </div>
 <% else %>
-  <p>You haven't received any offers yet.</p>
+  <p class="text-gray-500">You haven't received any offers yet.</p>
 <% end %>
+</div>

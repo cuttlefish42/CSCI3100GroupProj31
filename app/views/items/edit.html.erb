@@ -1,7 +1,13 @@
-<%= render "header" %>
+<div class="container mx-auto p-4 max-w-2xl">
+  <h1>Edit Item</h1>
 
-<h1>Edit Item</h1>
+  <div class="card bg-base-100 shadow-xl mb-6">
+    <div class="card-body">
+      <%= render "form", item: @item %>
+    </div>
+  </div>
 
-<%= render "form", item: @item %>
-
-<p><%= link_to "Back", @item %></p>
+  <div class="mt-4">
+    <%= link_to "Back", @item, class: "btn btn-outline" %>
+  </div>
+</div>

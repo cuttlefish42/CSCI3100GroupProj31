@@ -1,0 +1,38 @@
+<div class="flex-1">
+  <% if @item.photo.attached? %>
+    <div class="bg-base-200 rounded-xl flex items-center justify-center p-4 mb-6">
+      <%= image_tag @item.photo, class: "rounded-xl max-h-[500px] object-contain" %>
+    </div>
+  <% end %>
+
+  <h1 class="text-3xl font-bold mb-2"><%= @item.title %></h1>
+  <p class="text-2xl font-semibold text-secondary mb-6"><%= number_to_currency(@item.price) %></p>
+
+  <h3 class="text-xl font-bold mb-4 border-b border-base-300 pb-2">Details</h3>
+  <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
+    <div>
+      <p class="text-neutral/70">Condition</p>
+      <p class="font-medium"><%= @item.condition.humanize %></p>
+    </div>
+    <div>
+      <p class="text-neutral/70">Category</p>
+      <p class="font-medium"><%= @item.category.name %></p>
+    </div>
+    <div>
+      <p class="text-neutral/70">Listed</p>
+      <p class="font-medium"><%= time_ago_in_words(@item.created_at) %> ago</p>
+    </div>
+    <div>
+      <p class="text-neutral/70">Community</p>
+      <p class="font-medium"><%= @item.community&.name || "Any" %></p>
+    </div>
+  </div>
+
+  <div class="flex gap-4 my-4">
+    <%= link_to "Back", items_path, class: "btn btn-outline" %>
+    <% if Current.user == @item.seller %>
+      <%= link_to "Edit", edit_item_path(@item), class: "btn btn-primary" %>
+      <%= link_to "Delete", @item, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-error" %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,119 @@
+<%# === Offers list (visible to seller) === %>
+<% if Current.user == @item.seller && @offers.any? %>
+  <h2>Offers Received</h2>
+  <div class="overflow-x-auto my-4 bg-base-100 rounded-xl shadow">
+    <table class="table-zebra w-full text-center">
+      <thead>
+        <tr>
+          <th><%= sortable_header("Buyer", "buyer", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Amount", "price", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th>Message</th>
+          <th><%= sortable_header("Status", "status", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Date", "date", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @offers.each do |offer| %>
+          <tr>
+            <td><%= offer.buyer.email_address %></td>
+            <td><%= number_to_currency(offer.price_offered) %></td>
+            <td><%= offer.message.presence || "—" %></td>
+            <td>
+              <%= offer.status.humanize %>
+              <% if offer.countered? && offer.counter_price %>
+                (<%= number_to_currency(offer.counter_price) %>)
+              <% end %>
+            </td>
+            <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
+            <td>
+              <% if offer.pending? %>
+                <div class="flex flex-col gap-2 items-center justify-center">
+                  <%= button_to "Accept", item_offer_acceptance_path(offer.item, offer),
+                        method: :post,
+                        class: "btn btn-sm btn-success w-full",
+                        data: { turbo_confirm: "Accept this offer?" } %>
+                  <%= button_to "Reject", item_offer_rejection_path(offer.item, offer),
+                        method: :post,
+                        class: "btn btn-sm btn-error w-full",
+                        data: { turbo_confirm: "Reject this offer?" } %>
+                  <%= form_with url: item_offer_counter_path(offer.item, offer), method: :post, class: "flex gap-2 w-full" do |f| %>
+                    <%= f.hidden_field :status, value: "countered", name: "offer[status]" %>
+                    <%= f.number_field :counter_price, step: 0.01, min: 0.01, placeholder: "Counter $", name: "offer[counter_price]", class: "input-sm flex-1" %>
+                    <%= f.submit "Counter", class: "btn btn-sm btn-warning" %>
+                  <% end %>
+                </div>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<%# === All offers on this item (visible to any logged-in user who is not the seller) === %>
+<% if Current.user && Current.user != @item.seller && @offers.any? %>
+  <h2>Offers on This Item</h2>
+  <div class="overflow-x-auto my-4 bg-base-100 rounded-xl shadow">
+    <table class="table-zebra w-full text-center">
+      <thead>
+        <tr>
+          <th><%= sortable_header("Buyer", "buyer", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Amount", "price", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th>Message</th>
+          <th><%= sortable_header("Status", "status", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Date", "date", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @offers.each do |offer| %>
+          <tr>
+            <td><%= offer.buyer == Current.user ? "You" : offer.buyer.email_address %></td>
+            <td><%= number_to_currency(offer.price_offered) %></td>
+            <td><%= offer.message.presence || "—" %></td>
+            <td>
+              <% if offer.countered? && offer.counter_price %>
+                <span class="text-warning font-bold">
+                  Seller countered: <%= number_to_currency(offer.counter_price) %>
+                </span>
+              <% else %>
+                <%= offer.status.humanize %>
+              <% end %>
+            </td>
+            <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
+            <td>
+              <% if offer.buyer == Current.user && offer.countered? %>
+                <div class="flex flex-col gap-2 items-center justify-center">
+                  <%= button_to "Accept Counter", item_offer_path(@item, offer),
+                        method: :patch,
+                        params: { offer: { status: "accept_counter" } },
+                        class: "btn btn-sm btn-success w-full",
+                        data: { turbo_confirm: "Accept the counter-offer of #{number_to_currency(offer.counter_price)}?" } %>
+                  <%= button_to "Reject Counter", item_offer_path(@item, offer),
+                        method: :patch,
+                        params: { offer: { status: "reject_counter" } },
+                        class: "btn btn-sm btn-error w-full",
+                        data: { turbo_confirm: "Reject the counter-offer? You can make a new offer afterwards." } %>
+                  <%= button_to "Withdraw", item_offer_path(@item, offer),
+                        method: :delete,
+                        class: "btn btn-sm btn-error w-full",
+                        data: { turbo_confirm: "Withdraw this offer?" } %>
+                </div>
+              <% elsif offer.buyer == Current.user && offer.pending? %>
+                <div class="flex flex-col gap-2 items-center justify-center">
+                  <%= button_to "Withdraw", item_offer_path(@item, offer),
+                        method: :delete,
+                        class: "btn btn-sm btn-error w-full",
+                        data: { turbo_confirm: "Withdraw this offer?" } %>
+                  <button type="button" class="btn btn-sm btn-primary w-full" onclick="document.querySelector('[data-action=\'offer-price#open\']').click()">Edit Offer</button>
+                </div>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

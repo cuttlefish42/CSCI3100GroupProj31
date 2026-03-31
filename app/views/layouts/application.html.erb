@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="emerald">
+<html data-theme="bumblebee">
   <head>
     <title><%= content_for(:title) || "Csci3100 Group Proj31" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -25,6 +25,7 @@
   </head>
 
   <body>
+    <%= render "layouts/navbar" %>
     <% if flash[:notice] %>
       <div class="alert alert-success shadow-lg mb-4"><%= flash[:notice] %></div>
     <% end %>

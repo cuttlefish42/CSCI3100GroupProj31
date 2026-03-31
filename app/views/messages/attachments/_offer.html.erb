@@ -1,0 +1,23 @@
+<%# locals: (offer:) %>
+<div>
+  <div>
+    <strong>Offer for: <%= link_to offer.item.title, item_path(offer.item) %></strong>
+    <span>$<%= offer.price_offered %></span>
+  </div>
+
+  <p>
+    Status: <strong><%= offer.status.titleize %></strong>
+  </p>
+
+  <%# Show Accept/Reject buttons only if the current user is the seller and the offer is pending %>
+  <% if offer.item.seller == Current.user && (offer.status == "pending" || offer.status == "countered") %>
+    <div>
+      <%= button_to "Accept", item_offer_acceptance_path(offer.item, offer), method: :post, form: { data: { turbo: true } } %>
+      <%= button_to "Reject", item_offer_rejection_path(offer.item, offer), method: :post, form: { data: { turbo: true } } %>
+    </div>
+  <% elsif offer.buyer == Current.user && (offer.status == "pending" || offer.status == "countered") %>
+    <div>
+      <span>Waiting for seller's response...</span>
+    </div>
+  <% end %>
+</div>

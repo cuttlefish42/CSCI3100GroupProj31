@@ -44,6 +44,20 @@
   </div>
 
   <div class="form-control">
+    <%= form.label :meetup_note, "Meetup Note (optional)", class: "label font-semibold" %>
+    <%= form.text_field :meetup_note, placeholder: "e.g. Meet at Shaw College lobby", class: "w-full" %>
+  </div>
+
+  <div class="form-control" data-controller="map-picker"
+       data-map-picker-lat-value="<%= item.latitude || 22.4196 %>"
+       data-map-picker-lng-value="<%= item.longitude || 114.2068 %>">
+    <label class="label font-semibold">Meetup Location (click map to set pin)</label>
+    <%= form.hidden_field :latitude, data: { map_picker_target: "lat" } %>
+    <%= form.hidden_field :longitude, data: { map_picker_target: "lng" } %>
+    <div data-map-picker-target="map" style="height: 300px; border-radius: 8px; border: 1px solid #ccc;"></div>
+  </div>
+
+  <div class="form-control">
     <%= form.label :photo, "Product Photo", class: "label font-semibold" %>
     <% if item.photo.attached? %>
       <div class="mb-2">

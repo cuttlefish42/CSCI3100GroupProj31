@@ -28,6 +28,20 @@
     </div>
   </div>
 
+  <% if @item.latitude.present? && @item.longitude.present? %>
+    <h3 class="text-xl font-bold mb-4 border-b border-base-300 pb-2">Meetup Location</h3>
+    <div data-controller="map-display"
+         data-map-display-lat-value="<%= @item.latitude %>"
+         data-map-display-lng-value="<%= @item.longitude %>"
+         data-map-display-note-value="<%= @item.meetup_note %>">
+      <div data-map-display-target="map" style="height: 300px; border-radius: 8px;"></div>
+    </div>
+    <% if @item.meetup_note.present? %>
+      <p class="mt-2 text-sm"><strong>Note:</strong> <%= @item.meetup_note %></p>
+    <% end %>
+    <div class="mb-8"></div>
+  <% end %>
+
   <div class="flex gap-4 my-4">
     <%= link_to "Back", items_path, class: "btn btn-outline" %>
     <% if Current.user == @item.seller %>

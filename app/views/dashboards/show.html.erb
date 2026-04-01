@@ -3,7 +3,7 @@
 
   <h2>Offers I've Made</h2>
   <% if @sent_offers.any? %>
-    <div class="overflow-x-auto bg-base-100 rounded-xl shadow">
+    <div class="overflow-x-auto bg-base-100 rounded-box shadow">
       <table class="table-zebra w-full text-center">
     <thead>
       <tr>
@@ -68,12 +68,12 @@
   </table>
   </div>
 <% else %>
-  <p class="text-gray-500">You haven't made any offers yet.</p>
+  <p class="text-base-content/50">You haven't made any offers yet.</p>
 <% end %>
 
 <h2>Offers I've Received</h2>
 <% if @received_offers.any? %>
-  <div class="overflow-x-auto bg-base-100 rounded-xl shadow">
+  <div class="overflow-x-auto bg-base-100 rounded-box shadow">
     <table class="table-zebra w-full text-center">
     <thead>
       <tr>
@@ -124,6 +124,6 @@
   </table>
   </div>
 <% else %>
-  <p class="text-gray-500">You haven't received any offers yet.</p>
+  <p class="text-base-content/50">You haven't received any offers yet.</p>
 <% end %>
 </div>

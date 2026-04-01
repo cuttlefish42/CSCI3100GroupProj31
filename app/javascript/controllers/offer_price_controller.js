@@ -9,15 +9,11 @@ export default class extends Controller {
   static values = { base: Number }
 
   open() {
-    this.modalTarget.style.display = "flex"
+    this.modalTarget.showModal()
   }
 
   close() {
-    this.modalTarget.style.display = "none"
-  }
-
-  stopPropagation(event) {
-    event.stopPropagation()
+    this.modalTarget.close()
   }
 
   adjust(event) {

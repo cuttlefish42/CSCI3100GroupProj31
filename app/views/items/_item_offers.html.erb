@@ -1,20 +1,22 @@
+<%# locals: (item:, offers:, offer_sort:, offer_dir:) %>
+
 <%# === Offers list (visible to seller) === %>
-<% if Current.user == @item.seller && @offers.any? %>
+<% if Current.user == item.seller && offers.any? %>
   <h2>Offers Received</h2>
   <div class="overflow-x-auto my-4 bg-base-100 rounded-xl shadow">
     <table class="table-zebra w-full text-center">
       <thead>
         <tr>
-          <th><%= sortable_header("Buyer", "buyer", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
-          <th><%= sortable_header("Amount", "price", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Buyer", "buyer", offer_sort, offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Amount", "price", offer_sort, offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
           <th>Message</th>
-          <th><%= sortable_header("Status", "status", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
-          <th><%= sortable_header("Date", "date", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Status", "status", offer_sort, offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Date", "date", offer_sort, offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <% @offers.each do |offer| %>
+        <% offers.each do |offer| %>
           <tr>
             <td><%= offer.buyer.email_address %></td>
             <td><%= number_to_currency(offer.price_offered) %></td>
@@ -53,22 +55,22 @@
 <% end %>
 
 <%# === All offers on this item (visible to any logged-in user who is not the seller) === %>
-<% if Current.user && Current.user != @item.seller && @offers.any? %>
+<% if Current.user && Current.user != item.seller && offers.any? %>
   <h2>Offers on This Item</h2>
   <div class="overflow-x-auto my-4 bg-base-100 rounded-xl shadow">
     <table class="table-zebra w-full text-center">
       <thead>
         <tr>
-          <th><%= sortable_header("Buyer", "buyer", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
-          <th><%= sortable_header("Amount", "price", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Buyer", "buyer", offer_sort, offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Amount", "price", offer_sort, offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
           <th>Message</th>
-          <th><%= sortable_header("Status", "status", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
-          <th><%= sortable_header("Date", "date", @offer_sort, @offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Status", "status", offer_sort, offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
+          <th><%= sortable_header("Date", "date", offer_sort, offer_dir, sort_param: "offer_sort", dir_param: "offer_dir") %></th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <% @offers.each do |offer| %>
+        <% offers.each do |offer| %>
           <tr>
             <td><%= offer.buyer == Current.user ? "You" : offer.buyer.email_address %></td>
             <td><%= number_to_currency(offer.price_offered) %></td>
@@ -86,24 +88,24 @@
             <td>
               <% if offer.buyer == Current.user && offer.countered? %>
                 <div class="flex flex-col gap-2 items-center justify-center">
-                  <%= button_to "Accept Counter", item_offer_path(@item, offer),
+                  <%= button_to "Accept Counter", item_offer_path(item, offer),
                         method: :patch,
                         params: { offer: { status: "accept_counter" } },
                         class: "btn btn-sm btn-success w-full",
                         data: { turbo_confirm: "Accept the counter-offer of #{number_to_currency(offer.counter_price)}?" } %>
-                  <%= button_to "Reject Counter", item_offer_path(@item, offer),
+                  <%= button_to "Reject Counter", item_offer_path(item, offer),
                         method: :patch,
                         params: { offer: { status: "reject_counter" } },
                         class: "btn btn-sm btn-error w-full",
                         data: { turbo_confirm: "Reject the counter-offer? You can make a new offer afterwards." } %>
-                  <%= button_to "Withdraw", item_offer_path(@item, offer),
+                  <%= button_to "Withdraw", item_offer_path(item, offer),
                         method: :delete,
                         class: "btn btn-sm btn-error w-full",
                         data: { turbo_confirm: "Withdraw this offer?" } %>
                 </div>
               <% elsif offer.buyer == Current.user && offer.pending? %>
                 <div class="flex flex-col gap-2 items-center justify-center">
-                  <%= button_to "Withdraw", item_offer_path(@item, offer),
+                  <%= button_to "Withdraw", item_offer_path(item, offer),
                         method: :delete,
                         class: "btn btn-sm btn-error w-full",
                         data: { turbo_confirm: "Withdraw this offer?" } %>

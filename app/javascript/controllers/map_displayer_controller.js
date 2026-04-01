@@ -1,3 +1,4 @@
+import L from "leaflet"
 import { Controller } from "@hotwired/stimulus"
 
 // Read-only map showing the seller's meetup pin.

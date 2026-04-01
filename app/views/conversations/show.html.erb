@@ -1,22 +1,46 @@
-<h1>Chat with <%= @conversation.sender == Current.user ? @conversation.receiver.username : @conversation.sender.username %></h1>
+<% other_user = @conversation.sender == Current.user ? @conversation.receiver : @conversation.sender %>
 
-<%= turbo_stream_from @conversation %>
+<div class="max-w-3xl mx-auto flex flex-col h-[calc(100vh-5rem)]">
+  <%# ---- Header ---- %>
+  <div class="navbar bg-base-100 rounded-box shadow-sm mb-2">
+    <div class="flex-1 gap-3">
+      <%= link_to conversations_path, class: "btn btn-ghost btn-sm" do %>
+        &larr;
+      <% end %>
+      <div class="avatar placeholder">
+        <div class="bg-neutral text-neutral-content w-8 rounded-full">
+          <span><%= other_user.username[0].upcase %></span>
+        </div>
+      </div>
+      <span class="font-semibold text-base-content"><%= other_user.username %></span>
+    </div>
+  </div>
 
-<div id="messages">
+  <%= turbo_stream_from @conversation %>
+
+  <%# ---- Messages (scrollable) ---- %>
+  <div id="messages" class="flex-1 overflow-y-auto px-4 py-2 space-y-1">
     <% if @messages.any? %>
       <%= render @messages %>
     <% else %>
-      <p>No messages yet. Start the conversation!</p>
+      <div class="text-center py-12">
+        <p class="text-base-content/50">No messages yet. Start the conversation!</p>
+      </div>
     <% end %>
-</div>
-
-<%= form_with(model: [@conversation, @message], data: { controller: "chat-form", action: "turbo:submit-end->chat-form#reset" }) do |f| %>
-  <div>
-    <%= f.text_area :content, placeholder: "Type a message...", rows: 3, required: true, data: { action: "keydown->chat-form#submitOnEnter" } %>
-    <%= f.submit "Send" %>
   </div>
-<% end %>
 
-<div>
-  <%= link_to "← Back to Inbox", conversations_path %>
+  <%# ---- Input Bar ---- %>
+  <div class="bg-base-100 border-t border-base-300 p-3 rounded-b-box">
+    <%= form_with(model: [@conversation, @message], data: { controller: "chat-form", action: "turbo:submit-end->chat-form#reset" }) do |f| %>
+      <div class="flex gap-2 items-end">
+        <%= f.text_area :content,
+            placeholder: "Type a message...",
+            rows: 1,
+            required: true,
+            class: "textarea textarea-bordered flex-1 min-h-[2.5rem] max-h-32 resize-none",
+            data: { action: "keydown->chat-form#submitOnEnter" } %>
+        <%= f.submit "Send", class: "btn btn-primary btn-sm" %>
+      </div>
+    <% end %>
+  </div>
 </div>

@@ -1,16 +1,33 @@
-<h1>Your Inbox</h1>
+<div class="max-w-2xl mx-auto py-6 px-4">
+  <h1 class="text-3xl font-bold mb-6 text-neutral">Your Inbox</h1>
 
-<% if @conversations.any? %>
-  <ul>
-    <% @conversations.each do |conversation| %>
-      <% other_user = conversation.sender == Current.user ? conversation.receiver : conversation.sender %>
-      <li>
-        <h3><%= other_user.username %></h3>
-        <p>Last active <%= time_ago_in_words(conversation.updated_at) %> ago</p>
-        <%= link_to "Open Chat", conversation_path(conversation) %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No Messages Yet. When you start chatting with other users, your conversations will appear here.</p>
-<% end %>
+  <% if @conversations.any? %>
+    <ul class="menu bg-base-100 rounded-box w-full gap-2 p-4">
+      <% @conversations.each do |conversation| %>
+        <% other_user = conversation.sender == Current.user ? conversation.receiver : conversation.sender %>
+        <li>
+          <%= link_to conversation_path(conversation), class: "flex items-center justify-between" do %>
+            <div class="flex items-center gap-3">
+              <div class="avatar placeholder">
+                <div class="bg-neutral text-neutral-content w-10 rounded-full">
+                  <span class="text-lg"><%= other_user.username[0].upcase %></span>
+                </div>
+              </div>
+              <div>
+                <p class="font-semibold text-base-content"><%= other_user.username %></p>
+                <p class="text-sm text-base-content/60"><%= time_ago_in_words(conversation.updated_at) %> ago</p>
+              </div>
+            </div>
+            <span class="badge badge-ghost badge-sm">Open</span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="card bg-base-100 border border-base-200">
+      <div class="card-body items-center text-center">
+        <p class="text-base-content/60">No messages yet. When you start chatting with other users, your conversations will appear here.</p>
+      </div>
+    </div>
+  <% end %>
+</div>

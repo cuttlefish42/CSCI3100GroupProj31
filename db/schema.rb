@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_30_172946) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_01_054609) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.bigint "record_id", null: false
     t.string "record_type", null: false
-    t.index [ "blob_id" ], name: "index_active_storage_attachments_on_blob_id"
-    t.index [ "record_type", "record_id", "name", "blob_id" ], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
@@ -30,13 +30,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_172946) do
     t.string "key", null: false
     t.text "metadata"
     t.string "service_name", null: false
-    t.index [ "key" ], name: "index_active_storage_blobs_on_key", unique: true
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
-    t.index [ "blob_id", "variation_digest" ], name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "categories", force: :cascade do |t|
@@ -74,9 +74,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_172946) do
     t.integer "status", default: 0
     t.string "title"
     t.datetime "updated_at", null: false
-    t.index [ "category_id" ], name: "index_items_on_category_id"
-    t.index [ "community_id" ], name: "index_items_on_community_id"
-    t.index [ "seller_id" ], name: "index_items_on_seller_id"
+    t.index ["category_id"], name: "index_items_on_category_id"
+    t.index ["community_id"], name: "index_items_on_community_id"
+    t.index ["seller_id"], name: "index_items_on_seller_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -99,11 +99,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_172946) do
     t.datetime "created_at", null: false
     t.integer "item_id", null: false
     t.text "message"
-    t.decimal "price_offered", precision: 10, scale: 2, null: false
+    t.decimal "price_offered", null: false
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
-    t.index [ "buyer_id" ], name: "index_offers_on_buyer_id"
-    t.index [ "item_id" ], name: "index_offers_on_item_id"
+    t.index ["buyer_id"], name: "index_offers_on_buyer_id"
+    t.index ["item_id"], name: "index_offers_on_item_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -112,7 +112,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_172946) do
     t.datetime "updated_at", null: false
     t.string "user_agent"
     t.integer "user_id", null: false
-    t.index [ "user_id" ], name: "index_sessions_on_user_id"
+    t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -123,8 +123,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_172946) do
     t.string "password_digest", null: false
     t.datetime "updated_at", null: false
     t.string "username"
-    t.index [ "default_community_id" ], name: "index_users_on_default_community_id"
-    t.index [ "email_address" ], name: "index_users_on_email_address", unique: true
+    t.index ["default_community_id"], name: "index_users_on_default_community_id"
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

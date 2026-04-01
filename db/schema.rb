@@ -66,6 +66,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_30_172946) do
     t.integer "community_id"
     t.integer "condition", default: 0
     t.datetime "created_at", null: false
+    t.decimal "latitude"
+    t.decimal "longitude"
+    t.string "meetup_note"
     t.decimal "price"
     t.integer "seller_id", null: false
     t.integer "status", default: 0

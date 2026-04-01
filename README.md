@@ -2,6 +2,7 @@
 [Proposal](https://docs.google.com/document/d/1oOtpxZJiM1y9OBDHpL1dVIxfQdqSu73XgRC2idw4MRA)
 [Deploymnent Url](http://35.175.182.169/)
 
+
 # Ruby version
 Uses 3.3.8. Recommended to install it via [rvm](https://rvm.io)
 
@@ -25,7 +26,11 @@ To run sysmtem test, use `bin/rails test:system`. (None for now)
 None for now
 
 # Run locally
-Use `bin/rails server`
+Since we also uses tailwindcss + daisyUI for the frontend, please use
+```
+bin/dev
+```
+to start dev server.
 
 # Deployment
 The deployment is automated via github actions and kamal. It would be automatically pushed to production server after it passes all the tests.

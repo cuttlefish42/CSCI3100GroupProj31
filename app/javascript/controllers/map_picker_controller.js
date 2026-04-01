@@ -1,4 +1,3 @@
-import L from "leaflet"
 import { Controller } from "@hotwired/stimulus"
 
 // Seller clicks the map to place a meetup pin.

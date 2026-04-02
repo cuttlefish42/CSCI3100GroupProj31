@@ -3,18 +3,14 @@
 <div class="card bg-base-100 border border-base-200 <%= large_photo ? 'w-full max-w-2xl' : '' %>">
   <% if item.photo.attached? %>
     <figure class="px-4 pt-4">
-      <% if large_photo %>
-        <%= image_tag item.photo, class: "rounded-xl max-h-96 object-contain" %>
-      <% else %>
-        <%= image_tag item.photo, class: "rounded-xl max-h-48 object-cover" %>
-      <% end %>
+      <%= image_tag item.photo, class: "rounded-xl #{large_photo ? 'max-h-96 object-contain' : 'max-h-48 object-cover'}" %>
     </figure>
   <% end %>
 
   <div class="card-body">
     <h1 class="card-title">
       <% if link_title %>
-        <%= link_to item.title, item, class: "hover:text-secondary transition-colors" %>
+        <%= link_to item.title, item %>
       <% else %>
         <%= item.title %>
       <% end %>

@@ -62,7 +62,7 @@
     <% if item.photo.attached? %>
       <div class="mb-2">
         <span class="text-sm text-neutral/70">Current photo:</span>
-        <%= image_tag item.photo, class: "max-h-48 rounded-lg mt-1 object-cover" %>
+        <%= image_tag item.photo, class: "max-h-48 rounded-box mt-1 object-cover" %>
       </div>
     <% end %>
     <%= form.file_field :photo, accept: "image/*", class: "file-input file-input-bordered w-full" %>

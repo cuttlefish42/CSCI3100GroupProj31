@@ -1,0 +1,45 @@
+<tr>
+  <td><%= link_to offer.item.title, item_path(offer.item) %></td>
+  <td><%= offer.item.seller.email_address %></td>
+  <td><%= number_to_currency(offer.price_offered) %></td>
+  <td><%= offer.message.presence || "—" %></td>
+  <td>
+    <% if offer.countered? && offer.counter_price %>
+      <span class="text-warning font-bold">
+        Seller countered: <%= number_to_currency(offer.counter_price) %>
+      </span>
+    <% else %>
+      <%= offer.status.humanize %>
+    <% end %>
+  </td>
+  <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
+  <td>
+    <% if offer.countered? %>
+      <div class="flex flex-col gap-2 items-center justify-center">
+        <%= button_to "Accept Counter", item_offer_counter_acceptance_path(offer.item, offer),
+              method: :post,
+              class: "btn btn-sm btn-success w-full",
+              data: { turbo_confirm: "Accept the counter-offer of #{number_to_currency(offer.counter_price)}?" } %>
+        <%= button_to "Reject Counter", item_offer_counter_rejection_path(offer.item, offer),
+              method: :post,
+              class: "btn btn-sm btn-error w-full",
+              data: { turbo_confirm: "Reject the counter-offer? You can make a new offer afterwards." } %>
+        <%= button_to "Withdraw", item_offer_path(offer.item, offer),
+              method: :delete,
+              class: "btn btn-sm btn-outline w-full",
+              data: { turbo_confirm: "Withdraw this offer?" } %>
+      </div>
+    <% elsif offer.pending? %>
+      <div class="flex flex-col gap-2 items-center justify-center">
+        <%= button_to "Withdraw", item_offer_path(offer.item, offer),
+              method: :delete,
+              class: "btn btn-sm btn-outline w-full",
+              data: { turbo_confirm: "Withdraw this offer?" } %>
+        <%= form_with model: [offer.item, offer], class: "flex gap-2 w-full" do |f| %>
+          <%= f.number_field :price_offered, step: 0.01, min: 0.01, placeholder: "New price $", class: "input-sm flex-1" %>
+          <%= f.submit "Edit", class: "btn btn-sm btn-primary" %>
+        <% end %>
+      </div>
+    <% end %>
+  </td>
+</tr>

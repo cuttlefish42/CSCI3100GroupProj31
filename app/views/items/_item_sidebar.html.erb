@@ -59,7 +59,11 @@
   <% end %>
 <% end %>
 
-<button class="btn btn-primary w-full">Chat</button>
+<% if Current.user && Current.user != item.seller %>
+  <%= button_to "Chat", conversations_path(item_id: item.id),
+      params: { receiver_id: item.seller.id },
+      class: "btn btn-primary w-full" %>
+<% end %>
 
     </div>
   </div>

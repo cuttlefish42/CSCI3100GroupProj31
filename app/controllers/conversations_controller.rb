@@ -8,9 +8,9 @@ class ConversationsController < ApplicationController
   end
 
   def show
-    # it's already in asc order
     @messages = @conversation.messages
     @message = Message.new
+    @item = Item.find_by(id: params[:item_id])
   end
 
   def create
@@ -18,6 +18,6 @@ class ConversationsController < ApplicationController
 
     @conversation = Conversation.find_or_create_between(Current.user, receiver)
 
-    redirect_to conversation_path(@conversation)
+    redirect_to conversation_path(@conversation, item_id: params[:item_id])
   end
 end

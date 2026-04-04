@@ -1,0 +1,16 @@
+<%# locals: (item:, conversation:) %>
+<div class="bg-base-200 shadow-sm mb-2 rounded-box px-4 py-2 flex items-center justify-between" data-controller="shared--dismissible">
+  <span class="text-sm">
+    Chatting about: <strong><%= link_to item.title, item_path(item), class: "link link-hover" %></strong>
+    (<%= number_to_currency(item.price) %>)
+  </span>
+  <div class="flex gap-2 items-center shrink-0">
+    <%= form_with url: conversation_messages_path(conversation), method: :post,
+        data: { turbo: true } do |f| %>
+      <%= f.hidden_field :content, value: "Check out this item!", name: "message[content]" %>
+      <%= f.hidden_field :item_id, value: item.id, name: "message[item_id]" %>
+      <%= f.submit "Share Item", class: "btn btn-primary btn-xs" %>
+    <% end %>
+    <button class="btn btn-ghost btn-xs" data-action="shared--dismissible#dismiss">x</button>
+  </div>
+</div>

@@ -9,6 +9,7 @@
   <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
   <td>
     <div class="flex flex-col gap-2 items-center justify-center">
+        PLACEHOLDERS
       <%= link_to "View Details", item_path(offer.item), class: "btn btn-sm btn-primary w-full" %>
       <%= button_to "Message", conversation_path(offer.buyer_id), 
             method: :get,

@@ -7,11 +7,7 @@
       <%= link_to conversations_path, class: "btn btn-ghost btn-sm" do %>
         &larr;
       <% end %>
-      <div class="avatar placeholder">
-        <div class="bg-neutral text-neutral-content w-8 rounded-full">
-          <span><%= other_user.username[0].upcase %></span>
-        </div>
-      </div>
+      <%= render "shared/user_avatar", user: other_user, size: "sm" %>
       <span class="font-semibold text-base-content"><%= other_user.username %></span>
     </div>
   </div>

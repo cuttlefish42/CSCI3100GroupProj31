@@ -1,0 +1,13 @@
+<%# locals: (user:, size: "md") %>
+<%
+  size_classes = case size
+  when "sm" then "w-8 text-sm"
+  when "md" then "w-10 text-lg"
+  when "lg" then "w-12 text-xl font-bold"
+  end
+%>
+<div class="avatar placeholder">
+  <div class="bg-neutral text-neutral-content rounded-full flex items-center justify-center <%= size_classes %>">
+    <span><%= user.username[0].upcase %></span>
+  </div>
+</div>

@@ -8,11 +8,7 @@
         <li>
           <%= link_to conversation_path(conversation), class: "flex items-center justify-between" do %>
             <div class="flex items-center gap-3">
-              <div class="avatar placeholder">
-                <div class="bg-neutral text-neutral-content w-10 rounded-full">
-                  <span class="text-lg"><%= other_user.username[0].upcase %></span>
-                </div>
-              </div>
+              <%= render "shared/user_avatar", user: other_user, size: "md" %>
               <div>
                 <p class="font-semibold text-base-content"><%= other_user.username %></p>
                 <p class="text-sm text-base-content/60"><%= time_ago_in_words(conversation.updated_at) %> ago</p>

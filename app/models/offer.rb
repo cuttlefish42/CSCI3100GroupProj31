@@ -14,6 +14,8 @@ class Offer < ApplicationRecord
   scope :received_by, ->(user) { joins(:item).where(items: { seller_id: user.id }) }
   scope :recent, -> { order(created_at: :desc) }
 
+  after_update_commit :broadcast_offer_updates
+
   # ---------- Ordering ----------
   scope :order_by_price, ->(dir) { order(price_offered: dir) }
   scope :order_by_status, ->(dir) { order(status: dir) }
@@ -66,6 +68,32 @@ class Offer < ApplicationRecord
   end
 
   private
+
+  def broadcast_offer_updates
+    # Update chat offer card for buyer
+    broadcast_replace_to("user_#{buyer_id}_offer_updates",
+      target: "offer_#{id}",
+      partial: "messages/attachments/offer",
+      locals: { offer: self, viewer: buyer })
+
+    # Update dashboard "sent" row for buyer
+    broadcast_replace_to("user_#{buyer_id}_offer_updates",
+      target: "sent_offer_#{id}",
+      partial: "dashboards/sent_offer_row",
+      locals: { offer: self })
+
+    # Update chat offer card for seller
+    broadcast_replace_to("user_#{item.seller_id}_offer_updates",
+      target: "offer_#{id}",
+      partial: "messages/attachments/offer",
+      locals: { offer: self, viewer: item.seller })
+
+    # Update dashboard "received" row for seller
+    broadcast_replace_to("user_#{item.seller_id}_offer_updates",
+      target: "received_offer_#{id}",
+      partial: "dashboards/received_offer_row",
+      locals: { offer: self })
+  end
 
   def buyer_is_not_seller
     errors.add(:buyer, "cannot be the seller") if buyer_id == item&.seller_id

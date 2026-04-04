@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_01_054609) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_04_091430) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -66,8 +66,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_01_054609) do
     t.integer "community_id"
     t.integer "condition", default: 0
     t.datetime "created_at", null: false
-    t.decimal "latitude"
-    t.decimal "longitude"
+    t.float "latitude"
+    t.float "longitude"
     t.string "meetup_note"
     t.decimal "price"
     t.integer "seller_id", null: false
@@ -99,7 +99,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_01_054609) do
     t.datetime "created_at", null: false
     t.integer "item_id", null: false
     t.text "message"
-    t.decimal "price_offered", null: false
+    t.decimal "price_offered", precision: 10, scale: 2, null: false
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["buyer_id"], name: "index_offers_on_buyer_id"

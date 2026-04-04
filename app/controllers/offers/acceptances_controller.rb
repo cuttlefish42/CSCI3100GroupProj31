@@ -5,6 +5,6 @@ class Offers::AcceptancesController < ApplicationController
 
   def create
     @offer.accept!
-    redirect_to @item, notice: "Offer accepted. Item is now reserved."
+    redirect_back fallback_location: @item, notice: "Offer accepted. Item is now reserved."
   end
 end

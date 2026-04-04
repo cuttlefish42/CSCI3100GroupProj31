@@ -5,6 +5,6 @@ class Offers::CounterAcceptancesController < ApplicationController
 
   def create
     @offer.accept_counter!
-    redirect_to @item, notice: "You accepted the counter-offer of #{helpers.number_to_currency(@offer.counter_price)}. Item is now reserved."
+    redirect_back fallback_location: @item, notice: "You accepted the counter-offer of #{helpers.number_to_currency(@offer.counter_price)}. Item is now reserved."
   end
 end

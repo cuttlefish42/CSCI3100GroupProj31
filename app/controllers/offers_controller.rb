@@ -1,7 +1,8 @@
 class OffersController < ApplicationController
-  before_action :set_item
-  before_action :set_offer, only: [ :update, :destroy ]
-  before_action :authorize_offer_buyer!, only: [ :update, :destroy ]
+  include OfferManageable
+
+  skip_before_action :set_offer, only: [ :create ]
+  before_action :authorize_buyer!, only: [ :update, :destroy ]
 
   def create
     unless @item.available?
@@ -40,7 +41,7 @@ class OffersController < ApplicationController
 
   def update
     unless @offer.pending? || @offer.countered?
-      redirect_to @item, alert: "You can only edit pending or countered offers."
+      redirect_back fallback_location: @item, alert: "You can only edit pending or countered offers."
       return
     end
 
@@ -48,32 +49,18 @@ class OffersController < ApplicationController
     permitted[:status] = :pending if @offer.countered?
 
     if @offer.update(permitted)
-      redirect_to @item, notice: "Offer updated."
+      redirect_back fallback_location: @item, notice: "Offer updated."
     else
-      redirect_to @item, alert: @offer.errors.full_messages.to_sentence
+      redirect_back fallback_location: @item, alert: @offer.errors.full_messages.to_sentence
     end
   end
 
   def destroy
     @offer.destroy
-    redirect_to @item, notice: "Offer withdrawn."
+    redirect_back fallback_location: @item, notice: "Offer withdrawn."
   end
 
   private
-
-  def set_item
-    @item = Item.find(params[:item_id])
-  end
-
-  def set_offer
-    @offer = @item.offers.find(params[:id])
-  end
-
-  def authorize_offer_buyer!
-    unless @offer.buyer == Current.user
-      redirect_to @item, alert: "Not authorized."
-    end
-  end
 
   def offer_params
     params.require(:offer).permit(:price_offered, :message)

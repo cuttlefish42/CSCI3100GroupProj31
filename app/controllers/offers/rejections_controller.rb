@@ -5,6 +5,6 @@ class Offers::RejectionsController < ApplicationController
 
   def create
     @offer.rejected!
-    redirect_to @item, notice: "Offer rejected."
+    redirect_back fallback_location: @item, notice: "Offer rejected."
   end
 end

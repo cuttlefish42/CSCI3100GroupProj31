@@ -5,6 +5,6 @@ class Offers::CounterRejectionsController < ApplicationController
 
   def create
     @offer.rejected!
-    redirect_to @item, notice: "Counter-offer rejected. You can make a new offer if you'd like."
+    redirect_back fallback_location: @item, notice: "Counter-offer rejected. You can make a new offer if you'd like."
   end
 end

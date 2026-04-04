@@ -1,8 +1,14 @@
 class OffersController < ApplicationController
   before_action :set_item
   before_action :set_offer, only: [ :update, :destroy ]
+  before_action :authorize_offer_buyer!, only: [ :update, :destroy ]
 
   def create
+    unless @item.available?
+      redirect_to @item, alert: "This item is no longer available for offers."
+      return
+    end
+
     existing = @item.offers.where(buyer_id: Current.user.id, status: [ :pending, :countered ]).first
     if existing
       # Buyer already has an active offer — update it instead of creating a duplicate
@@ -33,11 +39,6 @@ class OffersController < ApplicationController
   end
 
   def update
-    unless @offer.buyer == Current.user
-      redirect_to @item, alert: "Not authorized."
-      return
-    end
-
     unless @offer.pending? || @offer.countered?
       redirect_to @item, alert: "You can only edit pending or countered offers."
       return
@@ -54,12 +55,8 @@ class OffersController < ApplicationController
   end
 
   def destroy
-    if @offer.buyer == Current.user
-      @offer.destroy
-      redirect_to @item, notice: "Offer withdrawn."
-    else
-      redirect_to @item, alert: "Not authorized."
-    end
+    @offer.destroy
+    redirect_to @item, notice: "Offer withdrawn."
   end
 
   private
@@ -72,7 +69,13 @@ class OffersController < ApplicationController
     @offer = @item.offers.find(params[:id])
   end
 
+  def authorize_offer_buyer!
+    unless @offer.buyer == Current.user
+      redirect_to @item, alert: "Not authorized."
+    end
+  end
+
   def offer_params
-    params.require(:offer).permit(:price_offered, :message, :status, :counter_price)
+    params.require(:offer).permit(:price_offered, :message)
   end
 end

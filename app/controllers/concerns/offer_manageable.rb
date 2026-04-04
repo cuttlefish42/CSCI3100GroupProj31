@@ -29,4 +29,10 @@ module OfferManageable
       redirect_to @item, alert: "This offer is no longer pending and cannot be modified."
     end
   end
+
+  def ensure_offer_is_countered!
+    unless @offer.countered?
+      redirect_to @item, alert: "This offer is not in a countered state."
+    end
+  end
 end

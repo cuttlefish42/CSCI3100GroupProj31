@@ -27,4 +27,26 @@ class Offers::CountersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to item_url(@item)
     assert offer.reload.pending?
   end
+
+  test "non-seller cannot counter an offer" do
+    sign_in_as(@buyer)
+    offer = offers(:one)
+
+    post item_offer_counter_path(@item, offer), params: { counter_price: "75.00" }
+
+    assert_redirected_to item_url(@item)
+    assert offer.reload.pending?
+    assert_equal "Not authorized.", flash[:alert]
+  end
+
+  test "cannot counter non-pending offer" do
+    sign_in_as(@seller)
+    offer = offers(:one)
+    offer.update!(status: :accepted)
+
+    post item_offer_counter_path(@item, offer), params: { counter_price: "75.00" }
+
+    assert_redirected_to item_url(@item)
+    assert_equal "This offer is no longer pending and cannot be modified.", flash[:alert]
+  end
 end

@@ -10,6 +10,7 @@ class Offer < ApplicationRecord
   validates :price_offered, numericality: { greater_than: 0 }
   validates :counter_price, numericality: { greater_than: 0 }, allow_nil: true
   validate :no_duplicate_pending_offer, on: :create
+  validate :item_must_be_available, on: :create
 
   scope :received_by, ->(user) { joins(:item).where(items: { seller_id: user.id }) }
   scope :recent, -> { order(created_at: :desc) }
@@ -97,6 +98,12 @@ class Offer < ApplicationRecord
 
   def buyer_is_not_seller
     errors.add(:buyer, "cannot be the seller") if buyer_id == item&.seller_id
+  end
+
+  def item_must_be_available
+    if item && !item.available?
+      errors.add(:base, "This item is no longer available for offers.")
+    end
   end
 
   def no_duplicate_pending_offer

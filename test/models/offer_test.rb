@@ -90,4 +90,49 @@ class OfferTest < ActiveSupport::TestCase
     offer.update!(message: "Is this still available?")
     assert_equal "Is this still available?", offer.reload.message
   end
+
+  test "accept_counter! updates price and marks accepted and reserved" do
+    offer = offers(:one)
+    offer.update!(status: :countered, counter_price: 50.00)
+    offer.item.update!(status: :available)
+
+    offer.accept_counter!
+
+    assert offer.reload.accepted?
+    assert_equal 50.00, offer.price_offered.to_f
+    assert offer.item.reload.reserved?
+  end
+
+  test "accept_counter! rejects other pending offers" do
+    item = items(:one)
+    item.update!(status: :available)
+    item.offers.destroy_all
+
+    offer_a = Offer.create!(buyer: users(:two), item: item, price_offered: 10.00)
+    offer_b = Offer.create!(buyer: users(:three), item: item, price_offered: 15.00)
+
+    offer_a.update!(status: :countered, counter_price: 12.00)
+    offer_a.accept_counter!
+
+    assert offer_a.reload.accepted?
+    assert offer_b.reload.rejected?
+  end
+
+  test "cannot create offer on reserved item" do
+    item = items(:one)
+    item.update!(status: :reserved)
+
+    offer = Offer.new(buyer: users(:three), item: item, price_offered: 5.00)
+    assert_not offer.valid?
+    assert_includes offer.errors[:base], "This item is no longer available for offers."
+  end
+
+  test "cannot create offer on sold item" do
+    item = items(:one)
+    item.update!(status: :sold)
+
+    offer = Offer.new(buyer: users(:three), item: item, price_offered: 5.00)
+    assert_not offer.valid?
+    assert_includes offer.errors[:base], "This item is no longer available for offers."
+  end
 end

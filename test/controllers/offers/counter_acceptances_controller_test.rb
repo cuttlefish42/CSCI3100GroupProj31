@@ -45,6 +45,6 @@ class Offers::CounterAcceptancesControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to item_url(@item)
     assert @offer.reload.pending? # Status should not have changed
-    assert_equal "You can only accept a counter-offer.", flash[:alert]
+    assert_equal "This offer is not in a countered state.", flash[:alert]
   end
 end

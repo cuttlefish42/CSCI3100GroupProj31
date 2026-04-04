@@ -1,12 +1,6 @@
 <tr>
   <td><%= link_to offer.item.title, item_path(offer.item) %></td>
-  <td>
-    <% if offer.buyer_id == Current.user.id %>
-      <%= offer.item.seller.email_address %>
-    <% else %>
-      <%= offer.buyer.email_address %>
-    <% end %>
-  </td>
+  <td><%= offer.buyer.email_address %></td>
   <td><%= number_to_currency(offer.counter_price || offer.price_offered) %></td>
   <td><%= offer.message.presence || "—" %></td>
   <td>
@@ -16,7 +10,7 @@
   <td>
     <div class="flex flex-col gap-2 items-center justify-center">
       <%= link_to "View Details", item_path(offer.item), class: "btn btn-sm btn-primary w-full" %>
-      <%= button_to "Message", conversation_path(offer.buyer_id == Current.user.id ? offer.item.seller_id : offer.buyer_id), 
+      <%= button_to "Message", conversation_path(offer.buyer_id), 
             method: :get,
             class: "btn btn-sm btn-info w-full" %>
     </div>

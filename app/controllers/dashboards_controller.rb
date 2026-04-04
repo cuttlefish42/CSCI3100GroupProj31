@@ -13,12 +13,12 @@ class DashboardsController < ApplicationController
     @received_offers = 
       Offer.received_by(Current.user)
         .includes(:buyer, :item)
-        .where.not(status: "Accepted")
+        .where.not(status: "accepted")
         .sorted_by(@recv_sort, @recv_dir, scope: :received)
     
     @pending_transactions = 
       Offer.includes(:item)
         .joins(:item)
-        .where(items: { seller_id: Current.user.id }, offers: { status: "Accepted" })
+        .where(items: { seller_id: Current.user.id }, offers: { status: "accepted" })
   end
 end

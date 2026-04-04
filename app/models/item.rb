@@ -12,7 +12,7 @@ class Item < ApplicationRecord
   enum :status, { available: 0, reserved: 1, sold: 2 }
 
   geocoded_by :meetup_note
-  after_validation :geocode, if: ->(obj) { obj.meetup_note.present? && obj.meetup_note.changed? }
+  after_validation :geocode, if: ->(obj) { obj.meetup_note.present? && obj.meetup_note_changed? }
 
   validate :validate_meetup_note
   def validate_meetup_note

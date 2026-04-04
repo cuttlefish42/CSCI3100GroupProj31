@@ -1,5 +1,20 @@
 <div class="container mx-auto p-4">
-  <h1>My Offers</h1>
+  <h1>Dashboard</h1>
+
+  <h2>Pending Transactions</h2>
+  <% if @pending_transactions.any? %>
+    <%= render "dashboards/offers_table",
+      offers: @pending_transactions,
+      sort: @sent_sort,
+      dir: @sent_dir,
+      sort_prefix: "sent",
+      second_header: "Seller",
+      second_key: "seller",
+      price_header: "My Offer",
+      row_partial: "dashboards/pending_action_row" %>
+  <% else %>
+    <p class="text-base-content/50">no pending actions</p>
+  <% end %>
 
   <h2>Offers I've Made</h2>
   <% if @sent_offers.any? %>
@@ -16,18 +31,18 @@
     <p class="text-base-content/50">You haven't made any offers yet.</p>
   <% end %>
 
-<h2>Offers I've Received</h2>
-<% if @received_offers.any? %>
-  <%= render "dashboards/offers_table",
-    offers: @received_offers,
-    sort: @recv_sort,
-    dir: @recv_dir,
-    sort_prefix: "recv",
-    second_header: "Buyer",
-    second_key: "buyer",
-    price_header: "Amount",
-    row_partial: "dashboards/received_offer_row" %>
-<% else %>
-  <p class="text-base-content/50">You haven't received any offers yet.</p>
-<% end %>
+  <h2>Offers I've Received</h2>
+  <% if @received_offers.any? %>
+    <%= render "dashboards/offers_table",
+      offers: @received_offers,
+      sort: @recv_sort,
+      dir: @recv_dir,
+      sort_prefix: "recv",
+      second_header: "Buyer",
+      second_key: "buyer",
+      price_header: "Amount",
+      row_partial: "dashboards/received_offer_row" %>
+  <% else %>
+    <p class="text-base-content/50">You haven't received any offers yet.</p>
+  <% end %>
 </div>

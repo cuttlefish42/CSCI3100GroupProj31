@@ -3,11 +3,30 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <style>
-      /* Email styles need to be inline */
+    body { font-family: Arial, sans-serif; line-height: 1.6; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: rgb(76, 175, 80); color: white; padding: 10px; text-align: center; }
+    .content { padding: 20px; }
+    .footer { text-align: center; font-size: 12px; color: rgb(102, 102, 102); margin-top: 20px; }
     </style>
   </head>
 
   <body>
-    <%= yield %>
+    <div class = "container">
+    
+      <div class = "header">
+        <h1> Group31 </h1>
+      <div>
+
+      <div class = "container">
+        <%= yield %>
+      <div>
+
+      <div class = "footer">
+        <p> right reserved by Group 31 <p>
+      <div>
+
+    <div>
+
   </body>
 </html>

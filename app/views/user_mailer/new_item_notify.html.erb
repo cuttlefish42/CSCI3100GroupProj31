@@ -1,0 +1,13 @@
+<h2>New Offer Received</h2>
+
+<p>Hello <%= @user.username %>,</p>
+
+<p>Someone made an offer on your item: <strong><%= @item.title %></strong></p>
+
+<p>Offer price: <%= number_to_currency(@offer.price_offered) %></p>
+
+<p>
+  <%= link_to "View Offer", @offer_url %>
+</p>
+
+<p>If you have any questions, please contact the buyer directly.</p>

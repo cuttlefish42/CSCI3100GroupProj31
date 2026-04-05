@@ -29,7 +29,7 @@ class OffersController < ApplicationController
       conversation = Conversation.find_or_create_between(Current.user, @item.seller)
       conversation.messages.create!(
         sender: Current.user,
-        content: "I made an offer for $#{@offer.price_offered}",
+        content: @offer.message,
         offer: @offer
       )
 

@@ -31,14 +31,21 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
+  #use letter_opener to preview, delete this after testing
+  config.action_mailer.delivery_method = :letter_opener
+
+
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+
+  # Mailer's preview path
+  config.action_mailer.preview_paths << Rails.root.join("spec/mailers/preview")
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

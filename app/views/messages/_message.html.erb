@@ -1,20 +1,30 @@
 <%# locals: (message:) %>
 
 <% is_mine = message.sender == Current.user %>
+<% has_attachment = message.offer.present? || message.item.present? %>
 
 <div id="<%= dom_id(message) %>" class="chat <%= is_mine ? 'chat-end' : 'chat-start' %>">
   <div class="chat-header text-base-content/60">
     <%= is_mine ? "You" : message.sender.username %>
   </div>
-  <div class="chat-bubble <%= is_mine ? 'chat-bubble-primary' : '' %>">
-    <% if message.offer.present? %>
-      <%= render "messages/attachments/offer", offer: message.offer %>
-    <% elsif message.item.present? %>
-      <%= render "messages/attachments/item", item: message.item %>
-    <% end %>
-    <%= message.content %>
-  </div>
-  <div class="chat-footer text-base-content/40">
+
+  <% if has_attachment %>
+    <div class="max-w-xs <%= is_mine ? 'col-start-1 justify-self-end' : 'col-start-2 justify-self-start' %>" style="grid-row: 2">
+      <% if message.offer.present? %>
+        <%= render "messages/attachments/offer", offer: message.offer %>
+      <% elsif message.item.present? %>
+        <%= render "messages/attachments/item", item: message.item %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if message.content.present? %>
+    <div class="chat-bubble <%= is_mine ? 'chat-bubble-primary' : '' %>" <% if has_attachment %>style="grid-row: 3"<% end %>>
+      <%= message.content %>
+    </div>
+  <% end %>
+
+  <div class="chat-footer text-base-content/40" <% if has_attachment %>style="grid-row: 4"<% end %>>
     <time class="text-xs"><%= time_ago_in_words(message.created_at) %> ago</time>
   </div>
 </div>

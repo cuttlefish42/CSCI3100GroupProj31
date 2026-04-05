@@ -24,7 +24,7 @@
       <p><strong>Community:</strong> <%= item.community&.name || "Any" %></p>
       <p>
         <strong>Status:</strong>
-        <span class="badge badge-info badge-sm"><%= item.status.humanize %></span>
+        <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
       </p>
       <p>
         <strong>Seller:</strong> <%= item.seller.username %>

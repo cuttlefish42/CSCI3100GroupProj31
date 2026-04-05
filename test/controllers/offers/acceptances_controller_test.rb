@@ -28,4 +28,15 @@ class Offers::AcceptancesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to item_url(@item)
     assert offer.reload.pending?
   end
+
+  test "cannot accept non-pending offer" do
+    sign_in_as(@seller)
+    offer = offers(:one)
+    offer.update!(status: :accepted)
+
+    post item_offer_acceptance_path(@item, offer)
+
+    assert_redirected_to item_url(@item)
+    assert_equal "This offer is no longer pending and cannot be modified.", flash[:alert]
+  end
 end

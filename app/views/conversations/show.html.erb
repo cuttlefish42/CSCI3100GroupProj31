@@ -7,16 +7,17 @@
       <%= link_to conversations_path, class: "btn btn-ghost btn-sm" do %>
         &larr;
       <% end %>
-      <div class="avatar placeholder">
-        <div class="bg-neutral text-neutral-content w-8 rounded-full">
-          <span><%= other_user.username[0].upcase %></span>
-        </div>
-      </div>
+      <%= render "shared/user_avatar", user: other_user, size: "sm" %>
       <span class="font-semibold text-base-content"><%= other_user.username %></span>
     </div>
   </div>
 
   <%= turbo_stream_from @conversation %>
+  <%= turbo_stream_from "user_#{Current.user.id}_offer_updates" %>
+
+  <% if @item %>
+    <%= render "conversations/item_banner", item: @item, conversation: @conversation %>
+  <% end %>
 
   <%# ---- Messages (scrollable) ---- %>
   <div id="messages" class="flex-1 overflow-y-auto px-4 py-2 space-y-1">

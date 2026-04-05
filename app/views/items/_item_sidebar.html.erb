@@ -4,11 +4,7 @@
   <div class="card card-border bg-base-100 shadow-xl">
     <div class="card-body">
       <div class="flex items-center gap-4">
-        <div class="avatar placeholder">
-          <div class="bg-neutral text-neutral-content rounded-full w-12">
-            <span class="text-xl font-bold"><%= item.seller.username[0].upcase %></span>
-          </div>
-        </div>
+        <%= render "shared/user_avatar", user: item.seller, size: "lg" %>
         <div>
           <p class="font-bold">@<%= item.seller.username %></p>
           <p class="text-xs">Karma: <%= item.seller.karma %></p>
@@ -63,7 +59,11 @@
   <% end %>
 <% end %>
 
-      <button class="btn btn-primary w-full">Chat</button>
+<% if Current.user && Current.user != item.seller %>
+  <%= button_to "Chat", conversations_path(item_id: item.id),
+      params: { receiver_id: item.seller.id },
+      class: "btn btn-primary w-full" %>
+<% end %>
 
     </div>
   </div>

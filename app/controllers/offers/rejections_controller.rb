@@ -5,16 +5,6 @@ class Offers::RejectionsController < ApplicationController
 
   def create
     @offer.rejected!
-
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          "offer_#{@offer.id}",
-          partial: "messages/attachments/offer",
-          locals: { offer: @offer.reload }
-        )
-      end
-      format.html { redirect_to @item, notice: "Offer rejected." }
-    end
+    redirect_back fallback_location: @item, notice: "Offer rejected."
   end
 end

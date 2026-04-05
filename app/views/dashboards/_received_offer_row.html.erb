@@ -1,4 +1,5 @@
-<tr>
+<%# locals: (offer:) %>
+<tr id="received_offer_<%= offer.id %>">
   <td><%= link_to offer.item.title, item_path(offer.item) %></td>
   <td><%= offer.buyer.email_address %></td>
   <td><%= number_to_currency(offer.price_offered) %></td>

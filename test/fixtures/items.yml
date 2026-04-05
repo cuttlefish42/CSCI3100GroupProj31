@@ -4,7 +4,7 @@ one:
   title: MyString
   price: 9.99
   condition: 1
-  status: 1
+  status: 0
   category: one
   community: one
   seller: one
@@ -13,7 +13,7 @@ two:
   title: MyString
   price: 9.99
   condition: 1
-  status: 1
+  status: 0
   category: two
   community: two
   seller: two

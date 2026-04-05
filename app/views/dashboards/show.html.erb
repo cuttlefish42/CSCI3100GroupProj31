@@ -15,34 +15,57 @@
   <% else %>
     <p class="text-base-content/50">no pending actions</p>
   <% end %>
+  <%= turbo_stream_from "user_#{Current.user.id}_offer_updates" %>
 
   <h2>Offers I've Made</h2>
   <% if @sent_offers.any? %>
-    <%= render "dashboards/offers_table",
-      offers: @sent_offers,
-      sort: @sent_sort,
-      dir: @sent_dir,
-      sort_prefix: "sent",
-      second_header: "Seller",
-      second_key: "seller",
-      price_header: "My Offer",
-      row_partial: "dashboards/sent_offer_row" %>
-  <% else %>
-    <p class="text-base-content/50">You haven't made any offers yet.</p>
-  <% end %>
+    <div class="overflow-x-auto bg-base-100 rounded-box shadow">
+      <table class="table-zebra w-full text-center">
+    <thead>
+      <tr>
+        <th><%= sortable_header("Item", "item", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
+        <th><%= sortable_header("Seller", "seller", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
+        <th><%= sortable_header("My Offer", "price", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
+        <th>Message</th>
+        <th><%= sortable_header("Status", "status", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
+        <th><%= sortable_header("Date", "date", @sent_sort, @sent_dir, sort_param: "sent_sort", dir_param: "sent_dir") %></th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @sent_offers.each do |offer| %>
+        <%= render "dashboards/sent_offer_row", offer: offer %>
+      <% end %>
+    </tbody>
+  </table>
+  </div>
+<% else %>
+  <p class="text-base-content/50">You haven't made any offers yet.</p>
+<% end %>
 
-  <h2>Offers I've Received</h2>
-  <% if @received_offers.any? %>
-    <%= render "dashboards/offers_table",
-      offers: @received_offers,
-      sort: @recv_sort,
-      dir: @recv_dir,
-      sort_prefix: "recv",
-      second_header: "Buyer",
-      second_key: "buyer",
-      price_header: "Amount",
-      row_partial: "dashboards/received_offer_row" %>
-  <% else %>
-    <p class="text-base-content/50">You haven't received any offers yet.</p>
-  <% end %>
+<h2>Offers I've Received</h2>
+<% if @received_offers.any? %>
+  <div class="overflow-x-auto bg-base-100 rounded-box shadow">
+    <table class="table-zebra w-full text-center">
+    <thead>
+      <tr>
+        <th><%= sortable_header("Item", "item", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>
+        <th><%= sortable_header("Buyer", "buyer", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>
+        <th><%= sortable_header("Amount", "price", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>
+        <th>Message</th>
+        <th><%= sortable_header("Status", "status", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>
+        <th><%= sortable_header("Date", "date", @recv_sort, @recv_dir, sort_param: "recv_sort", dir_param: "recv_dir") %></th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @received_offers.each do |offer| %>
+        <%= render "dashboards/received_offer_row", offer: offer %>
+      <% end %>
+    </tbody>
+  </table>
+  </div>
+<% else %>
+  <p class="text-base-content/50">You haven't received any offers yet.</p>
+<% end %>
 </div>

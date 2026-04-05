@@ -1,15 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-    conversation: one
-    sender: one
-    content: MyText
-    item: one
-    offer: one
+  conversation: one
+  sender: one
+  content: Hello there
 
 two:
-    conversation: two
-    sender: two
-    content: MyText
-    item: two
-    offer: two
+  conversation: two
+  sender: two
+  content: Hi from user two

@@ -1,7 +1,21 @@
 <div class="container mx-auto p-4">
-  <%= turbo_stream_from "user_#{Current.user.id}_offer_updates" %>
+  <h1>Dashboard</h1>
 
-  <h1>My Offers</h1>
+  <h2>Pending Transactions</h2>
+  <% if @pending_transactions.any? %>
+    <%= render "dashboards/offers_table",
+      offers: @pending_transactions,
+      sort: @sent_sort,
+      dir: @sent_dir,
+      sort_prefix: "sent",
+      second_header: "Buyer",
+      second_key: "seller",
+      price_header: "Offer",
+      row_partial: "dashboards/pending_action_row" %>
+  <% else %>
+    <p class="text-base-content/50">no pending actions</p>
+  <% end %>
+  <%= turbo_stream_from "user_#{Current.user.id}_offer_updates" %>
 
   <h2>Offers I've Made</h2>
   <% if @sent_offers.any? %>

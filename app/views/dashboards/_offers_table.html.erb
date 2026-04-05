@@ -1,0 +1,20 @@
+<div class="overflow-x-auto bg-base-100 rounded-box shadow">
+  <table class="table-zebra w-full text-center">
+    <thead>
+      <tr>
+        <th><%= sortable_header("Item", "item", sort, dir, sort_param: "#{sort_prefix}_sort", dir_param: "#{sort_prefix}_dir") %></th>
+        <th><%= sortable_header(second_header, second_key, sort, dir, sort_param: "#{sort_prefix}_sort", dir_param: "#{sort_prefix}_dir") %></th>
+        <th><%= sortable_header(price_header, "price", sort, dir, sort_param: "#{sort_prefix}_sort", dir_param: "#{sort_prefix}_dir") %></th>
+        <th>Message</th>
+        <th><%= sortable_header("Status", "status", sort, dir, sort_param: "#{sort_prefix}_sort", dir_param: "#{sort_prefix}_dir") %></th>
+        <th><%= sortable_header("Date", "date", sort, dir, sort_param: "#{sort_prefix}_sort", dir_param: "#{sort_prefix}_dir") %></th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% offers.each do |offer| %>
+        <%= render row_partial, offer: offer %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

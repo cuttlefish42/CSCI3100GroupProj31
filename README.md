@@ -1,6 +1,6 @@
 # README
 [Proposal](https://docs.google.com/document/d/1oOtpxZJiM1y9OBDHpL1dVIxfQdqSu73XgRC2idw4MRA)
-[Deploymnent Url](http://35.175.182.169/)
+[Deploymnent Url](http://server1.li-exponential.ts.net/)
 
 
 # Ruby version

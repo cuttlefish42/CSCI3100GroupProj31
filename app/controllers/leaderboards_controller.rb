@@ -1,7 +1,7 @@
 class LeaderboardsController < ApplicationController
   def karma
     @sort = params[:sort] || "highest"
-    
+
     if @sort == "lowest"
       @users = User.order(karma: :asc)
       chart_users = User.order(karma: :asc).limit(20)

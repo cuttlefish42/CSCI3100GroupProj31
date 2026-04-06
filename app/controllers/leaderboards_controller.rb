@@ -1,10 +1,17 @@
 class LeaderboardsController < ApplicationController
   def karma
-    @users = User.order(karma: :desc)
+    @sort = params[:sort] || "highest"
+    
+    if @sort == "lowest"
+      @users = User.order(karma: :asc)
+      chart_users = User.order(karma: :asc).limit(10)
+    else
+      @users = User.order(karma: :desc)
+      chart_users = User.order(karma: :desc).limit(10)
+    end
 
     # chart
-    top_users = User.order(karma: :desc).limit(10)
-    @labels = top_users.map(&:username).to_json
-    @values = top_users.map(&:karma).to_json
+    @labels = chart_users.map(&:username).to_json
+    @values = chart_users.map(&:karma).to_json
   end
 end

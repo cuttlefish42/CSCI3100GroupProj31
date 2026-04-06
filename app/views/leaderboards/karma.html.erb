@@ -1,6 +1,11 @@
 <div class="container mx-auto p-4">
   <h2>Karma Leaderboard</h2>
 
+  <div class="flex gap-4 mb-6 justify-center">
+    <%= link_to "Highest Karma", karma_leaderboard_path(sort: "highest"), class: "btn #{@sort == 'highest' ? 'btn-active' : 'btn-outline'}" %>
+    <%= link_to "Lowest Karma", karma_leaderboard_path(sort: "lowest"), class: "btn #{@sort == 'lowest' ? 'btn-active' : 'btn-outline'}" %>
+  </div>
+
   <%= render "chart" %>
 
   <% if @users.any? %>

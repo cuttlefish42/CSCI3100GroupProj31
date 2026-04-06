@@ -22,7 +22,7 @@ class UserMailerTest < ActionMailer::TestCase
       email.deliver_now
     end
 
-    assert_equal [@seller.email_address], email.to
+    assert_equal [ @seller.email_address ], email.to
     assert_equal "Welcome to Group 31 platform!", email.subject
   end
 
@@ -44,7 +44,7 @@ class UserMailerTest < ActionMailer::TestCase
       email.deliver_now
     end
 
-    assert_equal [@seller.email_address], email.to
+    assert_equal [ @seller.email_address ], email.to
     assert_equal "Reset Your Password Now!", email.subject
   end
 
@@ -65,7 +65,7 @@ class UserMailerTest < ActionMailer::TestCase
       email.deliver_now
     end
 
-    assert_equal [@seller.email_address], email.to
+    assert_equal [ @seller.email_address ], email.to
     assert_equal "New offer for #{@item.title}", email.subject
   end
 
@@ -108,7 +108,7 @@ class UserMailerTest < ActionMailer::TestCase
   test "email is sent from correct address" do
     email = UserMailer.new_offer_notify(@seller, @item, @offer)
 
-    assert_equal ["noreply@group31.com"], email.from
+    assert_equal [ "noreply@group31.com" ], email.from
   end
 
   private

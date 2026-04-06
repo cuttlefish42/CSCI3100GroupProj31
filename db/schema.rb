@@ -99,7 +99,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_063926) do
     t.datetime "created_at", null: false
     t.integer "item_id", null: false
     t.text "message"
-    t.decimal "price_offered", precision: 10, scale: 2, null: false
+    t.decimal "price_offered", null: false
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["buyer_id"], name: "index_offers_on_buyer_id"

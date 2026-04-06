@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_01_054609) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_06_063926) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -121,6 +121,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_01_054609) do
     t.string "email_address", null: false
     t.integer "karma", default: 0
     t.string "password_digest", null: false
+    t.datetime "password_reset_sent_at"
+    t.string "password_reset_token"
     t.datetime "updated_at", null: false
     t.string "username"
     t.index ["default_community_id"], name: "index_users_on_default_community_id"

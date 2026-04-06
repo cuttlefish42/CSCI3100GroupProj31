@@ -33,7 +33,7 @@ class OffersController < ApplicationController
         offer: @offer
       )
 
-      UserMailer.new_item_notify(@item.seller, @item, @offer).deliver_later
+      UserMailer.new_offer_notify(@item.seller, @item, @offer).deliver_later
 
       redirect_to @item, notice: "Offer submitted."
     else

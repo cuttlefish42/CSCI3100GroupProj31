@@ -32,5 +32,8 @@ bin/dev
 ```
 to start dev server.
 
+# Mail
+Preview mails at http://localhost:3000/letter_opener/
+
 # Deployment
 The deployment is automated via github actions and kamal. It would be automatically pushed to production server after it passes all the tests.

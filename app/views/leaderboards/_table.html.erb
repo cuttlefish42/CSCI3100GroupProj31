@@ -1,0 +1,22 @@
+<div class="overflow-x-auto bg-base-100 rounded-box shadow max-w-4xl mx-auto">
+  <table class="table-zebra w-full text-center">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Username</th>
+        <th>Karma</th>
+        <th>Joined</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each_with_index do |u, i| %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= u.username %></td>
+          <td><%= u.karma %></td>
+          <td><%= time_ago_in_words(u.created_at) %> ago</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -12,7 +12,7 @@ image: cuttlefish42/csci3100_group_proj31
 # Deploy to these servers.
 servers:
     web:
-        - <%= ENV["EC2_INSTANCE_ADDRESS"] %>
+        - server1
     # job:
     #   hosts:
     #     - 192.168.0.1
@@ -97,8 +97,8 @@ builder:
       - GITHUB_TOKEN
       - RAILS_MASTER_KEY
 # Use a different ssh user than root
-ssh:
-    user: ubuntu
+# ssh:
+#     user: root
 # Use accessory services (secrets come from .kamal/secrets).
 # accessories:
 #   db:

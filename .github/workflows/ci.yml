@@ -129,7 +129,7 @@ jobs:
         needs: [lint, test]
         if: github.ref == 'refs/heads/main'
 
-        permissions: 
+        permissions:
             contents: read
             packages: write
 
@@ -153,10 +153,12 @@ jobs:
             - name: Expose GitHub Runtime for cache
               uses: crazy-max/ghaction-github-runtime@v3
 
-            - name: Set up SSH agent
-              uses: webfactory/ssh-agent@v0.9.0
+            - name: Tailscale
+              uses: tailscale/github-action@v4
               with:
-                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+                  oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+                  tags: tag:ci
 
             - name: Deploy with Kamal
               run: bin/kamal deploy
@@ -164,6 +166,6 @@ jobs:
             - name: Delete old packages
               uses: actions/delete-package-versions@v5
               with:
-                package-name: 'csci3100_group_proj31'
-                package-type: 'container'
-                min-versions-to-keep: 3
+                  package-name: "csci3100_group_proj31"
+                  package-type: "container"
+                  min-versions-to-keep: 3

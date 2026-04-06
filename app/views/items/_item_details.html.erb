@@ -8,7 +8,7 @@
   <% end %>
 
   <h1 class="text-3xl mb-2"><%= item.title %></h1>
-  <p class="text-2xl font-semibold text-secondary mb-6"><%= number_to_currency(item.price) %></p>
+  <p class="text-2xl font-semibold text-secondary mb-6"><%= price(item.price) %></p>
 
   <div class="divider divider-start text-xl font-semibold">Details</div>
   <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
@@ -22,7 +22,7 @@
     </div>
     <div>
       <p>Listed</p>
-      <p class="font-medium"><%= time_ago_in_words(item.created_at) %> ago</p>
+      <p class="font-medium"><%= time_ago(item.created_at) %></p>
     </div>
     <div>
       <p>Community</p>
@@ -30,16 +30,16 @@
     </div>
   </div>
 
-  <% if @item.latitude.present? && @item.longitude.present? %>
+  <% if item.latitude.present? && item.longitude.present? %>
     <h3 class="text-xl font-bold mb-4 border-b border-base-300 pb-2">Meetup Location</h3>
     <div data-controller="map-display"
-         data-map-display-lat-value="<%= @item.latitude %>"
-         data-map-display-lng-value="<%= @item.longitude %>"
-         data-map-display-note-value="<%= @item.meetup_note %>">
+         data-map-display-lat-value="<%= item.latitude %>"
+         data-map-display-lng-value="<%= item.longitude %>"
+         data-map-display-note-value="<%= item.meetup_note %>">
       <div data-map-display-target="map" style="height: 300px; border-radius: 8px;"></div>
     </div>
-    <% if @item.meetup_note.present? %>
-      <p class="mt-2 text-sm"><strong>Note:</strong> <%= @item.meetup_note %></p>
+    <% if item.meetup_note.present? %>
+      <p class="mt-2 text-sm"><strong>Note:</strong> <%= item.meetup_note %></p>
     <% end %>
     <div class="mb-8"></div>
   <% end %>

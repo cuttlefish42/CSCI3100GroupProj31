@@ -19,15 +19,15 @@
         <% offers.each do |offer| %>
           <tr>
             <td><%= offer.buyer.email_address %></td>
-            <td><%= number_to_currency(offer.price_offered) %></td>
+            <td><%= price(offer.price_offered) %></td>
             <td><%= offer.message.presence || "—" %></td>
             <td>
               <%= offer.status.humanize %>
               <% if offer.countered? && offer.counter_price %>
-                (<%= number_to_currency(offer.counter_price) %>)
+                (<%= price(offer.counter_price) %>)
               <% end %>
             </td>
-            <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
+            <td><%= time_ago(offer.updated_at) %></td>
             <td>
               <% if offer.pending? %>
                 <div class="flex flex-col gap-2 items-center justify-center">
@@ -73,18 +73,18 @@
         <% offers.each do |offer| %>
           <tr>
             <td><%= offer.buyer == Current.user ? "You" : offer.buyer.email_address %></td>
-            <td><%= number_to_currency(offer.price_offered) %></td>
+            <td><%= price(offer.price_offered) %></td>
             <td><%= offer.message.presence || "—" %></td>
             <td>
               <% if offer.countered? && offer.counter_price %>
                 <span class="text-warning font-bold">
-                  Seller countered: <%= number_to_currency(offer.counter_price) %>
+                  Seller countered: <%= price(offer.counter_price) %>
                 </span>
               <% else %>
                 <%= offer.status.humanize %>
               <% end %>
             </td>
-            <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
+            <td><%= time_ago(offer.updated_at) %></td>
             <td>
               <% if offer.buyer == Current.user && offer.countered? %>
                 <div class="flex flex-col gap-2 items-center justify-center">

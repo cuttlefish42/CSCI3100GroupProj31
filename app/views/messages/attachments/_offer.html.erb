@@ -6,7 +6,7 @@
       Offer: <%= link_to offer.item.title, item_path(offer.item), class: "link link-hover" %>
     </h3>
     <div class="flex items-center gap-2">
-      <span class="font-semibold text-secondary text-sm"><%= number_to_currency(offer.price_offered) %></span>
+      <span class="font-semibold text-secondary text-sm"><%= price(offer.price_offered) %></span>
       <span class="badge badge-xs <%= offer_status_badge_class(offer) %>"><%= offer.status.titleize %></span>
     </div>
 

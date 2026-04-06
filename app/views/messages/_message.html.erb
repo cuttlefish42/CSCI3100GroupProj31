@@ -25,6 +25,6 @@
   <% end %>
 
   <div class="chat-footer text-base-content/40" <% if has_attachment %>style="grid-row: 4"<% end %>>
-    <time class="text-xs"><%= time_ago_in_words(message.created_at) %> ago</time>
+    <time class="text-xs"><%= time_ago(message.created_at) %></time>
   </div>
 </div>

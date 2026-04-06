@@ -19,11 +19,11 @@
     <div class="alert alert-warning shadow-md">
       <div>
         <h3 class="font-bold mt-0 mb-0">You already have an active offer on this item</h3>
-        <p>(<%= number_to_currency(existing_offer.price_offered) %> &mdash; <%= existing_offer.status.humanize %>)</p>
+        <p>(<%= price(existing_offer.price_offered) %> &mdash; <%= existing_offer.status.humanize %>)</p>
       </div>
       <% if existing_offer.countered? && existing_offer.counter_price %>
         <div class="mt-2">
-          <span class="text-warning-content font-bold block mb-2">The seller has countered with <%= number_to_currency(existing_offer.counter_price) %>.</span>
+          <span class="text-warning-content font-bold block mb-2">The seller has countered with <%= price(existing_offer.counter_price) %>.</span>
           <div class="flex gap-2">
             <%= button_to "Accept Counter", item_offer_path(item, existing_offer),
                   method: :patch,

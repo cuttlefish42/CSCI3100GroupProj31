@@ -16,7 +16,7 @@
       <% end %>
     </h1>
 
-    <p class="text-xl font-bold text-secondary mb-2"><%= number_to_currency(item.price) %></p>
+    <p class="text-xl font-bold text-secondary mb-2"><%= price(item.price) %></p>
 
     <div class="text-sm space-y-1">
       <p><strong>Category:</strong> <%= item.category.name %></p>

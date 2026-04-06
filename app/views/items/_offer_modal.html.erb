@@ -9,7 +9,7 @@
     <div class="modal-box">
       <button type="button" data-action="offer-price#close" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
       <h3 class="text-lg mt-0 mb-0"><%= heading %></h3>
-      <p class="text-sm mb-4"><%= price_label %>: <strong><%= number_to_currency(base_price) %></strong></p>
+      <p class="text-sm mb-4"><%= price_label %>: <strong><%= price(base_price) %></strong></p>
       <%= form_with model: [item, offer], class: "flex flex-col gap-4" do |f| %>
         <div class="form-control">
           <%= f.label :price_offered, "Your Offer ($)", class: "label font-semibold" %>
@@ -25,7 +25,7 @@
             <button type="button" class="btn btn-xs btn-outline" data-action="offer-price#adjust" data-pct="1.1">+10%</button>
             <button type="button" class="btn btn-xs btn-outline" data-action="offer-price#adjust" data-pct="1.25">+25%</button>
           </div>
-          <span class="text-xs mt-1 block">(of <%= number_to_currency(base_price) %>)</span>
+          <span class="text-xs mt-1 block">(of <%= price(base_price) %>)</span>
         </div>
         <div class="form-control">
           <%= f.label :message, "Message (optional)", class: "label font-semibold" %>

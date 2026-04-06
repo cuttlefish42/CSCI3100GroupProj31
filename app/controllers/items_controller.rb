@@ -11,8 +11,8 @@ class ItemsController < ApplicationController
     @offer_sort = params[:offer_sort] || "date"
     @offer_dir = params[:offer_dir] || "desc"
     @offers = @item.offers.includes(:buyer)
-    @offers = apply_item_offer_sort(@offers, @offer_sort, @offer_dir)
-    @existing_offer = Current.user ? @item.offers.where(buyer_id: Current.user.id, status: [ :pending, :countered ]).first : nil
+    .sorted_by(@offer_sort, @offer_dir, context: :received)
+    @existing_offer = Current.user ? @item.offers.by_buyer(Current.user).active.first : nil
     @offer = @item.offers.build
   end
 
@@ -54,20 +54,6 @@ class ItemsController < ApplicationController
 
     def authorize_owner!
       redirect_to items_path, alert: "Not authorized." unless @item.seller == Current.user
-    end
-
-    def apply_item_offer_sort(offers, sort_by, direction)
-      dir = direction == "asc" ? :asc : :desc
-      case sort_by
-      when "price"
-        offers.order(price_offered: dir)
-      when "buyer"
-        offers.joins(:buyer).order("users.email_address #{dir == :asc ? 'ASC' : 'DESC'}")
-      when "status"
-        offers.order(status: dir)
-      else
-        offers.order(created_at: dir)
-      end
     end
 
     def item_params

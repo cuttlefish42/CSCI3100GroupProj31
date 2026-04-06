@@ -12,10 +12,13 @@ class Offer < ApplicationRecord
   validate :no_duplicate_pending_offer, on: :create
   validate :item_must_be_available, on: :create
 
+  after_update_commit :broadcast_offer_updates
+  # ---------- Scopes -------------
+
   scope :received_by, ->(user) { joins(:item).where(items: { seller_id: user.id }) }
   scope :recent, -> { order(created_at: :desc) }
-
-  after_update_commit :broadcast_offer_updates
+  scope :by_buyer, ->(user) { where(buyer_id: user.id) }
+  scope :active, -> { where(status: [ :pending, :countered ]) }
 
   # ---------- Ordering ----------
   scope :order_by_price, ->(dir) { order(price_offered: dir) }
@@ -32,15 +35,25 @@ class Offer < ApplicationRecord
   }
   # --------------------
 
-  def self.sorted_by(sort_by, dir, scope: nil)
+  # sort_by:
+  #   "price" | "item" | "status" | "buyer" | "seller"
+  # dir:
+  #   :asc | :desc
+  # context:
+  #   :sent | :received
+  #
+  # If user is the offer receiver, he'd like to see received offers that's ordered by buyers' email, vice versa.
+  def self.sorted_by(sort_by, dir, context: nil)
+    dir = dir.to_s.downcase == "asc" ? :asc : :desc
+
     case sort_by
     when "price"  then order_by_price(dir)
     when "item"   then order_by_item_title(dir)
     when "status" then order_by_status(dir)
     when "buyer"
-      scope == :received ? order_by_buyer_email(dir) : order_by_date(:desc)
+      context == :received ? order_by_buyer_email(dir) : order_by_date(:desc)
     when "seller"
-      scope == :sent ? order_by_seller_email(dir) : order_by_date(:desc)
+      context == :sent ? order_by_seller_email(dir) : order_by_date(:desc)
     else
       order_by_date(dir)
     end

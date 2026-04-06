@@ -4,7 +4,7 @@
 
 <p>Someone made an offer on your item: <strong><%= @item.title %></strong></p>
 
-<p>Offer price: <%= number_to_currency(@offer.price_offered) %></p>
+<p>Offer price: <%= price(@offer.price_offered) %></p>
 
 <p>
   <%= link_to "View Offer", @offer_url %>

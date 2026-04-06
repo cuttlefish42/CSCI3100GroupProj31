@@ -1,17 +1,17 @@
 <tr>
   <td><%= link_to offer.item.title, item_path(offer.item) %></td>
   <td><%= offer.buyer.email_address %></td>
-  <td><%= number_to_currency(offer.counter_price || offer.price_offered) %></td>
+  <td><%= price(offer.counter_price || offer.price_offered) %></td>
   <td><%= offer.message.presence || "—" %></td>
   <td>
     <span class="text-success font-bold">Accepted</span>
   </td>
-  <td><%= time_ago_in_words(offer.updated_at) %> ago</td>
+  <td><%= time_ago(offer.updated_at) %></td>
   <td>
     <div class="flex flex-col gap-2 items-center justify-center">
         PLACEHOLDERS
       <%= link_to "View Details", item_path(offer.item), class: "btn btn-sm btn-primary w-full" %>
-      <%= button_to "Message", conversation_path(offer.buyer_id), 
+      <%= button_to "Message", conversation_path(offer.buyer_id),
             method: :get,
             class: "btn btn-sm btn-info w-full" %>
     </div>

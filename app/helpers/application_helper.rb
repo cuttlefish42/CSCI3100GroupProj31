@@ -17,4 +17,24 @@ module ApplicationHelper
     end
     link_to("#{label}#{arrow}".html_safe, request.params.merge(sort_param => sort_key, dir_param => new_dir, **extra_params))
   end
+
+
+
+  def price(amount)
+    number_to_currency(amount)
+  end
+
+  def offer_status_text(offer)
+    text = offer.status.humanize
+    if offer.countered? && offer.counter_price.present?
+      text += " (#{price(offer.counter_price)})"
+    end
+    text
+  end
+
+  def time_ago(time)
+    return "Never" if time.blank?
+
+    "#{time_ago_in_words(time)} ago"
+  end
 end

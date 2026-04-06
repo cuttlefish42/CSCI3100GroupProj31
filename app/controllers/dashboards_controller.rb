@@ -1,21 +1,21 @@
 class DashboardsController < ApplicationController
   def show
     @sent_sort = params[:sent_sort] || "date"
-    @sent_dir = params[:sent_dir] == "asc" ? :asc : :desc
+    @sent_dir = params[:sent_dir]
     @recv_sort = params[:recv_sort] || "date"
-    @recv_dir = params[:recv_dir] == "asc" ? :asc : :desc
+    @recv_dir = params[:recv_dir]
 
     @sent_offers =
       Current.user.offers
         .includes(item: :seller)
         .where.not(status: "accepted")
-        .sorted_by(@sent_sort, @sent_dir, scope: :sent)
+        .sorted_by(@sent_sort, @sent_dir, context: :sent)
 
     @received_offers =
       Offer.received_by(Current.user)
         .includes(:buyer, :item)
         .where.not(status: "accepted")
-        .sorted_by(@recv_sort, @recv_dir, scope: :received)
+        .sorted_by(@recv_sort, @recv_dir, context: :received)
 
     @pending_transactions =
       Offer.includes(:item, :buyer)

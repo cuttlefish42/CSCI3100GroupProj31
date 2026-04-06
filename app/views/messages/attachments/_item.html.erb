@@ -6,7 +6,7 @@
     </h3>
     <div class="flex items-center gap-2">
       <% if item.price.present? %>
-        <span class="font-semibold text-secondary text-sm"><%= number_to_currency(item.price) %></span>
+        <span class="font-semibold text-secondary text-sm"><%= price(item.price) %></span>
       <% end %>
       <span class="badge badge-xs <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
     </div>

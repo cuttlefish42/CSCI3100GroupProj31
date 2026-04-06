@@ -4,9 +4,6 @@ class UserMailerTest < ActionMailer::TestCase
   include Rails.application.routes.url_helpers
 
   setup do
-    Rails.application.routes.default_url_options[:host] = "localhost"
-    Rails.application.routes.default_url_options[:port] = 3000
-
     @seller = users(:one)
     @buyer = users(:two)
     @item = items(:one)

@@ -1,0 +1,104 @@
+require "application_system_test_case"
+
+class AuthenticationFlowTest < ApplicationSystemTestCase
+  # check that only top 20 users are shown
+  test "at most 20 users are shown" do
+    given "more than 20 users are in the database" do 
+      25.times do |i|
+        User.create!(
+          email_address: "sample_user_#{i}@link.cuhk.edu.hk",
+          username: "sample_user_#{i}",
+          password: "password123",
+          password_confirmation: "password123",
+          karma: i
+        )
+      end
+    end
+
+    given "the user is logged in" do
+      visit new_session_path
+      fill_in "Email", with: "sample_user_1@link.cuhk.edu.hk"
+      fill_in "Password", with: "password123"
+      click_button "Sign in"
+    end
+
+    when_ "the user is in karma leaderboard page" do
+      visit karma_leaderboard_path
+    end
+
+    then_ "the user should see 20 entries" do
+      rows = all("tbody tr").map(&:text)
+      assert_equal 20, rows.length
+    end
+  end
+
+  # check sort by descending order
+  test "user checks karma leaderboard for lowest karma users" do
+    given "the following sample users exists" do
+      5.times do |i|
+        User.create!(
+          email_address: "sample_user_#{i}@link.cuhk.edu.hk",
+          username: "sample_user_#{i}",
+          password: "password123",
+          password_confirmation: "password123",
+          karma: i
+        )
+      end
+    end
+
+    given "the user is logged in" do
+      visit new_session_path
+      fill_in "Email", with: "sample_user_1@link.cuhk.edu.hk"
+      fill_in "Password", with: "password123"
+      click_button "Sign in"
+    end
+
+    given "the user is in karma leaderboard page" do
+      visit karma_leaderboard_path
+    end
+
+    when_ "the user clicks Highest Karma" do
+      click_link "Highest Karma"
+    end
+
+    then_ "the user sees that leaderboard is sorted in descending order" do
+      rows = all("tbody tr").map(&:text)
+      assert_operator rows.index { |row| row.include?("sample_user_4") }, :<, rows.index { |row| row.include?("sample_user_2") }
+    end
+  end
+
+  # check sort by ascending order
+  test "user checks karma leaderboard for highest karma users" do
+    given "the following sample users exists" do
+      5.times do |i|
+        User.create!(
+          email_address: "sample_user_#{i}@link.cuhk.edu.hk",
+          username: "sample_user_#{i}",
+          password: "password123",
+          password_confirmation: "password123",
+          karma: i
+        )
+      end
+    end
+
+    given "the user is logged in" do
+      visit new_session_path
+      fill_in "Email", with: "sample_user_1@link.cuhk.edu.hk"
+      fill_in "Password", with: "password123"
+      click_button "Sign in"
+    end
+
+    given "the user is in karma leaderboard page" do
+      visit karma_leaderboard_path
+    end
+
+    when_ "the user clicks Lowest Karma" do
+      click_link "Lowest Karma"
+    end
+
+    then_ "the user sees that leaderboard is sorted in descending order" do
+      rows = all("tbody tr").map(&:text)
+      assert_operator rows.index { |row| row.include?("sample_user_1") }, :<, rows.index { |row| row.include?("sample_user_3") }
+    end
+  end
+end

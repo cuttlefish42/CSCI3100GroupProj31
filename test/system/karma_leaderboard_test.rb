@@ -1,6 +1,6 @@
 require "application_system_test_case"
 
-class AuthenticationFlowTest < ApplicationSystemTestCase
+class KarmaLeaderboardTest < ApplicationSystemTestCase
   # check that only top 20 users are shown
   test "at most 20 users are shown" do
     given "more than 20 users are in the database" do 
@@ -27,6 +27,7 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
     end
 
     then_ "the user should see 20 entries" do
+      assert_current_path karma_leaderboard_path, ignore_query: true
       rows = all("tbody tr").map(&:text)
       assert_equal 20, rows.length
     end
@@ -53,15 +54,13 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
       click_button "Sign in"
     end
 
-    given "the user is in karma leaderboard page" do
+    when_ "the user visits karma leaderboard and clicks Highest Karma" do
       visit karma_leaderboard_path
-    end
-
-    when_ "the user clicks Highest Karma" do
       click_link "Highest Karma"
     end
 
     then_ "the user sees that leaderboard is sorted in descending order" do
+      assert_current_path karma_leaderboard_path, ignore_query: true
       rows = all("tbody tr").map(&:text)
       assert_operator rows.index { |row| row.include?("sample_user_4") }, :<, rows.index { |row| row.include?("sample_user_2") }
     end
@@ -88,15 +87,13 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
       click_button "Sign in"
     end
 
-    given "the user is in karma leaderboard page" do
+    when_ "the user visits karma leaderboard and clicks Lowest Karma" do
       visit karma_leaderboard_path
-    end
-
-    when_ "the user clicks Lowest Karma" do
       click_link "Lowest Karma"
     end
 
     then_ "the user sees that leaderboard is sorted in descending order" do
+      assert_current_path karma_leaderboard_path, ignore_query: true
       rows = all("tbody tr").map(&:text)
       assert_operator rows.index { |row| row.include?("sample_user_1") }, :<, rows.index { |row| row.include?("sample_user_3") }
     end

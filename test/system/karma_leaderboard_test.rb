@@ -3,7 +3,7 @@ require "application_system_test_case"
 class KarmaLeaderboardTest < ApplicationSystemTestCase
   # check that only top 20 users are shown
   test "at most 20 users are shown" do
-    given "more than 20 users are in the database" do 
+    given "more than 20 users are in the database" do
       25.times do |i|
         User.create!(
           email_address: "sample_user_#{i}@link.cuhk.edu.hk",

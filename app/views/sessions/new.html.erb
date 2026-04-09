@@ -10,7 +10,7 @@
 
   <div class="card card-border bg-base-100 shadow-xl">
     <div class="card-body">
-      <%= form_with url: session_path, class: "flex flex-col gap-4" do |form| %>
+      <%= form_with url: session_path, data: { turbo: false }, class: "flex flex-col gap-4" do |form| %>
         <div class="form-control">
           <%= form.label :email_address, "Email", class: "label font-semibold" %>
           <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "w-full" %>

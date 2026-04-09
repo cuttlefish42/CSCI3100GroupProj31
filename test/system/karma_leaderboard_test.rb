@@ -61,7 +61,8 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
 
     then_ "the user sees that leaderboard is sorted in descending order" do
       assert_current_path karma_leaderboard_path, ignore_query: true
-      rows = all("tbody tr").map(&:text)
+      assert_selector "tbody tr"
+      rows = all("tbody tr", minimum: 1).map(&:text)
       assert_operator rows.index { |row| row.include?("sample_user_4") }, :<, rows.index { |row| row.include?("sample_user_2") }
     end
   end
@@ -94,7 +95,8 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
 
     then_ "the user sees that leaderboard is sorted in descending order" do
       assert_current_path karma_leaderboard_path, ignore_query: true
-      rows = all("tbody tr").map(&:text)
+      assert_selector "tbody tr"
+      rows = all("tbody tr", minimum: 1).map(&:text)
       assert_operator rows.index { |row| row.include?("sample_user_1") }, :<, rows.index { |row| row.include?("sample_user_3") }
     end
   end

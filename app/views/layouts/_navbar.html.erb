@@ -12,9 +12,10 @@
       <li><%= link_to "Conversations", conversations_path %></li>
       <li>
         <% if authenticated? %>
-          <%= link_to "Log out", session_path, data: { turbo_method: :delete }, class: "text-error font-semibold" %>
+          <%= button_to "Log out", session_path, method: :delete, form: { data: { turbo: false } }, class: "text-error font-semibold btn btn-ghost" %>
         <% else %>
           <%= link_to "Log in", new_session_path, class: "text-success font-semibold" %>
+          <%= link_to "Sign Up", sign_up_path, class: "btn btn-primary btn-sm ml-2" %>
         <% end %>
       </li>
     </ul>

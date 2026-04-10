@@ -7,5 +7,8 @@ class User < ApplicationRecord
   has_many :items, foreign_key: :seller_id, dependent: :destroy
   has_many :offers, foreign_key: :buyer_id, dependent: :destroy
 
+  has_many :reviews_given,    class_name: "Review", foreign_key: :reviewer_id, dependent: :destroy
+  has_many :reviews_received, class_name: "Review", foreign_key: :reviewee_id, dependent: :destroy
+
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 end

@@ -19,6 +19,8 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
       fill_in "Email", with: "sample_user_1@link.cuhk.edu.hk"
       fill_in "Password", with: "password123"
       click_button "Sign in"
+      # Have to ensure the cookie is updated otherwise the subsequent steps would fail.
+      assert_text "Log out"
     end
 
     when_ "the user is in karma leaderboard page" do
@@ -50,6 +52,7 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
       fill_in "Email", with: "sample_user_1@link.cuhk.edu.hk"
       fill_in "Password", with: "password123"
       click_button "Sign in"
+      assert_text "Log out"
     end
 
     when_ "the user visits karma leaderboard and clicks Highest Karma" do
@@ -83,6 +86,7 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
       fill_in "Email", with: "sample_user_1@link.cuhk.edu.hk"
       fill_in "Password", with: "password123"
       click_button "Sign in"
+      assert_text "Log out"
     end
 
     when_ "the user visits karma leaderboard and clicks Lowest Karma" do

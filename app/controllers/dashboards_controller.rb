@@ -8,13 +8,13 @@ class DashboardsController < ApplicationController
     @sent_offers =
       Current.user.offers
         .includes(item: :seller)
-        .where.not(status: "accepted")
+        .where.not(status: [ "accepted", "completed" ])
         .sorted_by(@sent_sort, @sent_dir, context: :sent)
 
     @received_offers =
       Offer.received_by(Current.user)
         .includes(:buyer, :item)
-        .where.not(status: "accepted")
+        .where.not(status: [ "accepted", "completed" ])
         .sorted_by(@recv_sort, @recv_dir, context: :received)
 
     @pending_transactions =

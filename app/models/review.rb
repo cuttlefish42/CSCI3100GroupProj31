@@ -11,11 +11,12 @@ class Review < ApplicationRecord
   validate  :reviewer_must_be_party_to_offer
 
   after_create :apply_karma_change
+  after_create :complete_transaction
 
   private
 
   def offer_must_be_accepted
-    errors.add(:offer, "must be an accepted transaction") unless offer&.accepted?
+    errors.add(:offer, "must be an accepted transaction") unless offer&.accepted? || offer&.completed?
   end
 
   def reviewer_must_be_party_to_offer
@@ -38,5 +39,12 @@ class Review < ApplicationRecord
       reviewee.increment!(field, rating)
       reviewee.increment!(:karma, rating)
     end
+  end
+
+  def complete_transaction
+    return unless seller_review? && offer.accepted?
+
+    offer.completed!
+    offer.item.sold!
   end
 end

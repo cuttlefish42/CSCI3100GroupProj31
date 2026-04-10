@@ -33,7 +33,7 @@ class ReviewsController < ApplicationController
   end
 
   def authorize_reviewer!
-    unless @offer.accepted? &&
+    unless (@offer.accepted? || @offer.completed?) &&
            [ @offer.buyer_id, @item.seller_id ].include?(Current.user.id)
       redirect_to dashboard_path, alert: "You cannot review this transaction."
     end

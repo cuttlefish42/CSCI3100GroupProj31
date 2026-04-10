@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   # Items
   resources :items do
     # Offers
-    resources :offers, only: [ :create, :update, :destroy ] do
+    resources :offers, only: [ :new, :create, :update, :destroy ] do
       # 1to1 relation no s
       resource :acceptance, only: [ :create ], module: :offers
       resource :rejection, only: [ :create ], module: :offers
@@ -27,6 +27,9 @@ Rails.application.routes.draw do
 
   # Dashboard
   resource :dashboard, only: [ :show ]
+
+  # User profiles
+  resources :users, only: [ :show ]
 
   resources :conversations, only: [ :index, :show, :create ] do
     resources :messages, only: [ :create ]

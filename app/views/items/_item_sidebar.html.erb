@@ -6,7 +6,7 @@
       <div class="flex items-center gap-4">
         <%= render "shared/user_avatar", user: item.seller, size: "lg" %>
         <div>
-          <p class="font-bold"><%= item.seller.full_name %></p>
+          <p class="font-bold"><%= link_to item.seller.full_name, user_path(item.seller) %></p>
           <p class="text-xs">Karma: <%= item.seller.karma %></p>
         </div>
       </div>
@@ -40,22 +40,10 @@
       <% end %>
     </div>
 
-    <%= render "offer_modal",
-        item: item,
-        offer: existing_offer,
-        base_price: existing_offer.price_offered,
-        heading: "Edit Your Offer",
-        price_label: "Current offer",
-        submit_text: "Update Offer" %>
+    <%= link_to "Edit Your Offer", new_item_offer_path(item), class: "btn btn-outline w-full my-2" %>
 
   <% else %>
-    <%= render "offer_modal",
-        item: item,
-        offer: offer,
-        base_price: item.price,
-        heading: "Make an Offer",
-        price_label: "Listing price",
-        submit_text: "Submit Offer" %>
+    <%= link_to "Make an Offer", new_item_offer_path(item), class: "btn btn-outline w-full my-2" %>
   <% end %>
 <% end %>
 

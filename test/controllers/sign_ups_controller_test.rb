@@ -16,7 +16,6 @@ class SignUpsControllerTest < ActionDispatch::IntegrationTest
         user: {
           first_name: "John",
           last_name: "Doe",
-          username: "johndoe",
           email_address: "john@example.com",
           password: "password123",
           password_confirmation: "password123",
@@ -34,7 +33,6 @@ class SignUpsControllerTest < ActionDispatch::IntegrationTest
         user: {
           first_name: "Jane",
           last_name: "Smith",
-          username: "janesmith",
           email_address: "jane@example.com",
           password: "password123",
           password_confirmation: "password123",
@@ -50,7 +48,6 @@ class SignUpsControllerTest < ActionDispatch::IntegrationTest
         user: {
           first_name: "Test",
           last_name: "User",
-          username: "testuser",
           email_address: "invalid-email",
           password: "password123",
           password_confirmation: "password123",
@@ -66,7 +63,6 @@ class SignUpsControllerTest < ActionDispatch::IntegrationTest
         user: {
           first_name: "Test",
           last_name: "User",
-          username: "testuser",
           email_address: "test@example.com",
           password: "password123",
           password_confirmation: "different",
@@ -77,12 +73,11 @@ class SignUpsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create user with duplicate email" do
-    # create the first user 
+    # create the first user
     post sign_up_path, params: {
       user: {
         first_name: "First",
         last_name: "User",
-        username: "firstuser",
         email_address: "duplicate@example.com",
         password: "password123",
         password_confirmation: "password123",
@@ -96,38 +91,7 @@ class SignUpsControllerTest < ActionDispatch::IntegrationTest
         user: {
           first_name: "Second",
           last_name: "User",
-          username: "seconduser",
           email_address: "duplicate@example.com",
-          password: "password123",
-          password_confirmation: "password123",
-          default_community_id: @default_community.id
-        }
-      }
-    end
-  end
-
-  test "should not create user with duplicate username" do
-    # create the first user
-    post sign_up_path, params: {
-      user: {
-        first_name: "First",
-        last_name: "User",
-        username: "sameuser",
-        email_address: "first@example.com",
-        password: "password123",
-        password_confirmation: "password123",
-        default_community_id: @default_community.id
-      }
-    }
-
-    # try to use the first user username to create second user
-    assert_no_difference("User.count") do
-      post sign_up_path, params: {
-        user: {
-          first_name: "Second",
-          last_name: "User",
-          username: "sameuser",
-          email_address: "second@example.com",
           password: "password123",
           password_confirmation: "password123",
           default_community_id: @default_community.id
@@ -141,7 +105,6 @@ class SignUpsControllerTest < ActionDispatch::IntegrationTest
       user: {
         first_name: "Logged",
         last_name: "User",
-        username: "loggeduser",
         email_address: "logged@example.com",
         password: "password123",
         password_confirmation: "password123",

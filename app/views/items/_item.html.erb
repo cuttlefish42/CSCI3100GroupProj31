@@ -27,7 +27,7 @@
         <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
       </p>
       <p>
-        <strong>Seller:</strong> <%= item.seller.username %>
+        <strong>Seller:</strong> <%= item.seller.full_name %>
         <span class="badge badge-ghost badge-sm">[<%= item.seller.karma %>]</span>
       </p>
     </div>

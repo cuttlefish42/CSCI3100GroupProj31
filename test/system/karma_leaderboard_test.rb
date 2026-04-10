@@ -7,7 +7,8 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
       25.times do |i|
         User.create!(
           email_address: "sample_user_#{i}@link.cuhk.edu.hk",
-          username: "sample_user_#{i}",
+          first_name: "Sample",
+          last_name: "User#{i}",
           password: "password123",
           password_confirmation: "password123",
           karma: i
@@ -39,7 +40,8 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
       5.times do |i|
         User.create!(
           email_address: "sample_user_#{i}@link.cuhk.edu.hk",
-          username: "sample_user_#{i}",
+          first_name: "Sample",
+          last_name: "User#{i}",
           password: "password123",
           password_confirmation: "password123",
           karma: i
@@ -63,7 +65,7 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
       assert_current_path karma_leaderboard_path, ignore_query: true
       assert_selector "tbody tr"
       rows = all("tbody tr", minimum: 1).map(&:text)
-      assert_operator rows.index { |row| row.include?("sample_user_4") }, :<, rows.index { |row| row.include?("sample_user_2") }
+      assert_operator rows.index { |row| row.include?("User4") }, :<, rows.index { |row| row.include?("User2") }
     end
   end
 
@@ -73,7 +75,8 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
       5.times do |i|
         User.create!(
           email_address: "sample_user_#{i}@link.cuhk.edu.hk",
-          username: "sample_user_#{i}",
+          first_name: "Sample",
+          last_name: "User#{i}",
           password: "password123",
           password_confirmation: "password123",
           karma: i
@@ -97,7 +100,7 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
       assert_current_path karma_leaderboard_path, ignore_query: true
       assert_selector "tbody tr"
       rows = all("tbody tr", minimum: 1).map(&:text)
-      assert_operator rows.index { |row| row.include?("sample_user_1") }, :<, rows.index { |row| row.include?("sample_user_3") }
+      assert_operator rows.index { |row| row.include?("User1") }, :<, rows.index { |row| row.include?("User3") }
     end
   end
 end

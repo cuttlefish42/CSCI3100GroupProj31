@@ -3,14 +3,17 @@
 one:
   email_address: one@example.com
   password_digest: <%= password_digest %>
-  username: user_one
+  first_name: Alice
+  last_name: Chan
 
 two:
   email_address: two@example.com
   password_digest: <%= password_digest %>
-  username: user_two
+  first_name: Bob
+  last_name: Wong
 
 three:
   email_address: three@example.com
   password_digest: <%= password_digest %>
-  username: user_three
+  first_name: Charlie
+  last_name: Lee

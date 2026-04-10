@@ -13,7 +13,7 @@ class LeaderboardsController < ApplicationController
     @display_users = @users.limit(20)
 
     # chart
-    @labels = chart_users.map(&:username).to_json
+    @labels = chart_users.map(&:full_name).to_json
     @values = chart_users.map(&:karma).to_json
   end
 end

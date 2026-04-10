@@ -23,11 +23,11 @@ class UserMailerTest < ActionMailer::TestCase
     assert_equal "Welcome to Group 31 platform!", email.subject
   end
 
-  test "welcome_email body contains username and login link" do
+  test "welcome_email body contains full name and login link" do
     email = UserMailer.welcome_email(@seller)
     body = email_body(email)
 
-    assert_includes body, @seller.username
+    assert_includes body, @seller.full_name
     assert_includes body, "Welcome"
     assert_includes body, "/session"
   end

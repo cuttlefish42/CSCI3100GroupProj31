@@ -6,7 +6,7 @@
       <div class="flex items-center gap-4">
         <%= render "shared/user_avatar", user: item.seller, size: "lg" %>
         <div>
-          <p class="font-bold">@<%= item.seller.username %></p>
+          <p class="font-bold"><%= item.seller.full_name %></p>
           <p class="text-xs">Karma: <%= item.seller.karma %></p>
         </div>
       </div>

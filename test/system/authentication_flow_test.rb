@@ -3,11 +3,7 @@ require "application_system_test_case"
 class AuthenticationFlowTest < ApplicationSystemTestCase
   test "user signs in with valid credentials" do
     given "an existing user" do
-      User.create!(
-        email_address: "sample_user_1@link.cuhk.edu.hk",
-        password: "password123",
-        password_confirmation: "password123",
-      )
+      create_sample_user
     end
 
     when_ "the user visits sign in and submits valid credentials" do
@@ -25,11 +21,7 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
   # invalid sign in attempts
   test "user tries to sign in with invalid email" do
     given "an existing user" do
-      User.create!(
-        email_address: "sample_user_1@link.cuhk.edu.hk",
-        password: "password123",
-        password_confirmation: "password123",
-      )
+      create_sample_user
     end
 
     when_ "the user visits sign in and submits the wrong email" do
@@ -47,11 +39,7 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
 
   test "user tries to sign in with invalid password" do
     given "an existing user" do
-      User.create!(
-        email_address: "sample_user_1@link.cuhk.edu.hk",
-        password: "password123",
-        password_confirmation: "password123",
-      )
+      create_sample_user
     end
 
     when_ "the user visits sign in and submits the wrong password" do

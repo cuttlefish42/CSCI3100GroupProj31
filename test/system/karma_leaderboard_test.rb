@@ -5,12 +5,10 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
   test "at most 20 users are shown" do
     given "more than 20 users are in the database" do
       25.times do |i|
-        User.create!(
+        create_sample_user(
           email_address: "sample_user_#{i}@link.cuhk.edu.hk",
           first_name: "Sample",
           last_name: "User#{i}",
-          password: "password123",
-          password_confirmation: "password123",
           karma: i
         )
       end
@@ -38,12 +36,10 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
   test "user checks karma leaderboard for lowest karma users" do
     given "the following sample users exists" do
       5.times do |i|
-        User.create!(
+        create_sample_user(
           email_address: "sample_user_#{i}@link.cuhk.edu.hk",
           first_name: "Sample",
           last_name: "User#{i}",
-          password: "password123",
-          password_confirmation: "password123",
           karma: i
         )
       end
@@ -73,12 +69,10 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
   test "user checks karma leaderboard for highest karma users" do
     given "the following sample users exists" do
       5.times do |i|
-        User.create!(
+        create_sample_user(
           email_address: "sample_user_#{i}@link.cuhk.edu.hk",
           first_name: "Sample",
           last_name: "User#{i}",
-          password: "password123",
-          password_confirmation: "password123",
           karma: i
         )
       end

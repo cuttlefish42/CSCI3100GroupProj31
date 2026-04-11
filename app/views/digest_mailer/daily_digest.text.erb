@@ -1,0 +1,14 @@
+Hello!
+
+Here are the new items listed on the marketplace in the past 24 hours:
+
+<% if @new_items.any? %>
+<% @new_items.each do |item| %>
+- <%= item.title %> — <%= number_to_currency(item.price) %>
+  <%= item_url(item) %>
+<% end %>
+<% else %>
+No new items in the past day. Check back tomorrow!
+<% end %>
+
+Browse all items: <%= items_url %>

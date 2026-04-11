@@ -1,12 +1,12 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
+
+# Controller / integration test helpers (auto-included via ActionDispatch::IntegrationTest)
 require_relative "test_helpers/session_test_helper"
-require_relative "test_helpers/user_test_helper"
 
 module ActiveSupport
   class TestCase
-    include UserTestHelper
     # Run tests in parallel with specified workers
     # parallelize(workers: :number_of_processors, threshold: 500)
 

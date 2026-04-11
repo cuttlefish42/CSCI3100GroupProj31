@@ -55,12 +55,18 @@ class ItemTest < ApplicationSystemTestCase
     end
 
     then_ "the user can see the new item" do
-      assert_current_path item_path, ignore_query: true
+      # Wait for the form submission and redirect to complete before querying
+      # the DB, otherwise the test process may run ahead of the controller.
+      assert_text "Item created"
       assert_text "New Item"
       assert_text "100"
       assert_text "Books"
       assert_text "Chung Chi College"
       assert_text "Good"
+
+      seller = User.find_by!(email_address: "sample_user_0@link.cuhk.edu.hk")
+      created_item = Item.find_by!(title: "New Item", seller: seller)
+      assert_current_path item_path(created_item), ignore_query: true
     end
   end
 end

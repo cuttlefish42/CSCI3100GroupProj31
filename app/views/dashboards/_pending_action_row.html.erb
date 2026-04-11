@@ -9,16 +9,19 @@
   <td><%= time_ago(offer.updated_at) %></td>
   <td>
     <div class="flex flex-col gap-2 items-center justify-center">
-      <% if Current.user.id == offer.buyer_id && offer.reviewable_by?(Current.user) %>
-        <%= link_to "Leave a Review",
-              new_item_offer_review_path(offer.item, offer),
-              class: "btn btn-sm btn-success w-full" %>
-      <% else %>
-        <span class="badge badge-ghost">Reviewed</span>
+      <% if Current.user.id == offer.buyer_id %>
+        <% if offer.reviewable_by?(Current.user) %>
+          <%= link_to "Leave a Review",
+                new_item_offer_review_path(offer.item, offer),
+                class: "btn btn-sm btn-success w-full" %>
+        <% else %>
+          <span class="badge badge-ghost">Reviewed</span>
+        <% end %>
       <% end %>
       <%= link_to "View Details", item_path(offer.item), class: "btn btn-sm btn-primary w-full" %>
-      <%= button_to "Message", conversation_path(offer.buyer_id),
-            method: :get,
+      <% other_user_id = Current.user.id == offer.buyer_id ? offer.item.seller_id : offer.buyer_id %>
+      <%= button_to "Message", conversations_path(item_id: offer.item_id),
+            params: { receiver_id: other_user_id },
             class: "btn btn-sm btn-info w-full" %>
     </div>
   </td>

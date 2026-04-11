@@ -1,20 +1,16 @@
 class ResizeImagesJob < ApplicationJob
   queue_as :default
 
-  def perform(listing_id)
-    listing = Listing.find_by(id: listing_id)
-    return unless listing
+  THUMBNAIL_VARIANT = { resize_to_limit: [ 300, 300 ] }.freeze
+  PREVIEW_VARIANT   = { resize_to_limit: [ 800, 600 ] }.freeze
 
-    listing.photos.each do |photo|
-      next unless photo.content_type&.start_with?("image/")
+  def perform(item_id)
+    item = Item.find_by(id: item_id)
+    return unless item&.photo&.attached?
+    return unless item.photo.content_type&.start_with?("image/")
 
-      begin
-        photo.variant(resize_to_limit: [ 300, 300 ]).processed
-        photo.variant(resize_to_limit: [ 800, 600 ]).processed
-        puts "✅ Resized photo #{photo.id} for listing #{listing_id}"
-      rescue => e
-        puts "❌ Error resizing photo #{photo.id}: #{e.message}"
-      end
-    end
+    item.photo.variant(THUMBNAIL_VARIANT).processed
+    item.photo.variant(PREVIEW_VARIANT).processed
+    Rails.logger.info "Resized photo for item #{item_id}"
   end
 end

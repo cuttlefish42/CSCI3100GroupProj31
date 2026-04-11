@@ -3,7 +3,8 @@
 <div class="card bg-base-100 border border-base-200 <%= large_photo ? 'w-full max-w-2xl' : '' %>">
   <% if item.photo.attached? %>
     <figure class="px-4 pt-4">
-      <%= image_tag item.photo, class: "rounded-xl #{large_photo ? 'max-h-96 object-contain' : 'max-h-48 object-cover'}" %>
+      <% variant = large_photo ? ResizeImagesJob::PREVIEW_VARIANT : ResizeImagesJob::THUMBNAIL_VARIANT %>
+      <%= image_tag item.photo.variant(variant), class: "rounded-xl #{large_photo ? 'max-h-96 object-contain' : 'max-h-48 object-cover'}" %>
     </figure>
   <% end %>
 

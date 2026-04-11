@@ -1,0 +1,10 @@
+<h1>Good morning!</h1>
+
+<p>Here are your new listings from the past 24 hours:</p>
+
+<% @new_listings.each do |listing| %>
+  <div>
+    <h3><%= listing.title %></h3>
+    <p>Price: $<%= listing.price %></p>
+  </div>
+<% end %>

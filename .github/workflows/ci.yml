@@ -184,14 +184,16 @@ jobs:
           # Transfer the single compressed file
           scp -o StrictHostKeyChecking=no coverage.tar.gz root@${{ secrets.EC2_INSTANCE_ADDRESS }}:/tmp/coverage-${{ github.sha }}.tar.gz
           
-          # Execute all remote commands in a single SSH connection
-          DOMAIN=$(ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "
+          # Execute remote setup commands in a single SSH connection
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "
             mkdir -p /var/www/coverage/${{ github.sha }}
             tar -xzf /tmp/coverage-${{ github.sha }}.tar.gz -C /var/www/coverage/${{ github.sha }}
             rm /tmp/coverage-${{ github.sha }}.tar.gz
             tailscale funnel --bg --set-path /coverage /var/www/coverage
-            tailscale status --self --json | jq -r .CertDomains[0]
-          ")
+          "
+          
+          # Fetch the Tailscale domain name and parse it locally on the GitHub runner
+          DOMAIN=$(ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "tailscale status --self --json" | jq -r .CertDomains[0] | tr -d '[:space:]')
           
           UNIT_URL="https://$DOMAIN/coverage/${{ github.sha }}/unit/"
           SYSTEM_URL="https://$DOMAIN/coverage/${{ github.sha }}/system/"
@@ -201,6 +203,7 @@ jobs:
           echo "## Test Coverage Reports" >> $GITHUB_STEP_SUMMARY
           echo "- [View Unit Test HTML Report]($UNIT_URL)" >> $GITHUB_STEP_SUMMARY
           echo "- [View System Test HTML Report]($SYSTEM_URL)" >> $GITHUB_STEP_SUMMARY
+          
           echo "UNIT_URL=$UNIT_URL" >> $GITHUB_ENV
           echo "SYSTEM_URL=$SYSTEM_URL" >> $GITHUB_ENV
 

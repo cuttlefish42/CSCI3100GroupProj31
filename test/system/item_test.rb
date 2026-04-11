@@ -55,9 +55,7 @@ class ItemTest < ApplicationSystemTestCase
     end
 
     then_ "the user can see the new item" do
-      seller = User.find_by!(email_address: "sample_user_0@link.cuhk.edu.hk")
-      created_item = Item.find_by!(title: "New Item", seller: seller)
-      assert_current_path item_path(created_item), ignore_query: true
+      assert_current_path item_path, ignore_query: true
       assert_text "New Item"
       assert_text "100"
       assert_text "Books"

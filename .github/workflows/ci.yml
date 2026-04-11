@@ -97,7 +97,7 @@ jobs:
               if: always()
               with:
                   name: coverage-unit
-                  path: coverage/.resultset.json
+                  path: coverage/
                   include-hidden-files: true
 
     system-test:
@@ -131,7 +131,7 @@ jobs:
               if: always()
               with:
                   name: coverage-system
-                  path: coverage/.resultset.json
+                  path: coverage/
                   include-hidden-files: true
 
             - name: Keep screenshots from failed system tests
@@ -145,6 +145,7 @@ jobs:
     coverage:
         runs-on: ubuntu-latest
         needs: [test, system-test]
+        
         steps:
             - name: Checkout code
               uses: actions/checkout@v6
@@ -154,26 +155,52 @@ jobs:
               with:
                   bundler-cache: true
 
-            - name: Download coverage
+            - name: Tailscale
+              uses: tailscale/github-action@v4
+              with:
+                  oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+                  oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+                  tags: tag:ci
+
+            - name: Download unit coverage
               uses: actions/download-artifact@v4
               with:
-                  pattern: coverage-*
-                  path: coverage-data
+                  name: coverage-unit
+                  path: coverage/unit
 
-            - name: Merge and display coverage
-              run: |
-                bundle exec ruby -r simplecov -e "
-                  SimpleCov.start 'rails'
-                  files = Dir.glob('coverage-data/**/.resultset.json', File::FNM_DOTMATCH)
-                  exit 0 if files.empty?
-                  SimpleCov.collate(files)
-                "
-
-            - name: Upload merged coverage report
-              uses: actions/upload-artifact@v4
+            - name: Download system coverage
+              uses: actions/download-artifact@v4
               with:
-                  name: coverage-merged
-                  path: coverage/
+                  name: coverage-system
+                  path: coverage/system
+
+            - name: Upload coverage to server & serve via Tailscale
+              run: |
+                ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "mkdir -p /var/www/coverage/${{ github.sha }}"
+                scp -o StrictHostKeyChecking=no -r coverage/* root@${{ secrets.EC2_INSTANCE_ADDRESS }}:/var/www/coverage/${{ github.sha }}/
+                ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "tailscale serve --bg --set-path /coverage /var/www/coverage"
+                DOMAIN=$(ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} tailscale status --self --json | jq -r .CertDomains[0])
+                UNIT_URL="https://$DOMAIN/coverage/${{ github.sha }}/unit/index.html"
+                SYSTEM_URL="https://$DOMAIN/coverage/${{ github.sha }}/system/index.html"
+                echo "Unit Test Coverage report served at: $UNIT_URL"
+                echo "System Test Coverage report served at: $SYSTEM_URL"
+                echo "## Test Coverage Reports" >> $GITHUB_STEP_SUMMARY
+                echo "- [View Unit Test HTML Report]($UNIT_URL)" >> $GITHUB_STEP_SUMMARY
+                echo "- [View System Test HTML Report]($SYSTEM_URL)" >> $GITHUB_STEP_SUMMARY
+                echo "UNIT_URL=$UNIT_URL" >> $GITHUB_ENV
+                echo "SYSTEM_URL=$SYSTEM_URL" >> $GITHUB_ENV
+
+            - name: Comment PR with Coverage Links
+              uses: thollander/actions-comment-pull-request@v3
+              if: github.event_name == 'pull_request'
+              with:
+                message: |
+                  ## 📊 Test Coverage Reports
+                  
+                  - 🔬 [View Unit Test HTML Report](${{ env.UNIT_URL }})
+                  - 🖥️ [View System Test HTML Report](${{ env.SYSTEM_URL }})
+                  
+                  *Reports are served securely via Tailscale for this commit (${{ github.sha }}).*
 
     deploy:
         runs-on: ubuntu-latest
@@ -210,23 +237,6 @@ jobs:
                   oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
                   oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
                   tags: tag:ci
-
-            - name: Download merged coverage
-              uses: actions/download-artifact@v4
-              with:
-                  name: coverage-merged
-                  path: coverage
-
-            - name: Upload coverage to server & serve via Tailscale
-              run: |
-                ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "mkdir -p /var/www/coverage/${{ github.sha }}"
-                scp -o StrictHostKeyChecking=no -r coverage/* root@${{ secrets.EC2_INSTANCE_ADDRESS }}:/var/www/coverage/${{ github.sha }}
-                ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "tailscale serve --bg --set-path /coverage /var/www/coverage"
-                DOMAIN=$(ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} tailscale status --self --json | jq -r .CertDomains[0])
-                URL="https://$DOMAIN/coverage/${{ github.sha }}/index.html"
-                echo "Coverage report served at: $URL"
-                echo "## Test Coverage Report" >> $GITHUB_STEP_SUMMARY
-                echo "[View HTML Report]($URL)" >> $GITHUB_STEP_SUMMARY
 
             - name: Deploy with Kamal
               run: bin/kamal deploy

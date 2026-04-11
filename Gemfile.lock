@@ -444,7 +444,6 @@ DEPENDENCIES
   lefthook
   letter_opener
   letter_opener_web
-  mini_magick (~> 4.11)
   propshaft
   puma (>= 5.0)
   rails (~> 8.1.2)

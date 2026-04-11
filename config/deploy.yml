@@ -11,13 +11,16 @@ image: cuttlefish42/csci3100_group_proj31
 # interpolates them. Both files are gitignored — copy .env.example to .env.
 <% require "dotenv"; Dotenv.load(".env", ".kamal/secrets") %>
 
-# Deploy to these servers.
+# Deploy to these servers. The host comes from EC2_INSTANCE_ADDRESS so it
+# can be swapped (e.g. staging vs. prod) without editing this file. Set it
+# in .env locally or as a GitHub Actions secret in CI.
+<% deploy_host = ENV.fetch("EC2_INSTANCE_ADDRESS") %>
 servers:
     web:
-        - server1
+        - <%= deploy_host %>
     worker:
         hosts:
-            - server1
+            - <%= deploy_host %>
         cmd: bundle exec sidekiq
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
@@ -102,7 +105,7 @@ builder:
 accessories:
     redis:
         image: redis:7
-        host: server1
+        host: <%= deploy_host %>
         port: "127.0.0.1:6379:6379"
         directories:
             - data:/data

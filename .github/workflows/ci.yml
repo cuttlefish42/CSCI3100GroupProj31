@@ -1,239 +1,268 @@
 name: CI
 
 on:
-    pull_request:
-    push:
-        branches: [main]
-    workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-    # scan_ruby:
-    #     runs-on: ubuntu-latest
+  # scan_ruby:
+  #     runs-on: ubuntu-latest
 
-    #     steps:
-    #         - name: Checkout code
-    #           uses: actions/checkout@v6
+  #     steps:
+  #         - name: Checkout code
+  #           uses: actions/checkout@v6
 
-    #         - name: Set up Ruby
-    #           uses: ruby/setup-ruby@v1
-    #           with:
-    #               bundler-cache: true
+  #         - name: Set up Ruby
+  #           uses: ruby/setup-ruby@v1
+  #           with:
+  #               bundler-cache: true
 
-    #         - name: Scan for common Rails security vulnerabilities using static analysis
-    #           run: bin/brakeman --no-pager
+  #         - name: Scan for common Rails security vulnerabilities using static analysis
+  #           run: bin/brakeman --no-pager
 
-    #         - name: Scan for known security vulnerabilities in gems used
-    #           run: bin/bundler-audit
+  #         - name: Scan for known security vulnerabilities in gems used
+  #           run: bin/bundler-audit
 
-    # scan_js:
-    #     runs-on: ubuntu-latest
+  # scan_js:
+  #     runs-on: ubuntu-latest
 
-    #     steps:
-    #         - name: Checkout code
-    #           uses: actions/checkout@v6
+  #     steps:
+  #         - name: Checkout code
+  #           uses: actions/checkout@v6
 
-    #         - name: Set up Ruby
-    #           uses: ruby/setup-ruby@v1
-    #           with:
-    #               bundler-cache: true
+  #         - name: Set up Ruby
+  #           uses: ruby/setup-ruby@v1
+  #           with:
+  #               bundler-cache: true
 
-    #         - name: Scan for security vulnerabilities in JavaScript dependencies
-    #           run: bin/importmap audit
+  #         - name: Scan for security vulnerabilities in JavaScript dependencies
+  #           run: bin/importmap audit
 
-    lint:
-        runs-on: ubuntu-latest
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      RUBOCOP_CACHE_ROOT: tmp/rubocop
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Prepare RuboCop cache
+        uses: actions/cache@v4
         env:
-            RUBOCOP_CACHE_ROOT: tmp/rubocop
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
+          DEPENDENCIES_HASH: ${{ hashFiles('.ruby-version', '**/.rubocop.yml', '**/.rubocop_todo.yml', 'Gemfile.lock') }}
+        with:
+          path: ${{ env.RUBOCOP_CACHE_ROOT }}
+          key: rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-${{ github.ref_name == github.event.repository.default_branch && github.run_id || 'default' }}
+          restore-keys: |
+            rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-
 
-            - name: Set up Ruby
-              uses: ruby/setup-ruby@v1
-              with:
-                  bundler-cache: true
+      - name: Lint code for consistent style
+        run: bin/rubocop -f github
 
-            - name: Prepare RuboCop cache
-              uses: actions/cache@v4
-              env:
-                  DEPENDENCIES_HASH: ${{ hashFiles('.ruby-version', '**/.rubocop.yml', '**/.rubocop_todo.yml', 'Gemfile.lock') }}
-              with:
-                  path: ${{ env.RUBOCOP_CACHE_ROOT }}
-                  key: rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-${{ github.ref_name == github.event.repository.default_branch && github.run_id || 'default' }}
-                  restore-keys: |
-                      rubocop-${{ runner.os }}-${{ env.DEPENDENCIES_HASH }}-
+  test:
+    runs-on: ubuntu-latest
 
-            - name: Lint code for consistent style
-              run: bin/rubocop -f github
+    # services:
+    #  redis:
+    #    image: valkey/valkey:8
+    #    ports:
+    #      - 6379:6379
+    #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-    test:
-        runs-on: ubuntu-latest
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
 
-        # services:
-        #  redis:
-        #    image: valkey/valkey:8
-        #    ports:
-        #      - 6379:6379
-        #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
-
-            - name: Set up Ruby
-              uses: ruby/setup-ruby@v1
-              with:
-                  bundler-cache: true
-
-            - name: Run tests
-              env:
-                  RAILS_ENV: test
-                  RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-                  SIMPLECOV_NAME: test-unit
-                  # REDIS_URL: redis://localhost:6379/0
-              run: bin/rails db:test:prepare test
-
-            - name: Upload coverage
-              uses: actions/upload-artifact@v4
-              if: always()
-              with:
-                  name: coverage-unit
-                  path: coverage/.resultset.json
-                  include-hidden-files: true
-
-    system-test:
-        runs-on: ubuntu-latest
-
-        # services:
-        #  redis:
-        #    image: valkey/valkey:8
-        #    ports:
-        #      - 6379:6379
-        #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
-
-            - name: Set up Ruby
-              uses: ruby/setup-ruby@v1
-              with:
-                  bundler-cache: true
-
-            - name: Run System Tests
-              env:
-                  RAILS_ENV: test
-                  RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-                  SIMPLECOV_NAME: test-system
-                  # REDIS_URL: redis://localhost:6379/0
-              run: bin/rails db:test:prepare test:system
-
-            - name: Upload coverage
-              uses: actions/upload-artifact@v4
-              if: always()
-              with:
-                  name: coverage-system
-                  path: coverage/.resultset.json
-                  include-hidden-files: true
-
-            - name: Keep screenshots from failed system tests
-              uses: actions/upload-artifact@v4
-              if: failure()
-              with:
-                  name: screenshots
-                  path: ${{ github.workspace }}/tmp/screenshots
-                  if-no-files-found: ignore
-
-    coverage:
-        runs-on: ubuntu-latest
-        needs: [test, system-test]
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
-
-            - name: Set up Ruby
-              uses: ruby/setup-ruby@v1
-              with:
-                  bundler-cache: true
-
-            - name: Download coverage
-              uses: actions/download-artifact@v4
-              with:
-                  pattern: coverage-*
-                  path: coverage-data
-
-            - name: Merge and display coverage
-              run: |
-                bundle exec ruby -r simplecov -e "
-                  SimpleCov.start 'rails'
-                  files = Dir.glob('coverage-data/**/.resultset.json', File::FNM_DOTMATCH)
-                  exit 0 if files.empty?
-                  SimpleCov.collate(files)
-                "
-
-            - name: Upload merged coverage report
-              uses: actions/upload-artifact@v4
-              with:
-                  name: coverage-merged
-                  path: coverage/
-
-    deploy:
-        runs-on: ubuntu-latest
-        needs: [lint, test, system-test, coverage]
-        if: github.ref == 'refs/heads/main'
-
-        permissions:
-            contents: read
-            packages: write
-
+      - name: Run tests
         env:
-            RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-            KAMAL_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-            EC2_INSTANCE_ADDRESS: ${{ secrets.EC2_INSTANCE_ADDRESS }}
+          RAILS_ENV: test
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          SIMPLECOV_NAME: test-unit
+          # REDIS_URL: redis://localhost:6379/0
+        run: bin/rails db:test:prepare test
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v6
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-unit
+          path: coverage/
+          include-hidden-files: true
 
-            - name: Set up Ruby
-              uses: ruby/setup-ruby@v1
-              with:
-                  bundler-cache: true
+  system-test:
+    runs-on: ubuntu-latest
 
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3
+    # services:
+    #  redis:
+    #    image: valkey/valkey:8
+    #    ports:
+    #      - 6379:6379
+    #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-            - name: Expose GitHub Runtime for cache
-              uses: crazy-max/ghaction-github-runtime@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
 
-            - name: Tailscale
-              uses: tailscale/github-action@v4
-              with:
-                  oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-                  oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-                  tags: tag:ci
+      - name: Run System Tests
+        env:
+          RAILS_ENV: test
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          SIMPLECOV_NAME: test-system
+          # REDIS_URL: redis://localhost:6379/0
+        run: bin/rails db:test:prepare test:system
 
-            - name: Download merged coverage
-              uses: actions/download-artifact@v4
-              with:
-                  name: coverage-merged
-                  path: coverage
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-system
+          path: coverage/
+          include-hidden-files: true
 
-            - name: Upload coverage to server & serve via Tailscale
-              run: |
-                ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "mkdir -p /var/www/coverage/${{ github.sha }}"
-                scp -o StrictHostKeyChecking=no -r coverage/* root@${{ secrets.EC2_INSTANCE_ADDRESS }}:/var/www/coverage/${{ github.sha }}
-                ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "tailscale serve --bg --set-path /coverage /var/www/coverage"
-                DOMAIN=$(ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} tailscale status --self --json | jq -r .CertDomains[0])
-                URL="https://$DOMAIN/coverage/${{ github.sha }}/index.html"
-                echo "Coverage report served at: $URL"
-                echo "## Test Coverage Report" >> $GITHUB_STEP_SUMMARY
-                echo "[View HTML Report]($URL)" >> $GITHUB_STEP_SUMMARY
+      - name: Keep screenshots from failed system tests
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: screenshots
+          path: ${{ github.workspace }}/tmp/screenshots
+          if-no-files-found: ignore
 
-            - name: Deploy with Kamal
-              run: bin/kamal deploy
+  coverage:
+    runs-on: ubuntu-latest
+    needs: [test, system-test]
+    permissions:
+      pull-requests: write
 
-            - name: Delete old packages
-              uses: actions/delete-package-versions@v5
-              with:
-                  package-name: "csci3100_group_proj31"
-                  package-type: "container"
-                  min-versions-to-keep: 3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Download unit coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-unit
+          path: coverage/unit
+
+      - name: Download system coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-system
+          path: coverage/system
+
+      - name: Upload coverage to server & serve via Tailscale Funnel
+        run: |
+          # Compress coverage directory locally to avoid slow scp for many small files
+          tar -czf coverage.tar.gz -C coverage .
+          
+          # Transfer the single compressed file
+          scp -o StrictHostKeyChecking=no coverage.tar.gz root@${{ secrets.EC2_INSTANCE_ADDRESS }}:/tmp/coverage-${{ github.sha }}.tar.gz
+          
+          # Execute remote setup commands in a single SSH connection
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "
+            mkdir -p /var/www/coverage/${{ github.sha }}
+            tar -xzf /tmp/coverage-${{ github.sha }}.tar.gz -C /var/www/coverage/${{ github.sha }}
+            rm /tmp/coverage-${{ github.sha }}.tar.gz
+            tailscale funnel --bg --set-path /coverage /var/www/coverage
+          "
+          
+          # Fetch the Tailscale domain name and parse it locally on the GitHub runner
+          DOMAIN=$(ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "tailscale status --self --json" | jq -r .CertDomains[0] | tr -d '[:space:]')
+          
+          UNIT_URL="https://$DOMAIN/coverage/${{ github.sha }}/unit/"
+          SYSTEM_URL="https://$DOMAIN/coverage/${{ github.sha }}/system/"
+          
+          echo "Unit Test Coverage report served at: $UNIT_URL"
+          echo "System Test Coverage report served at: $SYSTEM_URL"
+          echo "## Test Coverage Reports" >> $GITHUB_STEP_SUMMARY
+          echo "- [View Unit Test HTML Report]($UNIT_URL)" >> $GITHUB_STEP_SUMMARY
+          echo "- [View System Test HTML Report]($SYSTEM_URL)" >> $GITHUB_STEP_SUMMARY
+          
+          echo "UNIT_URL=$UNIT_URL" >> $GITHUB_ENV
+          echo "SYSTEM_URL=$SYSTEM_URL" >> $GITHUB_ENV
+
+      - name: Comment PR with Coverage Links
+        uses: thollander/actions-comment-pull-request@v3
+        if: github.event_name == 'pull_request'
+        with:
+          comment-tag: coverage-report
+          mode: recreate
+          message: |
+            ## 📊 Test Coverage Reports
+
+            - 🔬 [View Unit Test HTML Report](${{ env.UNIT_URL }})
+            - 🖥️ [View System Test HTML Report](${{ env.SYSTEM_URL }})
+
+            *Reports are publicly accessible via Tailscale Funnel for this commit (${{ github.sha }}).*
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [lint, test, system-test, coverage]
+    if: github.ref == 'refs/heads/main'
+
+    permissions:
+      contents: read
+      packages: write
+
+    env:
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      KAMAL_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+      EC2_INSTANCE_ADDRESS: ${{ secrets.EC2_INSTANCE_ADDRESS }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Expose GitHub Runtime for cache
+        uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Deploy with Kamal
+        run: bin/kamal deploy
+
+      - name: Delete old packages
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: "csci3100_group_proj31"
+          package-type: "container"
+          min-versions-to-keep: 3

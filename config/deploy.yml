@@ -7,7 +7,9 @@ image: cuttlefish42/csci3100_group_proj31
 
 # Refer to https://kamal-deploy.org/docs/upgrading/secrets-changes/#environment-variables-in-deployyml.
 # Kamal would load neither .env or .kamal/secrets to ENV, we have to load it manually.
-<% require "dotenv"; Dotenv.load(".kamal/secrets") %>
+# .env is loaded first so values defined there are available when .kamal/secrets
+# interpolates them. Both files are gitignored — copy .env.example to .env.
+<% require "dotenv"; Dotenv.load(".env", ".kamal/secrets") %>
 
 # Deploy to these servers.
 servers:

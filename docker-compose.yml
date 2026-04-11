@@ -1,0 +1,25 @@
+# Local development services. The Rails app and Sidekiq worker still run on
+# the host via `bin/dev`; this file is just here so contributors don't have
+# to install Redis system-wide.
+#
+# Usage:
+#   docker compose up -d        # start Redis in the background
+#   docker compose down         # stop and remove the container
+#   docker compose logs -f redis
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: csci3100_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  redis_data:

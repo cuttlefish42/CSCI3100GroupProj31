@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   # Authentation
   resource :session
   resources :passwords, param: :token
-  resource :sign_up, controller: 'sign_ups', only: [:show, :create]
+  resource :sign_up, controller: "sign_ups", only: [ :show, :create ]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # About Us

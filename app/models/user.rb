@@ -11,11 +11,10 @@ class User < ApplicationRecord
   has_many :reviews_received, class_name: "Review", foreign_key: :reviewee_id, dependent: :destroy
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
-  
+
   validates :first_name, :last_name, presence: true
   validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP, message: "is invalid" }
   def full_name
     "#{first_name} #{last_name}"
   end
-
 end

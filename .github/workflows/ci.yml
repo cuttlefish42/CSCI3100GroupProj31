@@ -159,7 +159,7 @@ jobs:
                   path: coverage-data
 
             - name: Merge and display coverage
-              run: bin/coverage_report
+              run: bundle exec bin/coverage_report
 
             - name: Upload merged coverage report
               uses: actions/upload-artifact@v4

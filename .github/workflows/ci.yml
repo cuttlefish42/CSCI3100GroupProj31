@@ -161,7 +161,13 @@ jobs:
                   path: coverage-data
 
             - name: Merge and display coverage
-              run: bundle exec bin/coverage_report
+              run: |
+                bundle exec ruby -r simplecov -e "
+                  SimpleCov.start 'rails'
+                  files = Dir.glob('coverage-data/**/.resultset.json', File::FNM_DOTMATCH)
+                  exit 0 if files.empty?
+                  SimpleCov.collate(files)
+                "
 
             - name: Upload merged coverage report
               uses: actions/upload-artifact@v4
@@ -204,6 +210,23 @@ jobs:
                   oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
                   oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
                   tags: tag:ci
+
+            - name: Download merged coverage
+              uses: actions/download-artifact@v4
+              with:
+                  name: coverage-merged
+                  path: coverage
+
+            - name: Upload coverage to server & serve via Tailscale
+              run: |
+                ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "mkdir -p /var/www/coverage/${{ github.sha }}"
+                scp -o StrictHostKeyChecking=no -r coverage/* root@${{ secrets.EC2_INSTANCE_ADDRESS }}:/var/www/coverage/${{ github.sha }}
+                ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "tailscale serve --bg --set-path /coverage /var/www/coverage"
+                DOMAIN=$(ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} tailscale status --self --json | jq -r .CertDomains[0])
+                URL="https://$DOMAIN/coverage/${{ github.sha }}/index.html"
+                echo "Coverage report served at: $URL"
+                echo "## Test Coverage Report" >> $GITHUB_STEP_SUMMARY
+                echo "[View HTML Report]($URL)" >> $GITHUB_STEP_SUMMARY
 
             - name: Deploy with Kamal
               run: bin/kamal deploy

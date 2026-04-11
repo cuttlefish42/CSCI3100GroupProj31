@@ -178,12 +178,24 @@ jobs:
 
       - name: Upload coverage to server & serve via Tailscale Funnel
         run: |
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "mkdir -p /var/www/coverage/${{ github.sha }}"
-          scp -o StrictHostKeyChecking=no -r coverage/* root@${{ secrets.EC2_INSTANCE_ADDRESS }}:/var/www/coverage/${{ github.sha }}/
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "tailscale funnel --bg --set-path /coverage /var/www/coverage"
-          DOMAIN=$(ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} tailscale status --self --json | jq -r .CertDomains[0])
+          # Compress coverage directory locally to avoid slow scp for many small files
+          tar -czf coverage.tar.gz -C coverage .
+          
+          # Transfer the single compressed file
+          scp -o StrictHostKeyChecking=no coverage.tar.gz root@${{ secrets.EC2_INSTANCE_ADDRESS }}:/tmp/coverage-${{ github.sha }}.tar.gz
+          
+          # Execute all remote commands in a single SSH connection
+          DOMAIN=$(ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "
+            mkdir -p /var/www/coverage/${{ github.sha }}
+            tar -xzf /tmp/coverage-${{ github.sha }}.tar.gz -C /var/www/coverage/${{ github.sha }}
+            rm /tmp/coverage-${{ github.sha }}.tar.gz
+            tailscale funnel --bg --set-path /coverage /var/www/coverage
+            tailscale status --self --json | jq -r .CertDomains[0]
+          ")
+          
           UNIT_URL="https://$DOMAIN/coverage/${{ github.sha }}/unit/"
           SYSTEM_URL="https://$DOMAIN/coverage/${{ github.sha }}/system/"
+          
           echo "Unit Test Coverage report served at: $UNIT_URL"
           echo "System Test Coverage report served at: $SYSTEM_URL"
           echo "## Test Coverage Reports" >> $GITHUB_STEP_SUMMARY

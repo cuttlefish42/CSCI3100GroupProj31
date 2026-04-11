@@ -41,3 +41,5 @@
 
 # Redis dump file (created by `redis-server` in dev)
 /dump.rdb
+/coverage
+/coverage-data

@@ -88,8 +88,16 @@ jobs:
               env:
                   RAILS_ENV: test
                   RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+                  SIMPLECOV_NAME: test-unit
                   # REDIS_URL: redis://localhost:6379/0
               run: bin/rails db:test:prepare test
+
+            - name: Upload coverage
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: coverage-unit
+                  path: coverage/.resultset.json
 
     system-test:
         runs-on: ubuntu-latest
@@ -113,8 +121,16 @@ jobs:
               env:
                   RAILS_ENV: test
                   RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+                  SIMPLECOV_NAME: test-system
                   # REDIS_URL: redis://localhost:6379/0
               run: bin/rails db:test:prepare test:system
+
+            - name: Upload coverage
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: coverage-system
+                  path: coverage/.resultset.json
 
             - name: Keep screenshots from failed system tests
               uses: actions/upload-artifact@v4
@@ -124,9 +140,36 @@ jobs:
                   path: ${{ github.workspace }}/tmp/screenshots
                   if-no-files-found: ignore
 
+    coverage:
+        runs-on: ubuntu-latest
+        needs: [test, system-test]
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v6
+
+            - name: Set up Ruby
+              uses: ruby/setup-ruby@v1
+              with:
+                  bundler-cache: true
+
+            - name: Download coverage
+              uses: actions/download-artifact@v4
+              with:
+                  pattern: coverage-*
+                  path: coverage-data
+
+            - name: Merge and display coverage
+              run: bin/coverage_report
+
+            - name: Upload merged coverage report
+              uses: actions/upload-artifact@v4
+              with:
+                  name: coverage-merged
+                  path: coverage/
+
     deploy:
         runs-on: ubuntu-latest
-        needs: [lint, test, system-test]
+        needs: [lint, test, system-test, coverage]
         if: github.ref == 'refs/heads/main'
 
         permissions:

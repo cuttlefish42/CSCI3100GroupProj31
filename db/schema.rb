@@ -79,14 +79,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_114921) do
     t.index ["seller_id"], name: "index_items_on_seller_id"
   end
 
-  create_table "listings", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.text "description"
-    t.decimal "price"
-    t.string "title"
-    t.datetime "updated_at", null: false
-  end
-
   create_table "messages", force: :cascade do |t|
     t.text "content"
     t.integer "conversation_id", null: false

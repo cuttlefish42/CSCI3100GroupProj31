@@ -1,15 +1,24 @@
 module SetupHelper
-  def create_sample_users(count:, karma_sequence: nil)
-    count.times do |i|
-      karma_value = karma_sequence ? karma_sequence.call(i) : i
+  # Create one user. Defaults are valid; pass any attribute to override.
+  def create_sample_user(attributes = {})
+    defaults = {
+      email_address: "sample_user_0@link.cuhk.edu.hk",
+      first_name: "Sample",
+      last_name: "User",
+      password: "password123",
+      password_confirmation: "password123"
+    }
+    User.create!(defaults.merge(attributes))
+  end
 
-      User.create!(
+  # Create N sequentially-numbered sample users (sample_user_0..N-1) with
+  # ascending karma. Pass karma_sequence to override the karma per user.
+  def create_sample_users(count:, karma_sequence: nil)
+    count.times.map do |i|
+      create_sample_user(
         email_address: "sample_user_#{i}@link.cuhk.edu.hk",
-        first_name: "Sample",
         last_name: "User#{i}",
-        password: "password123",
-        password_confirmation: "password123",
-        karma: karma_value
+        karma: karma_sequence ? karma_sequence.call(i) : i
       )
     end
   end

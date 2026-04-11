@@ -4,22 +4,13 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
   # check that only top 20 users are shown
   test "at most 20 users are shown" do
     given "more than 20 users are in the database" do
-      25.times do |i|
-        create_sample_user(
-          email_address: "sample_user_#{i}@link.cuhk.edu.hk",
-          first_name: "Sample",
-          last_name: "User#{i}",
-          karma: i
-        )
-      end
+      create_sample_users(count: 25)
     end
 
     given "the user is logged in" do
       visit new_session_path
-      fill_in "Email", with: "sample_user_1@link.cuhk.edu.hk"
-      fill_in "Password", with: "password123"
-      click_button "Sign in"
-      # Have to ensure the cookie is updated otherwise the subsequent steps would fail.
+      login_user_as(email: "sample_user_0@link.cuhk.edu.hk", password: "password123")
+      # Wait for the session cookie to be set before navigating away
       assert_text "Log out"
     end
 
@@ -37,21 +28,12 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
   # check sort by descending order
   test "user checks karma leaderboard for lowest karma users" do
     given "the following sample users exists" do
-      5.times do |i|
-        create_sample_user(
-          email_address: "sample_user_#{i}@link.cuhk.edu.hk",
-          first_name: "Sample",
-          last_name: "User#{i}",
-          karma: i
-        )
-      end
+      create_sample_users(count: 5)
     end
 
     given "the user is logged in" do
       visit new_session_path
-      fill_in "Email", with: "sample_user_1@link.cuhk.edu.hk"
-      fill_in "Password", with: "password123"
-      click_button "Sign in"
+      login_user_as(email: "sample_user_1@link.cuhk.edu.hk", password: "password123")
       assert_text "Log out"
     end
 
@@ -71,21 +53,12 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
   # check sort by ascending order
   test "user checks karma leaderboard for highest karma users" do
     given "the following sample users exists" do
-      5.times do |i|
-        create_sample_user(
-          email_address: "sample_user_#{i}@link.cuhk.edu.hk",
-          first_name: "Sample",
-          last_name: "User#{i}",
-          karma: i
-        )
-      end
+      create_sample_users(count: 5)
     end
 
     given "the user is logged in" do
       visit new_session_path
-      fill_in "Email", with: "sample_user_1@link.cuhk.edu.hk"
-      fill_in "Password", with: "password123"
-      click_button "Sign in"
+      login_user_as(email: "sample_user_1@link.cuhk.edu.hk", password: "password123")
       assert_text "Log out"
     end
 
@@ -94,7 +67,7 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
       click_link "Lowest Karma"
     end
 
-    then_ "the user sees that leaderboard is sorted in descending order" do
+    then_ "the user sees that leaderboard is sorted in ascending order" do
       assert_current_path karma_leaderboard_path, ignore_query: true
       assert_selector "tbody tr"
       rows = all("tbody tr", minimum: 1).map(&:text)

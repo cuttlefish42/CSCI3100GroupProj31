@@ -2,6 +2,7 @@ require "test_helper"
 require "capybara/minitest"
 require "selenium/webdriver"
 require_relative "system/support/bdd_steps"
+require_relative "system/support/setup_helper"
 
 Capybara.disable_animation = true
 Capybara.automatic_label_click = true
@@ -21,6 +22,7 @@ end
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include BddSteps
+  include SetupHelper
 
   parallelize(workers: 1)
   driven_by :custom_headless_chrome

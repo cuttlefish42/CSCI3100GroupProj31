@@ -12,6 +12,14 @@ Make sure rails secret is put at `config/master.key`. Obtain the rails secret in
 # Development
 Run `bin/setup` to setup dependencies and database.
 
+Image processing (item thumbnails) uses libvips, which has to be installed
+on the host:
+
+```
+sudo apt install libvips42 libvips-tools    # Ubuntu / WSL
+brew install vips                            # macOS
+```
+
 If you want to reset your local db, use `bin/rails db:reset`
 
 

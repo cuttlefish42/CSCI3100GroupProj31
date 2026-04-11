@@ -176,11 +176,11 @@ jobs:
           name: coverage-system
           path: coverage/system
 
-      - name: Upload coverage to server & serve via Tailscale
+      - name: Upload coverage to server & serve via Tailscale Funnel
         run: |
           ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "mkdir -p /var/www/coverage/${{ github.sha }}"
           scp -o StrictHostKeyChecking=no -r coverage/* root@${{ secrets.EC2_INSTANCE_ADDRESS }}:/var/www/coverage/${{ github.sha }}/
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "tailscale serve --bg --set-path /coverage /var/www/coverage"
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} "tailscale funnel --bg --set-path /coverage /var/www/coverage"
           DOMAIN=$(ssh -o StrictHostKeyChecking=no root@${{ secrets.EC2_INSTANCE_ADDRESS }} tailscale status --self --json | jq -r .CertDomains[0])
           UNIT_URL="https://$DOMAIN/coverage/${{ github.sha }}/unit/"
           SYSTEM_URL="https://$DOMAIN/coverage/${{ github.sha }}/system/"
@@ -196,13 +196,15 @@ jobs:
         uses: thollander/actions-comment-pull-request@v3
         if: github.event_name == 'pull_request'
         with:
+          comment-tag: coverage-report
+          mode: recreate
           message: |
             ## 📊 Test Coverage Reports
 
             - 🔬 [View Unit Test HTML Report](${{ env.UNIT_URL }})
             - 🖥️ [View System Test HTML Report](${{ env.SYSTEM_URL }})
 
-            *Reports are served securely via Tailscale for this commit (${{ github.sha }}).*
+            *Reports are publicly accessible via Tailscale Funnel for this commit (${{ github.sha }}).*
 
   deploy:
     runs-on: ubuntu-latest

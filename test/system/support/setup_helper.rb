@@ -50,13 +50,13 @@ module SetupHelper
     end
   end
 
-  def create_sample_communities()
+  def create_sample_communities
     community = Community.find_or_create_by!(name: "Chung Chi College") do |c|
       c.community_type = "College"
     end
   end
 
-  def create_sample_categories()
+  def create_sample_categories
     category = Category.find_or_create_by!(name: "Books")
   end
 

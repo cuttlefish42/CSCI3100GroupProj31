@@ -74,3 +74,9 @@ gem 'mini_magick', '~> 4.11'
 gem "sidekiq", "~> 7.0"
 gem "redis", "~> 5.0"
 
+
+gem "simplecov", "~> 0.22.0"
+gem "whenever", require: false
+
+gem "lucide-rails", "~> 0.7.4"
+

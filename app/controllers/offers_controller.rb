@@ -1,8 +1,12 @@
 class OffersController < ApplicationController
   include OfferManageable
 
-  skip_before_action :set_offer, only: [ :create ]
+  skip_before_action :set_offer, only: [ :new, :create ]
   before_action :authorize_buyer!, only: [ :update, :destroy ]
+
+  def new
+    @offer = @item.offers.build
+  end
 
   def create
     unless @item.available?

@@ -1,7 +1,17 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
+
+# Controller / integration test helpers (auto-included via ActionDispatch::IntegrationTest)
 require_relative "test_helpers/session_test_helper"
+
+# Testcoverage
+require "simplecov"
+SimpleCov.start "rails" do
+  enable_coverage :branch
+  primary_coverage :branch
+  command_name ENV["SIMPLECOV_NAME"] if ENV["SIMPLECOV_NAME"]
+end
 
 module ActiveSupport
   class TestCase

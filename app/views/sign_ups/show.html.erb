@@ -1,0 +1,41 @@
+<div class="container mx-auto p-4 max-w-sm">
+  <h1>Sign Up</h1>
+
+  <div class="card card-border bg-base-100 shadow-xl">
+    <div class="card-body">
+        <%= form_with model: @user, url: sign_up_path, class: "flex flex-col gap-4" do |form| %>
+          <div>
+            <%= form.label :first_name, class: "label font-semibold" %>
+            <%= form.text_field :first_name, required: true, autofocus: true, class: "w-full input input-bordered" %>
+          </div>
+
+          <div>
+            <%= form.label :last_name, class: "label font-semibold" %>
+            <%= form.text_field :last_name, required: true, class: "w-full input input-bordered" %>
+          </div>
+
+          <div>
+            <%= form.label :email_address, class: "label font-semibold" %>
+            <%= form.email_field :email_address, required: true, autocomplete: "email" %>
+          </div>
+
+          <div>
+            <%= form.label :password, class: "label font-semibold" %>
+            <%= form.password_field :password, required: true, autocomplete: "new-password" %>
+          </div>
+
+          <div>
+            <%= form.label :password_confirmation, class: "label font-semibold" %>
+            <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password" %>
+          </div>
+
+          <div class="mt-2">
+            <%= form.submit "Sign up", class: "btn btn-primary w-full" %>
+          </div>
+        <% end %>
+        <div class="text-center mt-2">
+          <%= link_to "Already have an account?", new_session_path, class: "text_sm" %>
+        </div>
+    </div>
+  </div>
+</div>

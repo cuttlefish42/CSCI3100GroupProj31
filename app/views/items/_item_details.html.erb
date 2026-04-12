@@ -44,6 +44,11 @@
     <div class="mb-8"></div>
   <% end %>
 
+  <div class="flex items-center gap-3 my-4">
+    <span class="badge badge-ghost"><%= item.views_count %> views</span>
+    <%= render "items/like_button", item: item %>
+  </div>
+
   <div class="flex gap-4 my-4">
     <%= link_to "Back", items_path, class: "btn btn-outline" %>
     <% if Current.user == item.seller %>

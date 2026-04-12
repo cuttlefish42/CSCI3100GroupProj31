@@ -18,7 +18,7 @@
       <tbody>
         <% offers.each do |offer| %>
           <tr>
-            <td><%= offer.buyer.email_address %></td>
+            <td><%= link_to offer.buyer.full_name, user_path(offer.buyer) %></td>
             <td><%= price(offer.price_offered) %></td>
             <td><%= offer.message.presence || "—" %></td>
             <td>
@@ -72,7 +72,7 @@
       <tbody>
         <% offers.each do |offer| %>
           <tr>
-            <td><%= offer.buyer == Current.user ? "You" : offer.buyer.email_address %></td>
+            <td><%= offer.buyer == Current.user ? "You" : link_to(offer.buyer.full_name, user_path(offer.buyer)) %></td>
             <td><%= price(offer.price_offered) %></td>
             <td><%= offer.message.presence || "—" %></td>
             <td>
@@ -109,7 +109,7 @@
                         method: :delete,
                         class: "btn btn-sm btn-error w-full",
                         data: { turbo_confirm: "Withdraw this offer?" } %>
-                  <button type="button" class="btn btn-sm btn-primary w-full" onclick="document.querySelector('[data-action=\'offer-price#open\']').click()">Edit Offer</button>
+                  <%= link_to "Edit Offer", new_item_offer_path(item), class: "btn btn-sm btn-primary w-full" %>
                 </div>
               <% end %>
             </td>

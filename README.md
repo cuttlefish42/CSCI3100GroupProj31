@@ -30,6 +30,9 @@ To run unit test, use `bin/rails test`.
 ## System test
 To run sysmtem test, use `bin/rails test:system`. (None for now)
 
+# Documentation
+- [Offer & Item State Management](docs/offer_fsm.pdf) — Diagram showing offer/item status transitions and routes
+
 # Services
 The app uses **Sidekiq** for background jobs (image thumbnail generation,
 mail digests). Sidekiq needs **Redis**. The easiest way to get Redis on a

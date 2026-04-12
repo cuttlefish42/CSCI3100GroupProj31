@@ -1,7 +1,7 @@
 <%# locals: (offer:) %>
 <tr id="sent_offer_<%= offer.id %>">
   <td><%= link_to offer.item.title, item_path(offer.item) %></td>
-  <td><%= offer.item.seller.email_address %></td>
+  <td><%= link_to offer.item.seller.full_name, user_path(offer.item.seller) %></td>
   <td><%= price(offer.price_offered) %></td>
   <td><%= offer.message.presence || "—" %></td>
   <td>

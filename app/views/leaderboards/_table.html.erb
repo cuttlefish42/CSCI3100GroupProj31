@@ -3,7 +3,7 @@
     <thead>
       <tr>
         <th>Rank</th>
-        <th>Username</th>
+        <th>Name</th>
         <th>Karma</th>
         <th>Joined</th>
       </tr>
@@ -12,7 +12,7 @@
       <% @display_users.each_with_index do |u, i| %>
         <tr>
           <td><%= i + 1 %></td>
-          <td><%= u.username %></td>
+          <td><%= u.full_name %></td>
           <td><%= u.karma %></td>
           <td><%= time_ago_in_words(u.created_at) %> ago</td>
         </tr>

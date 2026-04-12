@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_06_063926) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_12_122956) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -67,6 +67,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_063926) do
     t.integer "condition", default: 0
     t.datetime "created_at", null: false
     t.decimal "latitude"
+    t.integer "likes_count", default: 0, null: false
     t.decimal "longitude"
     t.string "meetup_note"
     t.decimal "price"
@@ -74,9 +75,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_063926) do
     t.integer "status", default: 0
     t.string "title"
     t.datetime "updated_at", null: false
+    t.integer "views_count", default: 0, null: false
     t.index ["category_id"], name: "index_items_on_category_id"
     t.index ["community_id"], name: "index_items_on_community_id"
     t.index ["seller_id"], name: "index_items_on_seller_id"
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "item_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["item_id"], name: "index_likes_on_item_id"
+    t.index ["user_id", "item_id"], name: "index_likes_on_user_id_and_item_id", unique: true
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "listings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.decimal "price"
+    t.string "title"
+    t.datetime "updated_at", null: false
   end
 
   create_table "messages", force: :cascade do |t|
@@ -106,6 +126,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_063926) do
     t.index ["item_id"], name: "index_offers_on_item_id"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.integer "offer_id", null: false
+    t.integer "rating", null: false
+    t.integer "reviewee_id", null: false
+    t.integer "reviewer_id", null: false
+    t.integer "role", null: false
+    t.datetime "updated_at", null: false
+    t.index ["offer_id", "role"], name: "index_reviews_on_offer_id_and_role", unique: true
+    t.index ["offer_id"], name: "index_reviews_on_offer_id"
+    t.index ["reviewee_id"], name: "index_reviews_on_reviewee_id"
+    t.index ["reviewer_id"], name: "index_reviews_on_reviewer_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -116,15 +151,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_063926) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.integer "buyer_karma", default: 0, null: false
     t.datetime "created_at", null: false
     t.integer "default_community_id"
     t.string "email_address", null: false
+    t.string "first_name"
     t.integer "karma", default: 0
+    t.string "last_name"
     t.string "password_digest", null: false
     t.datetime "password_reset_sent_at"
     t.string "password_reset_token"
+    t.integer "seller_karma", default: 0, null: false
     t.datetime "updated_at", null: false
-    t.string "username"
     t.index ["default_community_id"], name: "index_users_on_default_community_id"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
@@ -136,12 +174,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_063926) do
   add_foreign_key "items", "categories"
   add_foreign_key "items", "communities"
   add_foreign_key "items", "users", column: "seller_id"
+  add_foreign_key "likes", "items"
+  add_foreign_key "likes", "users"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "items"
   add_foreign_key "messages", "offers"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "offers", "items"
   add_foreign_key "offers", "users", column: "buyer_id"
+  add_foreign_key "reviews", "offers"
+  add_foreign_key "reviews", "users", column: "reviewee_id"
+  add_foreign_key "reviews", "users", column: "reviewer_id"
   add_foreign_key "sessions", "users"
   add_foreign_key "users", "communities", column: "default_community_id"
 end

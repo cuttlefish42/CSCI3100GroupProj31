@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   # Authentation
   resource :session
   resources :passwords, param: :token
+  resource :sign_up, controller: "sign_ups", only: [ :show, :create ]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # About Us
@@ -12,19 +13,26 @@ Rails.application.routes.draw do
 
   # Items
   resources :items do
+    member do
+      post :toggle_like
+    end
     # Offers
-    resources :offers, only: [ :create, :update, :destroy ] do
+    resources :offers, only: [ :new, :create, :update, :destroy ] do
       # 1to1 relation no s
       resource :acceptance, only: [ :create ], module: :offers
       resource :rejection, only: [ :create ], module: :offers
       resource :counter, only: [ :create ], module: :offers
       resource :counter_acceptance, only: [ :create ], module: :offers
       resource :counter_rejection, only: [ :create ], module: :offers
+      resource :review, only: [ :new, :create ]
     end
   end
 
   # Dashboard
   resource :dashboard, only: [ :show ]
+
+  # User profiles
+  resources :users, only: [ :show ]
 
   resources :conversations, only: [ :index, :show, :create ] do
     resources :messages, only: [ :create ]

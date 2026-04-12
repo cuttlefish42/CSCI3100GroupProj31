@@ -3,8 +3,9 @@ class Offer < ApplicationRecord
   belongs_to :item
 
   has_many :messages, dependent: :nullify
+  has_many :reviews, dependent: :destroy
 
-  enum :status, { pending: 0, accepted: 1, rejected: 2, countered: 3 }
+  enum :status, { pending: 0, accepted: 1, rejected: 2, countered: 3, completed: 4 }
 
   validate :buyer_is_not_seller
   validates :price_offered, numericality: { greater_than: 0 }
@@ -57,6 +58,19 @@ class Offer < ApplicationRecord
     else
       order_by_date(dir)
     end
+  end
+
+  def reviewable_by?(user)
+    return false unless (accepted? || completed?) && user
+    role = review_role_for(user)
+    return false if role.nil?
+    !reviews.exists?(role: role)
+  end
+
+  def review_role_for(user)
+    return :seller_review if user.id == buyer_id
+    return :buyer_review  if item && user.id == item.seller_id
+    nil
   end
 
   def accept!

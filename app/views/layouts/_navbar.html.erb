@@ -1,8 +1,6 @@
 <div class="navbar bg-base-200 shadow-sm mb-6">
   <div class="flex-1">
     <span class="text-2xl font-bold px-4">CUHK Marketplace</span>
-  </div>
-  <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
       <li><%= link_to "Items", items_path %></li>
       <li><%= link_to "Karma Leaderboard", karma_leaderboard_path %></li>
@@ -10,13 +8,21 @@
       <li><%= link_to "Profile", "#profile" %></li>
       <li><%= link_to "About Us", "#about" %></li>
       <li><%= link_to "Conversations", conversations_path %></li>
-      <li>
-        <% if authenticated? %>
-          <%= link_to "Log out", session_path, data: { turbo_method: :delete }, class: "text-error font-semibold" %>
-        <% else %>
-          <%= link_to "Log in", new_session_path, class: "text-success font-semibold" %>
-        <% end %>
-      </li>
+    </ul>
+  </div>
+  <div class="flex-none" data-controller="theme">
+    <label class="swap swap-rotate btn btn-ghost btn-circle">
+      <input type="checkbox" data-theme-target="toggle" data-action="theme#switch">
+      <%= lucide_icon("moon", class: "swap-off w-5 h-5") %>
+      <%= lucide_icon("sun", class: "swap-on w-5 h-5") %>
+    </label>
+    <ul class="menu menu-horizontal px-1">
+      <% if authenticated? %>
+        <li><%= button_to "Log out", session_path, method: :delete, form: { data: { turbo: false } }, class: "text-error font-semibold btn btn-ghost" %></li>
+      <% else %>
+        <li><%= link_to "Sign Up", sign_up_path, class: "font-semibold" %></li>
+        <li><%= link_to "Log in", new_session_path, class: "font-semibold" %></li>
+      <% end %>
     </ul>
   </div>
 </div>

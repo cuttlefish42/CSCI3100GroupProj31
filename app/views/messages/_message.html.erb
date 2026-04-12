@@ -5,7 +5,7 @@
 
 <div id="<%= dom_id(message) %>" class="chat <%= is_mine ? 'chat-end' : 'chat-start' %>">
   <div class="chat-header text-base-content/60">
-    <%= is_mine ? "You" : message.sender.username %>
+    <%= is_mine ? "You" : message.sender.full_name %>
   </div>
 
   <% if has_attachment %>

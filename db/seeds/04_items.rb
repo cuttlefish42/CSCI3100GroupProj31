@@ -1,4 +1,5 @@
 # db/seeds/04_items.rb
+require "open-uri"
 
 items = [
   { title: "Calculus Textbook", price: 200, condition: "good", category_name: "Books", email: "student1@link.cuhk.edu.hk", community_name: "Chung Chi College" },
@@ -14,11 +15,31 @@ items.each do |item_attr|
   seller = User.find_by(email_address: item_attr[:email])
   community = Community.find_by(name: item_attr[:community_name])
 
-  Item.find_or_create_by!(title: item_attr[:title], seller: seller) do |i|
+  item = Item.find_or_create_by!(title: item_attr[:title], seller: seller) do |i|
     i.price = item_attr[:price]
     i.condition = item_attr[:condition]
     i.status = "available"
     i.category = category
     i.community = community
+  end
+
+  unless item.photo.attached?
+    filename = "#{item_attr[:title].parameterize}.png"
+    cache_path = Rails.root.join("db", "seeds", "images", filename)
+
+    unless cache_path.exist?
+      cache_path.dirname.mkpath
+      label = item_attr[:title].gsub(" ", "+")
+      url = "https://placehold.co/400x300.png?text=#{label}"
+      IO.copy_stream(URI.open(url), cache_path)
+      puts "  Downloaded #{filename}"
+    end
+
+    item.photo.attach(
+      io: File.open(cache_path),
+      filename: filename,
+      content_type: "image/png"
+    )
+    puts "  Attached photo for #{item_attr[:title]}"
   end
 end

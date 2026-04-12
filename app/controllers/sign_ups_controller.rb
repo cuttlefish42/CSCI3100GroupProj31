@@ -8,7 +8,12 @@ class SignUpsController < ApplicationController
   def create
     @user = User.new(sign_up_params)
     if @user.save
-      UserMailer.welcome_email(@user).deliver_later
+      mail = UserMailer.welcome_email(@user)
+      if ENV["SYSTEM_TEST"].present?
+        mail.deliver_now
+      else
+        mail.deliver_later
+      end
       start_new_session_for(@user)
       redirect_to root_path,  notice: "Welcome! Please check your email for confirmation."
     else

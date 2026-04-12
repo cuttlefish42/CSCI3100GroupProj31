@@ -37,7 +37,12 @@ class OffersController < ApplicationController
         offer: @offer
       )
 
-      UserMailer.new_offer_notify(@item.seller, @item, @offer).deliver_later
+      mail = UserMailer.new_offer_notify(@item.seller, @item, @offer)
+      if ENV["SYSTEM_TEST"].present?
+        mail.deliver_now
+      else
+        mail.deliver_later
+      end
 
       redirect_to @item, notice: "Offer submitted."
     else

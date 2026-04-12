@@ -13,6 +13,9 @@ Rails.application.routes.draw do
 
   # Items
   resources :items do
+    member do
+      post :toggle_like
+    end
     # Offers
     resources :offers, only: [ :new, :create, :update, :destroy ] do
       # 1to1 relation no s

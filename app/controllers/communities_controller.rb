@@ -8,6 +8,8 @@ class CommunitiesController < ApplicationController
   end
 
   def show
+    @show_sidebar = true
+    @active_community_id = @community.id
     @items = @community.items.where(status: :available).order(created_at: :desc)
     @is_admin = Current.user && @community.admins.include?(Current.user)
   end

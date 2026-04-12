@@ -1,4 +1,5 @@
 # db/seeds/04_items.rb
+require "open-uri"
 
 items = [
   { title: "Calculus Textbook", price: 200, condition: "good", category_name: "Books", email: "student1@link.cuhk.edu.hk", community_name: "Chung Chi College" },
@@ -14,11 +15,22 @@ items.each do |item_attr|
   seller = User.find_by(email_address: item_attr[:email])
   community = Community.find_by(name: item_attr[:community_name])
 
-  Item.find_or_create_by!(title: item_attr[:title], seller: seller) do |i|
+  item = Item.find_or_create_by!(title: item_attr[:title], seller: seller) do |i|
     i.price = item_attr[:price]
     i.condition = item_attr[:condition]
     i.status = "available"
     i.category = category
     i.community = community
+  end
+
+  unless item.photo.attached?
+    label = URI.encode_www_form_component(item_attr[:title])
+    url = "https://placehold.net/400x300?text=#{label}"
+    item.photo.attach(
+      io: URI.open(url),
+      filename: "#{item_attr[:title].parameterize}.png",
+      content_type: "image/png"
+    )
+    puts "  Attached photo for #{item_attr[:title]}"
   end
 end

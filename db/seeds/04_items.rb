@@ -2,11 +2,11 @@
 require "open-uri"
 
 items = [
-  { title: "Calculus Textbook", price: 200, condition: "good", category_name: "Books", email: "student1@link.cuhk.edu.hk", community_name: "Chung Chi College" },
-  { title: "iPhone 13", price: 3500, condition: "like_new", category_name: "Electronics", email: "student2@link.cuhk.edu.hk", community_name: "New Asia College" },
-  { title: "Dorm Chair", price: 150, condition: "fair", category_name: "Furniture", email: "student3@link.cuhk.edu.hk", community_name: "United College" },
-  { title: "Hoodie", price: 100, condition: "brand_new", category_name: "Clothing", email: "student1@link.cuhk.edu.hk", community_name: "Chung Chi College" },
-  { title: "Kettle", price: 80, condition: "poor", category_name: "Kitchenware", email: "student2@link.cuhk.edu.hk", community_name: "Shaw College" }
+  { title: "Calculus Textbook", description: "MATH1010 textbook, some highlighting", price: 200, condition: "good", category_name: "Books", email: "student1@link.cuhk.edu.hk", community_name: "Chung Chi College" },
+  { title: "iPhone 13", description: "128GB, blue, with case", price: 3500, condition: "like_new", category_name: "Electronics", email: "student2@link.cuhk.edu.hk", community_name: "New Asia College" },
+  { title: "Dorm Chair", description: "Ergonomic chair, used for one year", price: 150, condition: "fair", category_name: "Furniture", email: "student3@link.cuhk.edu.hk", community_name: "United College" },
+  { title: "Hoodie", description: "CUHK hoodie, never worn", price: 100, condition: "brand_new", category_name: "Clothing", email: "student1@link.cuhk.edu.hk", community_name: "Chung Chi College" },
+  { title: "Kettle", description: "Electric kettle, works fine", price: 80, condition: "poor", category_name: "Kitchenware", email: "student2@link.cuhk.edu.hk", community_name: "Shaw College" }
 ]
 
 puts "Seeding items..."
@@ -16,6 +16,7 @@ items.each do |item_attr|
   community = Community.find_by(name: item_attr[:community_name])
 
   item = Item.find_or_create_by!(title: item_attr[:title], seller: seller) do |i|
+    i.description = item_attr[:description]
     i.price = item_attr[:price]
     i.condition = item_attr[:condition]
     i.status = "available"

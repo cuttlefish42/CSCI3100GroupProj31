@@ -4,6 +4,8 @@ class User < ApplicationRecord
   # Allow default to no community
   belongs_to :default_community, class_name: "Community", optional: true, dependent: :destroy
 
+  has_many :likes, dependent: :destroy
+  has_many :liked_items, through: :likes, source: :item
   has_many :items, foreign_key: :seller_id, dependent: :destroy
   has_many :offers, foreign_key: :buyer_id, dependent: :destroy
 

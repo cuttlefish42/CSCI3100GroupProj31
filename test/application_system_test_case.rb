@@ -4,9 +4,6 @@ require "selenium/webdriver"
 require_relative "system/support/bdd_steps"
 require_relative "system/support/setup_helper"
 
-# Enable inline job execution for system tests (separate server process)
-ENV['SYSTEM_TEST'] = 'true'
-
 Capybara.disable_animation = true
 Capybara.automatic_label_click = true
 
@@ -27,17 +24,6 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include BddSteps
   include SetupHelper
   include ActiveJob::TestHelper
-
-  # Switch to :inline adapter for system tests since they run in a separate server process
-  # The default :test adapter won't work across processes
-  setup do
-    @original_queue_adapter = ActiveJob::Base.queue_adapter
-    ActiveJob::Base.queue_adapter = :inline
-  end
-
-  teardown do
-    ActiveJob::Base.queue_adapter = @original_queue_adapter
-  end
 
   parallelize(workers: 1)
   driven_by :custom_headless_chrome

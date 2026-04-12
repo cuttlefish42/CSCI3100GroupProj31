@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resources :items do
     member do
       post :toggle_like
+      get :analytics
     end
     # Offers
     resources :offers, only: [ :new, :create, :update, :destroy ] do

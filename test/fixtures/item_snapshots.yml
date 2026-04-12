@@ -1,0 +1,11 @@
+one_hour_ago:
+  item: one
+  views_count: 10
+  likes_count: 2
+  recorded_at: <%= 1.hour.ago.beginning_of_hour.to_fs(:db) %>
+
+two_hours_ago:
+  item: one
+  views_count: 8
+  likes_count: 1
+  recorded_at: <%= 2.hours.ago.beginning_of_hour.to_fs(:db) %>

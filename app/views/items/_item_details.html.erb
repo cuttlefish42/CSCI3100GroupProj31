@@ -44,11 +44,11 @@
     <div class="mb-8"></div>
   <% end %>
 
-  <div class="flex items-center gap-3 my-4">
-    <span class="badge badge-ghost"><%= item.views_count %> views</span>
-    <span class="badge badge-ghost"><%= item.likes_count %> likes</span>
+  <div class="flex items-center gap-4 text-sm text-base-content/60 my-4">
+    <span><%= item.views_count %> views</span>
+    <span><%= item.likes_count %> likes</span>
     <% if Current.user && Current.user != item.seller %>
-      <%= button_to toggle_like_item_path(item), method: :post, class: "btn btn-sm #{@liked ? 'btn-primary' : 'btn-outline btn-primary'}" do %>
+      <%= button_to toggle_like_item_path(item), method: :post, class: "btn btn-sm #{@liked ? 'btn-primary' : 'btn-outline'}" do %>
         <%= @liked ? "Unlike" : "Like" %>
       <% end %>
     <% end %>

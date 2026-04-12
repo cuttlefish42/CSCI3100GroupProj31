@@ -1,0 +1,11 @@
+<%= turbo_frame_tag dom_id(item, :like) do %>
+  <% if Current.user %>
+    <% liked = item.likes.exists?(user_id: Current.user.id) %>
+    <%= button_to toggle_like_item_path(item), class: "btn btn-ghost btn-xs gap-1" do %>
+      <%= lucide_icon("heart", class: "w-4 h-4 #{liked ? 'fill-error text-error' : 'text-base-content/60'}") %>
+      <span><%= item.likes_count %></span>
+    <% end %>
+  <% else %>
+    <span class="badge badge-ghost badge-sm"><%= item.likes_count %> likes</span>
+  <% end %>
+<% end %>

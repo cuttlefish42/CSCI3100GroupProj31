@@ -2,7 +2,9 @@ class User < ApplicationRecord
   has_secure_password
   has_many :sessions, dependent: :destroy
   # Allow default to no community
-  belongs_to :default_community, class_name: "Community", optional: true, dependent: :destroy
+  belongs_to :default_community, class_name: "Community", optional: true
+  has_many :community_memberships, dependent: :destroy
+  has_many :communities, through: :community_memberships
 
   has_many :likes, dependent: :destroy
   has_many :liked_items, through: :likes, source: :item

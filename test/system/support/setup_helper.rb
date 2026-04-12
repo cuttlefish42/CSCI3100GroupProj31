@@ -60,9 +60,18 @@ module SetupHelper
     category = Category.find_or_create_by!(name: "Books")
   end
 
+  # Low-level form filler — use directly only when testing with wrong credentials.
   def login_user_as(email:, password:)
     fill_in "Email", with: email
     fill_in "Password", with: password
     click_button "Sign in"
+  end
+
+  # Full sign-in flow: navigates to login page, fills form, and waits for success.
+  # Use this as the default one-liner in most system tests.
+  def system_sign_in(user)
+    visit new_session_path
+    login_user_as(email: user.email_address, password: "password123")
+    assert_text "Log out"
   end
 end

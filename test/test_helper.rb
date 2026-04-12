@@ -1,4 +1,11 @@
 ENV["RAILS_ENV"] ||= "test"
+
+# Detect if we're running system tests (need :inline adapter for job execution in separate process)
+# vs unit/integration tests (need :test adapter for assert_enqueued_jobs)
+if ARGV.any? { |arg| arg.include?("test/system/") }
+  ENV["SYSTEM_TEST"] = "true"
+end
+
 require_relative "../config/environment"
 require "rails/test_help"
 

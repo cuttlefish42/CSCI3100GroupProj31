@@ -36,10 +36,14 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
-  # Configure Active Job to use the inline adapter
-  # This executes jobs immediately rather than queuing them
-  # Essential for system tests where server runs in separate process
-  config.active_job.queue_adapter = :inline
+  # Configure Active Job queue adapter based on test type:
+  # - System tests need :inline (jobs execute immediately in server process)
+  # - Controller/Unit tests need :test (to verify jobs are enqueued with assert_enqueued_jobs)
+  if ENV["SYSTEM_TEST"].present?
+    config.active_job.queue_adapter = :inline
+  else
+    config.active_job.queue_adapter = :test
+  end
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "example.com" }

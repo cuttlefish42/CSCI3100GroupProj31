@@ -28,15 +28,14 @@ class NewNotifyItemsMailTest < ApplicationSystemTestCase
     end
 
     when_ "the buyer submits an offer" do
-      click_on "Make Offer"
-      fill_in "Price offered", with: 95
-      
-      assert_emails 1 do
-        click_button "Submit Offer"
-      end
+      click_on "Make an Offer"
+      fill_in "Your Offer ($)", with: 95
+      click_button "Submit Offer"
     end
 
     then_ "the seller receives a notification email" do
+      assert_equal 1, ActionMailer::Base.deliveries.count, "Expected 1 email to be sent"
+      
       mail = last_email
       assert_equal [@seller.email_address], mail.to
       assert_match "New offer for #{@item.title}", mail.subject

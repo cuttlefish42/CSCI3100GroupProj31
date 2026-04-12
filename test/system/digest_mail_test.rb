@@ -38,12 +38,12 @@ class DigestMailTest < ApplicationSystemTestCase
 
   test "daily digest contains only recently created items" do
     when_ "the daily digest is generated for the user" do
-      assert_emails 1 do
-        DigestMailer.daily_digest(@user).deliver_now
-      end
+      DigestMailer.daily_digest(@user).deliver_now
     end
 
     then_ "the email is addressed to the user and includes only recent items" do
+      assert_equal 1, ActionMailer::Base.deliveries.count, "Expected 1 email to be sent"
+      
       mail = last_email
       assert_equal [@user.email_address], mail.to
       assert_equal "Your Daily Marketplace Digest", mail.subject

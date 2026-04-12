@@ -16,10 +16,8 @@ class RegistrationFlowTest < ApplicationSystemTestCase
       fill_in "Email address", with: "bono@link.cuhk.edu.hk"
       fill_in "Password", with: "pro-level-password"
       fill_in "Password confirmation", with: "pro-level-password"
-
-      assert_emails 1 do
-        click_button "Sign up"
-      end
+      
+      click_button "Sign up"
     end
 
     then_ "I should see a success message" do
@@ -27,6 +25,8 @@ class RegistrationFlowTest < ApplicationSystemTestCase
     end
 
     then_ "I receive a welcome email with the correct content" do
+      assert_equal 1, ActionMailer::Base.deliveries.count, "Expected 1 email to be sent"
+      
       mail = last_email
       assert_equal ["bono@link.cuhk.edu.hk"], mail.to
       assert_equal "Welcome to Group 31 platform!", mail.subject

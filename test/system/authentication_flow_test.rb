@@ -11,8 +11,8 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
       login_user_as(email: "sample_user_0@link.cuhk.edu.hk", password: "password123")
     end
 
-    then_ "the user is redirected to the root items page" do
-      assert_current_path root_path, ignore_query: true
+    then_ "the user is redirected to the items page" do
+      assert_current_path items_path, ignore_query: true
     end
   end
 

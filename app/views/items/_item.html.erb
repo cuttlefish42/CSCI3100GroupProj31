@@ -1,4 +1,4 @@
-<%# locals: (item:, link_title: false, large_photo: false) %>
+<%# locals: (item:, link_title: false, large_photo: false, admin: false) %>
 
 <div class="card bg-base-100 border border-base-200 overflow-hidden <%= large_photo ? 'w-full max-w-2xl' : '' %>">
   <%# Seller info top bar %>
@@ -9,6 +9,15 @@
       <p class="text-xs text-base-content/50"><%= time_ago(item.created_at) %></p>
     </div>
     <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
+    <% if admin %>
+      <%= button_to item_path(item),
+            method: :patch,
+            params: { item: { status: "sold" } },
+            class: "btn btn-ghost btn-xs btn-circle text-error",
+            data: { turbo_confirm: "Take down '#{item.title}'?" } do %>
+        <%= lucide_icon("x", class: "w-4 h-4") %>
+      <% end %>
+    <% end %>
   </div>
 
   <%# Edge-to-edge photo %>

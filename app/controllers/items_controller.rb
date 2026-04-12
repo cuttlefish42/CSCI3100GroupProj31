@@ -1,6 +1,6 @@
 class ItemsController < ApplicationController
-  before_action :set_item, only: %i[ show edit update destroy toggle_like ]
-  before_action :authorize_owner!, only: %i[ edit update destroy ]
+  before_action :set_item, only: %i[ show edit update destroy toggle_like analytics ]
+  before_action :authorize_owner!, only: %i[ edit update destroy analytics ]
   allow_unauthenticated_access only: %i[ index show ]
 
   def index
@@ -53,6 +53,21 @@ class ItemsController < ApplicationController
     end
     @item.reload
     render partial: "items/like_button", locals: { item: @item }
+  end
+
+  def analytics
+    from = params[:from] ? Time.zone.parse(params[:from]) : 7.days.ago
+    to = params[:to] ? Time.zone.parse(params[:to]) : Time.current
+
+    snapshots = @item.item_snapshots.between(from, to).order(:recorded_at)
+
+    render json: snapshots.map { |s|
+      {
+        recorded_at: s.recorded_at.iso8601,
+        views_count: s.views_count,
+        likes_count: s.likes_count
+      }
+    }
   end
 
   def destroy

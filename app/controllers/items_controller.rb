@@ -6,7 +6,11 @@ class ItemsController < ApplicationController
   def index
     @show_sidebar = true
     @items = Item.where(status: :available).order(created_at: :desc)
-    if params[:community_id].present?
+
+    if params[:feed] == "my" && Current.user
+      @items = @items.where(community_id: Current.user.community_ids)
+      @active_feed = "my"
+    elsif params[:community_id].present?
       @items = @items.where(community_id: params[:community_id])
       @active_community_id = params[:community_id].to_i
     end

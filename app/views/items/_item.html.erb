@@ -1,41 +1,39 @@
 <%# locals: (item:, link_title: false, large_photo: false) %>
 
-<div class="card bg-base-100 border border-base-200 <%= large_photo ? 'w-full max-w-2xl' : '' %>">
+<div class="card bg-base-100 border border-base-200 overflow-hidden <%= large_photo ? 'w-full max-w-2xl' : '' %>">
+  <%# Seller info top bar %>
+  <div class="flex items-center gap-3 px-4 py-3">
+    <%= render "shared/user_avatar", user: item.seller, size: "sm" %>
+    <div class="flex-1 min-w-0">
+      <p class="text-sm font-semibold truncate"><%= item.seller.full_name %></p>
+      <p class="text-xs text-base-content/50"><%= time_ago(item.created_at) %></p>
+    </div>
+    <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
+  </div>
+
+  <%# Edge-to-edge photo %>
   <% if item.photo.attached? %>
-    <figure class="px-4 pt-4">
+    <figure>
       <% variant = large_photo ? ResizeImagesJob::PREVIEW_VARIANT : ResizeImagesJob::THUMBNAIL_VARIANT %>
-      <%= image_tag item.photo.variant(variant), class: "rounded-xl #{large_photo ? 'max-h-96 object-contain' : 'max-h-48 object-cover'}" %>
+      <%= image_tag item.photo.variant(variant), class: "w-full #{large_photo ? 'max-h-96 object-contain' : 'max-h-56 object-cover'}" %>
     </figure>
   <% end %>
 
-  <div class="card-body">
-    <h1 class="card-title">
+  <div class="card-body gap-1 p-4">
+    <h2 class="card-title text-base">
       <% if link_title %>
         <%= link_to item.title, item %>
       <% else %>
         <%= item.title %>
       <% end %>
-    </h1>
+    </h2>
 
-    <p class="text-xl font-bold text-secondary mb-2"><%= price(item.price) %></p>
+    <p class="text-lg font-bold text-secondary"><%= price(item.price) %></p>
+    <p class="text-xs text-base-content/60"><%= item.condition.humanize %></p>
 
-    <div class="flex items-center gap-2 mb-2">
+    <div class="flex items-center gap-2 mt-2">
       <span class="badge badge-ghost badge-sm"><%= item.views_count %> views</span>
       <span class="badge badge-ghost badge-sm"><%= item.likes_count %> likes</span>
-    </div>
-
-    <div class="text-sm space-y-1">
-      <p><strong>Category:</strong> <%= item.category.name %></p>
-      <p><strong>Condition:</strong> <%= item.condition.humanize %></p>
-      <p><strong>Community:</strong> <%= item.community&.name || "Any" %></p>
-      <p>
-        <strong>Status:</strong>
-        <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
-      </p>
-      <p>
-        <strong>Seller:</strong> <%= item.seller.full_name %>
-        <span class="badge badge-ghost badge-sm">[<%= item.seller.karma %>]</span>
-      </p>
     </div>
   </div>
 </div>

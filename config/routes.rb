@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   resource :dashboard, only: [ :show ]
 
   # User profiles
-  resources :users, only: [ :show ]
+  resources :users, only: [ :show, :edit, :update ]
 
   resources :conversations, only: [ :index, :show, :create ] do
     resources :messages, only: [ :create ]

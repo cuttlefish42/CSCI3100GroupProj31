@@ -69,4 +69,8 @@ end
 gem "tailwindcss-rails", "~> 4.4"
 gem "letter_opener", group: :development
 gem "letter_opener_web", group: :development
+
 gem 'mini_magick', '~> 4.11'
+gem "sidekiq", "~> 7.0"
+gem "redis", "~> 5.0"
+

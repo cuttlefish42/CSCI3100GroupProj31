@@ -7,8 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore all environment files.
+# Ignore all environment files except the committed example template.
 /.env*
+!/.env.example
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -37,3 +38,6 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+# Redis dump file (created by `redis-server` in dev)
+/dump.rdb

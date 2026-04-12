@@ -1,0 +1,20 @@
+<h1>Hello!</h1>
+
+<p>Here are the new items listed on the marketplace in the past 24 hours:</p>
+
+<% if @new_items.any? %>
+  <ul>
+    <% @new_items.each do |item| %>
+      <li>
+        <strong><%= link_to item.title, item_url(item) %></strong>
+        &mdash; <%= number_to_currency(item.price) %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No new items in the past day. Check back tomorrow!</p>
+<% end %>
+
+<p>
+  <%= link_to "Browse all items", items_url %>
+</p>

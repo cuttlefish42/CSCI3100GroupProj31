@@ -1,9 +1,13 @@
 require "application_system_test_case"
 
 class RegistrationFlowTest < ApplicationSystemTestCase
+  setup do
+    clear_emails
+  end
+
   test "new user receives a welcome email after signing up" do
     given "I am on the registration page" do
-      visit new_registration_path # Adjust to your actual route
+      visit sign_up_path
     end
 
     when_ "I submit the registration form with valid details" do
@@ -12,14 +16,14 @@ class RegistrationFlowTest < ApplicationSystemTestCase
       fill_in "Email address", with: "bono@link.cuhk.edu.hk"
       fill_in "Password", with: "pro-level-password"
       fill_in "Password confirmation", with: "pro-level-password"
-      
+
       assert_emails 1 do
         click_button "Sign up"
       end
     end
 
     then_ "I should see a success message" do
-      assert_text "Welcome! You have signed up successfully"
+      assert_text "Welcome! Please check your email for confirmation."
     end
 
     then_ "I receive a welcome email with the correct content" do

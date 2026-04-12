@@ -23,9 +23,11 @@ class PasswordResetFlowTest < ApplicationSystemTestCase
       mail = last_email
       assert_equal [@user.email_address], mail.to
       assert_match "Reset Your Password Now!", mail.subject
-      
-      # Extract the URL from the email body to test it
-      @reset_link = mail.body.encoded.match(/href="([^"]+)"/)[1]
+
+      # Extract the URL from the email body to test it (handles html/plain)
+      body = mail.body.encoded
+      match = body.match(/href="([^"]+)"/)
+      @reset_link = match ? match[1] : body.match(%r{http://[^"\s]+})[0]
     end
 
     when_ "I visit the link from the email" do

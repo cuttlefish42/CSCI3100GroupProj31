@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_12_144529) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_12_173719) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -100,14 +100,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_144529) do
     t.index ["item_id"], name: "index_likes_on_item_id"
     t.index ["user_id", "item_id"], name: "index_likes_on_user_id_and_item_id", unique: true
     t.index ["user_id"], name: "index_likes_on_user_id"
-  end
-
-  create_table "listings", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.text "description"
-    t.decimal "price"
-    t.string "title"
-    t.datetime "updated_at", null: false
   end
 
   create_table "messages", force: :cascade do |t|

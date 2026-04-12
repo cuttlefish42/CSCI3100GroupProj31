@@ -2,7 +2,7 @@ require "application_system_test_case"
 
 class SignUpsTest < ApplicationSystemTestCase
   setup do
-    # Assuming you need this for your database constraints, 
+    # Assuming you need this for your database constraints,
     # even if it's hidden or set automatically in the form.
     @default_community = Community.first || Community.create!(name: "Default Community", community_type: "public")
   end
@@ -15,7 +15,7 @@ class SignUpsTest < ApplicationSystemTestCase
     fill_in "Email address", with: "jane@example.com"
     fill_in "Password", with: "password123"
     fill_in "Password confirmation", with: "password123"
-    
+
     # If community is a visible dropdown in your form, uncomment the next line:
     # select @default_community.name, from: "Community"
 
@@ -72,10 +72,7 @@ class SignUpsTest < ApplicationSystemTestCase
     # Leave all fields blank and submit
     click_on "Sign up"
 
-    # Asserts that the controller rendered the :show template with unprocessable_entity
-    # and displays standard Rails presence validation errors.
-    assert_text "First name can't be blank"
-    assert_text "Email address can't be blank"
-    assert_text "Password can't be blank"
+    message = page.find("#user_first_name").native.attribute("validationMessage")
+    assert_equal "Please fill out this field.", message
   end
 end

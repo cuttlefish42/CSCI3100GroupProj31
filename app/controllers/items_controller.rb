@@ -86,7 +86,9 @@ class ItemsController < ApplicationController
     end
 
     def authorize_owner!
-      redirect_to items_path, alert: "Not authorized." unless @item.seller == Current.user
+      return if @item.seller == Current.user
+      return if @item.community && @item.community.admins.include?(Current.user)
+      redirect_to items_path, alert: "Not authorized."
     end
 
     def item_params

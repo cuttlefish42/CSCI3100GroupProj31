@@ -44,6 +44,16 @@
     <div class="mb-8"></div>
   <% end %>
 
+  <div class="flex items-center gap-4 text-sm text-base-content/60 my-4">
+    <span><%= item.views_count %> views</span>
+    <span><%= item.likes_count %> likes</span>
+    <% if Current.user && Current.user != item.seller %>
+      <%= button_to toggle_like_item_path(item), method: :post, class: "btn btn-sm #{@liked ? 'btn-primary' : 'btn-outline'}" do %>
+        <%= @liked ? "Unlike" : "Like" %>
+      <% end %>
+    <% end %>
+  </div>
+
   <div class="flex gap-4 my-4">
     <%= link_to "Back", items_path, class: "btn btn-outline" %>
     <% if Current.user == item.seller %>

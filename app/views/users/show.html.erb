@@ -1,2 +1,29 @@
-<h1><%= @user.full_name %></h1>
-<p>TODO</p>
+<h1 class="font-bold text-4xl mb-6"><%= @user.username %>'s Profile</h1>
+
+<div class="profile-info bg-gray-50 p-6 rounded-lg mb-8">
+  <p class="mb-2"><strong>Email:</strong> <%= @user.email_address %></p>
+  <p class="mb-2"><strong>Member since:</strong> <%= @user.created_at.strftime("%B %d, %Y") %></p>
+  <p class="mb-4"><strong>Karma:</strong> <%= @user.karma || 0 %></p>
+  
+  <% if current_user == @user %>
+    <%= link_to "Edit Profile", edit_user_path(@user), class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  <% end %>
+</div>
+
+<h2 class="font-bold text-2xl mb-4">Items for Sale</h2>
+<% if @user_items.any? %>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% @user_items.each do |item| %>
+      <div class="border rounded-lg p-4 shadow-sm">
+        <p class="font-bold">Item #<%= item.id %></p>
+        <p>Price: $<%= item.price %></p>
+        <p>Condition: <%= item.condition %></p>
+        <p>Status: <%= item.status %></p>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="text-gray-500">No items listed yet.</p>
+<% end %>
+
+<%= link_to "Back to Home", root_path, class: "text-blue-500 hover:underline mt-4 inline-block" %>

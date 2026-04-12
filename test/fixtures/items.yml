@@ -2,6 +2,7 @@
 
 one:
   title: MyString
+  description: My description
   price: 9.99
   condition: 1
   status: 0
@@ -11,6 +12,7 @@ one:
 
 two:
   title: MyString
+  description: My description
   price: 9.99
   condition: 1
   status: 0

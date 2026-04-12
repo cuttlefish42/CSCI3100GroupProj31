@@ -10,6 +10,12 @@ class Item < ApplicationRecord
   has_many :messages, dependent: :nullify
   has_one_attached :photo
 
+  validates :title, presence: true
+  validates :description, presence: true
+  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :condition, presence: true
+  validates :status, presence: true
+
   enum :condition, { poor: 0, fair: 1, good: 2, like_new: 3, brand_new: 4 }
   enum :status, { available: 0, reserved: 1, sold: 2 }
 

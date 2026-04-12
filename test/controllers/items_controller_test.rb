@@ -67,6 +67,38 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to items_url
   end
 
+  test "show increments views_count" do
+    item = items(:one)
+    assert_changes -> { item.reload.views_count }, from: 0, to: 1 do
+      get item_url(item)
+    end
+    assert_response :success
+  end
+
+  test "toggle_like requires authentication" do
+    assert_no_changes -> { Like.count } do
+      post toggle_like_item_path(items(:one))
+      assert_redirected_to new_session_path
+    end
+  end
+
+  test "toggle_like creates a like" do
+    sign_in_as(users(:one))
+
+    assert_changes -> { Like.count }, from: 1, to: 2 do
+      post toggle_like_item_path(items(:one))
+    end
+  end
+
+  test "toggle_like removes an existing like" do
+    sign_in_as(users(:one))
+    Like.create!(user: users(:one), item: items(:one))
+
+    assert_changes -> { Like.count }, from: 2, to: 1 do
+      post toggle_like_item_path(items(:one))
+    end
+  end
+
   test "cannot destroy another user's item" do
     user = users(:one)
     sign_in_as(user)

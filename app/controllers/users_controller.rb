@@ -4,6 +4,8 @@ class UsersController < ApplicationController
   
   def show
     @user_items = @user.items.order(created_at: :desc).limit(10)
+    @completed_trades = @user.offers.where(status: :completed).order(updated_at: :desc).limit(10)
+    @reviews_received = @user.reviews_received.order(created_at: :desc)
   end
   
   def edit

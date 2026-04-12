@@ -1,5 +1,5 @@
 class ItemsController < ApplicationController
-  before_action :set_item, only: %i[ show edit update destroy ]
+  before_action :set_item, only: %i[ show edit update destroy toggle_like ]
   before_action :authorize_owner!, only: %i[ edit update destroy ]
   allow_unauthenticated_access only: %i[ index show ]
 
@@ -8,11 +8,13 @@ class ItemsController < ApplicationController
   end
 
   def show
+    @item.increment!(:views_count)
     @offer_sort = params[:offer_sort] || "date"
     @offer_dir = params[:offer_dir] || "desc"
     @offers = @item.offers.includes(:buyer)
     .sorted_by(@offer_sort, @offer_dir, context: :received)
     @existing_offer = Current.user ? @item.offers.by_buyer(Current.user).active.first : nil
+    @liked = Current.user ? @item.likes.exists?(user_id: Current.user.id) : false
     @offer = @item.offers.build
   end
 
@@ -40,6 +42,16 @@ class ItemsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def toggle_like
+    like = @item.likes.find_by(user_id: Current.user.id)
+    if like
+      like.destroy
+    else
+      @item.likes.create!(user_id: Current.user.id)
+    end
+    redirect_back fallback_location: @item
   end
 
   def destroy

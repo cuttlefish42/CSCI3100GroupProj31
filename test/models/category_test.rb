@@ -1,7 +1,7 @@
 require "test_helper"
 
 class CategoryTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test "valid category from fixtures" do
+    assert categories(:one).valid?
+  end
 end

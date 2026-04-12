@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_12_122956) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_12_144529) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -59,6 +59,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_122956) do
     t.datetime "updated_at", null: false
     t.index ["receiver_id"], name: "index_conversations_on_receiver_id"
     t.index ["sender_id"], name: "index_conversations_on_sender_id"
+  end
+
+  create_table "item_snapshots", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "item_id", null: false
+    t.integer "likes_count", default: 0, null: false
+    t.datetime "recorded_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "views_count", default: 0, null: false
+    t.index ["item_id", "recorded_at"], name: "index_item_snapshots_on_item_id_and_recorded_at"
+    t.index ["item_id"], name: "index_item_snapshots_on_item_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -171,6 +182,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_122956) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "conversations", "users", column: "receiver_id"
   add_foreign_key "conversations", "users", column: "sender_id"
+  add_foreign_key "item_snapshots", "items"
   add_foreign_key "items", "categories"
   add_foreign_key "items", "communities"
   add_foreign_key "items", "users", column: "seller_id"

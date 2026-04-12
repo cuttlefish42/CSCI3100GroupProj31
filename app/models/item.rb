@@ -5,6 +5,7 @@ class Item < ApplicationRecord
   belongs_to :seller, class_name: "User"
 
   has_many :likes, dependent: :destroy
+  has_many :item_snapshots, dependent: :destroy
   has_many :offers, dependent: :destroy
   has_many :messages, dependent: :nullify
   has_one_attached :photo

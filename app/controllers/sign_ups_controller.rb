@@ -8,9 +8,12 @@ class SignUpsController < ApplicationController
   def create
     @user = User.new(sign_up_params)
     if @user.save
+      if @user.default_community.present?
+        @user.community_memberships.find_or_create_by!(community: @user.default_community, role: :member)
+      end
       UserMailer.welcome_email(@user).deliver_later
       start_new_session_for(@user)
-      redirect_to root_path,  notice: "Welcome! Please check your email for confirmation."
+      redirect_to root_path, notice: "Welcome! Please check your email for confirmation."
     else
       flash.now[:alert] = @user.errors.full_messages.to_sentence
       render :show, status: :unprocessable_entity

@@ -4,9 +4,18 @@
       <h1 class="text-3xl font-bold"><%= @community.name %></h1>
       <p class="text-base-content/60"><%= @community.community_type %></p>
     </div>
-    <% if @is_admin %>
-      <%= link_to "Edit Rules", "#rules-form", class: "btn btn-outline btn-sm" %>
-    <% end %>
+    <div class="flex gap-2">
+      <% if authenticated? %>
+        <% if Current.user.communities.include?(@community) %>
+          <%= button_to "Leave", leave_community_path(@community), method: :delete, class: "btn btn-outline btn-sm" %>
+        <% else %>
+          <%= button_to "Join", join_community_path(@community), method: :post, class: "btn btn-primary btn-sm" %>
+        <% end %>
+      <% end %>
+      <% if @is_admin %>
+        <%= link_to "Edit Rules", "#rules-form", class: "btn btn-outline btn-sm" %>
+      <% end %>
+    </div>
   </div>
 
   <%# Listing rules banner %>

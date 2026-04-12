@@ -30,7 +30,12 @@ Rails.application.routes.draw do
   end
 
   # Communities
-  resources :communities, only: [ :index, :show, :update ]
+  resources :communities, only: [ :index, :show, :update ] do
+    member do
+      post :join
+      delete :leave
+    end
+  end
 
   # Dashboard
   resource :dashboard, only: [ :show ]

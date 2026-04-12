@@ -1,0 +1,58 @@
+<div class="container mx-auto p-4">
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h1 class="text-3xl font-bold"><%= @community.name %></h1>
+      <p class="text-base-content/60"><%= @community.community_type %></p>
+    </div>
+    <% if @is_admin %>
+      <%= link_to "Edit Rules", "#rules-form", class: "btn btn-outline btn-sm" %>
+    <% end %>
+  </div>
+
+  <%# Listing rules banner %>
+  <% if @community.listing_rules.present? %>
+    <div class="alert bg-base-200 text-base-content mb-6">
+      <div class="prose prose-sm max-w-none">
+        <%= @community.listing_rules %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Admin: edit rules form %>
+  <% if @is_admin %>
+    <div id="rules-form" class="card bg-base-100 shadow-md mb-6">
+      <div class="card-body">
+        <h3 class="card-title text-base">Edit Listing Rules</h3>
+        <%= form_with model: @community do |f| %>
+          <div class="mb-4">
+            <%= f.rich_text_area :listing_rules, class: "min-h-[120px]" %>
+          </div>
+          <%= f.submit "Save Rules", class: "btn btn-primary btn-sm" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Items grid %>
+  <h2 class="text-xl font-semibold mb-4">Items (<%= @items.count %>)</h2>
+  <% if @items.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% @items.each do |item| %>
+        <div class="relative">
+          <%= link_to item_path(item), class: "no-underline" do %>
+            <%= render item, link_title: true %>
+          <% end %>
+          <% if @is_admin %>
+            <%= button_to "Take Down", item_path(item),
+                  method: :patch,
+                  params: { item: { status: "sold" } },
+                  class: "btn btn-error btn-xs absolute top-2 right-2",
+                  data: { turbo_confirm: "Take down '#{item.title}'?" } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-base-content/50">No items listed in this community yet.</p>
+  <% end %>
+</div>

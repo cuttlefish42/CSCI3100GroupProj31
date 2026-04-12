@@ -51,7 +51,8 @@ class ItemsController < ApplicationController
     else
       @item.likes.create!(user_id: Current.user.id)
     end
-    redirect_back fallback_location: @item
+    @item.reload
+    render partial: "items/like_button", locals: { item: @item }
   end
 
   def destroy

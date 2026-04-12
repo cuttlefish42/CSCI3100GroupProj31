@@ -24,11 +24,20 @@ items.each do |item_attr|
   end
 
   unless item.photo.attached?
-    label = URI.encode_www_form_component(item_attr[:title])
-    url = "https://placehold.net/400x300?text=#{label}"
+    filename = "#{item_attr[:title].parameterize}.png"
+    cache_path = Rails.root.join("db", "seeds", "images", filename)
+
+    unless cache_path.exist?
+      cache_path.dirname.mkpath
+      label = item_attr[:title].gsub(" ", "+")
+      url = "https://placehold.co/400x300.png?text=#{label}"
+      IO.copy_stream(URI.open(url), cache_path)
+      puts "  Downloaded #{filename}"
+    end
+
     item.photo.attach(
-      io: URI.open(url),
-      filename: "#{item_attr[:title].parameterize}.png",
+      io: File.open(cache_path),
+      filename: filename,
       content_type: "image/png"
     )
     puts "  Attached photo for #{item_attr[:title]}"

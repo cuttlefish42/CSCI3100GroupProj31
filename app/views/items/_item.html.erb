@@ -33,7 +33,7 @@
 
     <div class="flex items-center gap-2 mt-2">
       <span class="badge badge-ghost badge-sm"><%= item.views_count %> views</span>
-      <span class="badge badge-ghost badge-sm"><%= item.likes_count %> likes</span>
+      <%= render "items/like_button", item: item %>
     </div>
   </div>
 </div>

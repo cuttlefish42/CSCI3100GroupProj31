@@ -1,0 +1,9 @@
+admin_one:
+  community: one
+  user: one
+  role: 1
+
+member_two:
+  community: one
+  user: two
+  role: 0

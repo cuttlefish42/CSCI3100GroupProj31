@@ -16,10 +16,10 @@
 <%# === Offer section (for logged-in buyers, only on available items) === %>
 <% if Current.user && Current.user != item.seller && item.available? %>
   <% if existing_offer %>
-    <div class="alert alert-warning shadow-md">
+    <div class="alert bg-base-200 text-base-content text-sm">
       <div>
-        <h3 class="font-bold mt-0 mb-0">You already have an active offer on this item</h3>
-        <p>(<%= price(existing_offer.price_offered) %> &mdash; <%= existing_offer.status.humanize %>)</p>
+        <p class="font-semibold">You already have an active offer on this item</p>
+        <p class="text-xs"><%= price(existing_offer.price_offered) %> &mdash; <%= existing_offer.status.humanize %></p>
       </div>
       <% if existing_offer.countered? && existing_offer.counter_price %>
         <div class="mt-2">

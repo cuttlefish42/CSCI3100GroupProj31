@@ -17,6 +17,8 @@ class DashboardsController < ApplicationController
         .where.not(status: [ "accepted", "completed" ])
         .sorted_by(@recv_sort, @recv_dir, context: :received)
 
+    @my_items = Current.user.items.where(status: [ :available, :reserved ]).order(:title)
+
     @pending_transactions =
       Offer.includes(:item, :buyer)
         .joins(:item)

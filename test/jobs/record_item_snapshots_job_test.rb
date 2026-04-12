@@ -24,6 +24,17 @@ class RecordItemSnapshotsJobTest < ActiveJob::TestCase
     assert_nil ItemSnapshot.find_by(item_id: sold.id)
   end
 
+  test "snapshots capture correct counts" do
+    item = items(:one)
+    item.update_columns(views_count: 42, likes_count: 7)
+
+    RecordItemSnapshotsJob.perform_now
+
+    snapshot = ItemSnapshot.find_by(item_id: item.id, recorded_at: Time.current.beginning_of_hour)
+    assert_equal 42, snapshot.views_count
+    assert_equal 7, snapshot.likes_count
+  end
+
   test "handles zero eligible items" do
     Item.update_all(status: :sold)
 

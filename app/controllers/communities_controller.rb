@@ -1,5 +1,5 @@
 class CommunitiesController < ApplicationController
-  before_action :set_community, only: %i[show update]
+  before_action :set_community, only: %i[show update join leave]
   before_action :authorize_admin!, only: %i[update]
   allow_unauthenticated_access only: %i[index show]
 
@@ -12,6 +12,23 @@ class CommunitiesController < ApplicationController
     @active_community_id = @community.id
     @items = @community.items.where(status: :available).order(created_at: :desc)
     @is_admin = Current.user && @community.admins.include?(Current.user)
+  end
+
+  def join
+    @community.community_memberships.find_or_create_by!(user: Current.user) do |m|
+      m.role = :member
+    end
+    redirect_to @community, notice: "Joined #{@community.name}."
+  end
+
+  def leave
+    membership = @community.community_memberships.find_by(user: Current.user)
+    if membership&.admin?
+      redirect_to @community, alert: "Admins cannot leave their community."
+    else
+      membership&.destroy
+      redirect_to @community, notice: "Left #{@community.name}."
+    end
   end
 
   def update

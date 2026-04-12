@@ -1,0 +1,20 @@
+<div class="container mx-auto p-4">
+  <h1 class="text-3xl font-bold mb-8">Communities</h1>
+
+  <% @communities_by_type.each do |type, communities| %>
+    <h2 class="text-xl font-semibold mt-6 mb-4"><%= type || "Other" %></h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <% communities.each do |community| %>
+        <%= link_to community_path(community), class: "card bg-base-100 shadow-md hover:shadow-lg transition-shadow no-underline" do %>
+          <div class="card-body">
+            <h3 class="card-title"><%= community.name %></h3>
+            <div class="flex gap-4 text-sm text-base-content/60">
+              <span><%= community.items.where(status: :available).count %> items</span>
+              <span><%= community.members.count %> members</span>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

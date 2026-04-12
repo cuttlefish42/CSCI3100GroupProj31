@@ -40,7 +40,6 @@ class PasswordResetFlowTest < ApplicationSystemTestCase
       fill_in "New password", with: "brand-new-password-123"
       fill_in "Confirm new password", with: "brand-new-password-123"
       click_button "Update Password"
-      
       assert_text "Password has been reset"
     end
   end

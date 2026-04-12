@@ -38,16 +38,21 @@
   <% if @items.any? %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <% @items.each do |item| %>
-        <div class="relative">
+        <div>
           <%= link_to item_path(item), class: "no-underline" do %>
             <%= render item, link_title: true %>
           <% end %>
           <% if @is_admin %>
-            <%= button_to "Take Down", item_path(item),
-                  method: :patch,
-                  params: { item: { status: "sold" } },
-                  class: "btn btn-error btn-xs absolute top-2 right-2",
-                  data: { turbo_confirm: "Take down '#{item.title}'?" } %>
+            <div class="flex justify-end mt-1">
+              <%= button_to item_path(item),
+                    method: :patch,
+                    params: { item: { status: "sold" } },
+                    class: "btn btn-ghost btn-xs text-error",
+                    data: { turbo_confirm: "Take down '#{item.title}'?" } do %>
+                <%= lucide_icon("x", class: "w-4 h-4") %>
+                <span>Take Down</span>
+              <% end %>
+            </div>
           <% end %>
         </div>
       <% end %>

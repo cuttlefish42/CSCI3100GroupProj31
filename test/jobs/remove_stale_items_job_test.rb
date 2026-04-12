@@ -3,7 +3,7 @@ require "test_helper"
 class RemoveStaleItemsJobTest < ActiveJob::TestCase
   test "removes items older than 90 days" do
     stale = Item.create!(
-      title: "Old Item", price: 5, condition: :good, status: :available,
+      title: "Old Item", description: "Old stuff", price: 5, condition: :good, status: :available,
       category: categories(:one), seller: users(:one),
       created_at: 91.days.ago
     )

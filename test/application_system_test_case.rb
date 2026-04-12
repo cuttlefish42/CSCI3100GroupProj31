@@ -4,6 +4,9 @@ require "selenium/webdriver"
 require_relative "system/support/bdd_steps"
 require_relative "system/support/setup_helper"
 
+# Enable inline job execution for system tests (separate server process)
+ENV['SYSTEM_TEST'] = 'true'
+
 Capybara.disable_animation = true
 Capybara.automatic_label_click = true
 

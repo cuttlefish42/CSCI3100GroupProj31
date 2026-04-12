@@ -14,7 +14,10 @@ communities = [
 
 puts "Seeding communities..."
 communities.each do |community_attr|
-  Community.find_or_create_by!(name: community_attr[:name]) do |c|
+  community = Community.find_or_create_by!(name: community_attr[:name]) do |c|
     c.community_type = community_attr[:community_type]
+  end
+  unless community.listing_rules.present?
+    community.update!(listing_rules: "Welcome to #{community.name}! Please keep listings relevant to our community.")
   end
 end

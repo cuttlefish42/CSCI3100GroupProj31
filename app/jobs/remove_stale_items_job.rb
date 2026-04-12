@@ -3,10 +3,10 @@ class RemoveStaleItemsJob < ApplicationJob
 
   def perform(*args)
     # Do something later
-    stale_items = Item.where('created_at < ?', 90.days.ago)
-    
+    stale_items = Item.where("created_at < ?", 90.days.ago)
+
     count = stale_items.count
-    
+
     if count > 0
       Rails.logger.info "Removing #{count} stale items:"
       stale_items.find_each do |item|
@@ -17,7 +17,7 @@ class RemoveStaleItemsJob < ApplicationJob
     else
       Rails.logger.info "No stale items found"
     end
-    
+
     count
   end
 end

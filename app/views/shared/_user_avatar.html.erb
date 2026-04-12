@@ -8,6 +8,6 @@
 %>
 <div class="avatar placeholder">
   <div class="bg-neutral text-neutral-content rounded-full flex items-center justify-center <%= size_classes %>">
-    <span><%= user.first_name&.first&.upcase || "?" %></span>
+    <span><%= user.first_name[0].upcase %></span>
   </div>
 </div>

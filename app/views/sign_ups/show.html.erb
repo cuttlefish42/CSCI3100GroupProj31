@@ -4,6 +4,8 @@
   <div class="card card-border bg-base-100 shadow-xl">
     <div class="card-body">
         <%= form_with model: @user, url: sign_up_path, class: "flex flex-col gap-4" do |form| %>
+          <%= form.hidden_field :default_community_id, value: Community.first&.id %>
+
           <div>
             <%= form.label :first_name, class: "label font-semibold" %>
             <%= form.text_field :first_name, required: true, autofocus: true, class: "w-full input input-bordered" %>

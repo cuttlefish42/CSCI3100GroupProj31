@@ -25,6 +25,17 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include SetupHelper
   include ActiveJob::TestHelper
 
+  # Switch to :inline adapter for system tests since they run in a separate server process
+  # The default :test adapter won't work across processes
+  setup do
+    @original_queue_adapter = ActiveJob::Base.queue_adapter
+    ActiveJob::Base.queue_adapter = :inline
+  end
+
+  teardown do
+    ActiveJob::Base.queue_adapter = @original_queue_adapter
+  end
+
   parallelize(workers: 1)
   driven_by :custom_headless_chrome
 end

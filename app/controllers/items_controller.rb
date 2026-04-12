@@ -4,7 +4,12 @@ class ItemsController < ApplicationController
   allow_unauthenticated_access only: %i[ index show ]
 
   def index
-    @items = Item.all.order(created_at: :desc)
+    @show_sidebar = true
+    @items = Item.where(status: :available).order(created_at: :desc)
+    if params[:community_id].present?
+      @items = @items.where(community_id: params[:community_id])
+      @active_community_id = params[:community_id].to_i
+    end
   end
 
   def show

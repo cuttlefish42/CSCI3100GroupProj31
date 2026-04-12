@@ -1,0 +1,63 @@
+<%# Hero section %>
+<div class="hero min-h-[70vh] bg-base-200">
+  <div class="hero-content text-center">
+    <div class="max-w-2xl">
+      <h1 class="text-5xl font-bold">CUHK Marketplace</h1>
+      <p class="py-6 text-lg text-base-content/70">
+        Buy and sell second-hand items within the CUHK community.
+        Textbooks, electronics, furniture, and more — all from fellow students.
+      </p>
+      <div class="flex gap-4 justify-center">
+        <%= link_to "Browse Items", items_path, class: "btn btn-primary btn-lg" %>
+        <%= link_to "Sign Up", sign_up_path, class: "btn btn-outline btn-lg" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# How it works %>
+<div class="container mx-auto px-4 py-16">
+  <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="card bg-base-100 shadow-md">
+      <div class="card-body items-center text-center">
+        <%= lucide_icon("camera", class: "w-12 h-12 text-primary mb-4") %>
+        <h3 class="card-title">1. List Your Item</h3>
+        <p class="text-base-content/60">Take a photo, set your price, and publish in seconds.</p>
+      </div>
+    </div>
+    <div class="card bg-base-100 shadow-md">
+      <div class="card-body items-center text-center">
+        <%= lucide_icon("message-circle", class: "w-12 h-12 text-primary mb-4") %>
+        <h3 class="card-title">2. Negotiate & Chat</h3>
+        <p class="text-base-content/60">Receive offers, counter, and message buyers directly.</p>
+      </div>
+    </div>
+    <div class="card bg-base-100 shadow-md">
+      <div class="card-body items-center text-center">
+        <%= lucide_icon("handshake", class: "w-12 h-12 text-primary mb-4") %>
+        <h3 class="card-title">3. Meet & Trade</h3>
+        <p class="text-base-content/60">Agree on a meetup spot on campus and complete the deal.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Featured items %>
+<% if @featured_items.any? %>
+  <div class="bg-base-200 py-16">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-12">Recently Listed</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @featured_items.each do |item| %>
+          <%= link_to item_path(item), class: "no-underline" do %>
+            <%= render item %>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="text-center mt-8">
+        <%= link_to "View All Items", items_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+<% end %>

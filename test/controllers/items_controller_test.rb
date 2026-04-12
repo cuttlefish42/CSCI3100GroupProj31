@@ -18,7 +18,7 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
 
   test "create requires authentication" do
     assert_no_changes -> { Item.count } do
-      post items_path, params: { item: { title: "Widget", price: 10, condition: "good", status: "available", category_id: categories(:one).id, community_id: communities(:one).id } }
+      post items_path, params: { item: { title: "Widget", description: "A widget", price: 10, condition: "good", status: "available", category_id: categories(:one).id, community_id: communities(:one).id } }
       assert_redirected_to new_session_path
     end
   end
@@ -28,7 +28,7 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(user)
 
     assert_changes -> { Item.count }, +1 do
-      post items_path, params: { item: { title: "Widget", price: 10, condition: "good", status: "available", category_id: categories(:one).id, community_id: communities(:one).id } }
+      post items_path, params: { item: { title: "Widget", description: "A widget", price: 10, condition: "good", status: "available", category_id: categories(:one).id, community_id: communities(:one).id } }
     end
 
     item = Item.order(:created_at).last

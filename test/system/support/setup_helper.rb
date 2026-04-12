@@ -41,6 +41,7 @@ module SetupHelper
     count.times do |i|
       n = i + 1
       Item.find_or_create_by!(title: "Sample Item #{n}", seller: seller) do |item|
+        item.description = "A sample item for testing"
         item.price = 100
         item.condition = :good
         item.status = :available

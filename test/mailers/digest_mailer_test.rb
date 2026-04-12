@@ -6,7 +6,7 @@ class DigestMailerTest < ActionMailer::TestCase
     mail = DigestMailer.daily_digest(user)
 
     assert_equal "Your Daily Marketplace Digest", mail.subject
-    assert_equal [user.email_address], mail.to
+    assert_equal [ user.email_address ], mail.to
   end
 
   test "daily_digest includes recent items" do

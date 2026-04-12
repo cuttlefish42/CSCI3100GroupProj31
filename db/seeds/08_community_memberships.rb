@@ -2,13 +2,13 @@
 
 puts "Seeding community memberships..."
 
-# Make the first user admin of the first community
-first_user = User.first
-first_community = Community.first
+admin_user = User.find_by(email_address: "admin@link.cuhk.edu.hk")
 
-if first_user && first_community
-  CommunityMembership.find_or_create_by!(user: first_user, community: first_community) do |m|
-    m.role = :admin
+if admin_user
+  Community.find_each do |community|
+    CommunityMembership.find_or_create_by!(user: admin_user, community: community) do |m|
+      m.role = :admin
+    end
+    puts "  #{admin_user.full_name} is admin of #{community.name}"
   end
-  puts "  #{first_user.full_name} is admin of #{first_community.name}"
 end

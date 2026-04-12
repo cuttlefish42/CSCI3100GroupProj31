@@ -72,3 +72,5 @@ gem "letter_opener_web", group: :development
 
 gem "sidekiq", "~> 7.0"
 gem "redis", "~> 5.0"
+
+gem "whenever", require: false

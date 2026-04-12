@@ -4,7 +4,13 @@ class ItemsController < ApplicationController
   allow_unauthenticated_access only: %i[ index show ]
 
   def index
-    @items = Item.all.order(created_at: :desc)
+    @items = Item.all
+      .search_by_keyword(params[:keyword])
+      .by_community(params[:community_id])
+      .by_price_range(params[:min_price], params[:max_price])
+      .by_date_range(params[:start_date], params[:end_date])
+      .sorted(params[:sort_by] || "date", params[:sort_direction] || "desc")
+      .includes(:category, :community, :seller)
   end
 
   def show

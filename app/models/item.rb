@@ -15,6 +15,45 @@ class Item < ApplicationRecord
 
   after_commit :enqueue_thumbnail_job, on: [ :create, :update ], if: -> { photo.attached? }
 
+  # Scopes for filtering and searching
+  scope :search_by_keyword, ->(keyword) {
+    where("title ILIKE ?", "%#{keyword}%") if keyword.present?
+  }
+
+  scope :by_community, ->(community_id) {
+    where(community_id: community_id) if community_id.present?
+  }
+
+  scope :by_price_range, ->(min_price, max_price) {
+    query = all
+    query = query.where("price >= ?", min_price.to_f) if min_price.present?
+    query = query.where("price <= ?", max_price.to_f) if max_price.present?
+    query
+  }
+
+  scope :by_date_range, ->(start_date, end_date) {
+    query = all
+    if start_date.present?
+      query = query.where("created_at >= ?", Time.zone.parse(start_date).beginning_of_day)
+    end
+    if end_date.present?
+      query = query.where("created_at <= ?", Time.zone.parse(end_date).end_of_day)
+    end
+    query
+  }
+
+  scope :sorted, ->(sort_by = "date", sort_direction = "desc") {
+    direction = sort_direction.to_sym
+    case sort_by
+    when "price"
+      order(price: direction)
+    when "date"
+      order(created_at: direction)
+    else
+      order(created_at: direction)
+    end
+  }
+
   private
 
   def enqueue_thumbnail_job

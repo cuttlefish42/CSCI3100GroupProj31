@@ -8,10 +8,7 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
     end
 
     given "the user is logged in" do
-      visit new_session_path
-      login_user_as(email: "sample_user_0@link.cuhk.edu.hk", password: "password123")
-      # Wait for the session cookie to be set before navigating away
-      assert_text "Log out"
+      system_sign_in(User.find_by!(email_address: "sample_user_0@link.cuhk.edu.hk"))
     end
 
     when_ "the user is in karma leaderboard page" do
@@ -32,9 +29,7 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
     end
 
     given "the user is logged in" do
-      visit new_session_path
-      login_user_as(email: "sample_user_1@link.cuhk.edu.hk", password: "password123")
-      assert_text "Log out"
+      system_sign_in(User.find_by!(email_address: "sample_user_1@link.cuhk.edu.hk"))
     end
 
     when_ "the user visits karma leaderboard and clicks Highest Karma" do
@@ -57,9 +52,7 @@ class KarmaLeaderboardTest < ApplicationSystemTestCase
     end
 
     given "the user is logged in" do
-      visit new_session_path
-      login_user_as(email: "sample_user_1@link.cuhk.edu.hk", password: "password123")
-      assert_text "Log out"
+      system_sign_in(User.find_by!(email_address: "sample_user_1@link.cuhk.edu.hk"))
     end
 
     when_ "the user visits karma leaderboard and clicks Lowest Karma" do

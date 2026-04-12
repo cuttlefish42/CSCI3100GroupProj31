@@ -29,10 +29,8 @@ class ItemTest < ApplicationSystemTestCase
   test "visiting an item shows updated view count" do
     given "an item exists and a user is logged in" do
       create_sample_items(count: 1)
-      create_sample_user(email_address: "viewer@link.cuhk.edu.hk", first_name: "Viewer", last_name: "One")
-      visit new_session_path
-      login_user_as(email: "viewer@link.cuhk.edu.hk", password: "password123")
-      assert_text "Log out"
+      user = create_sample_user(email_address: "viewer@link.cuhk.edu.hk", first_name: "Viewer", last_name: "One")
+      system_sign_in(user)
     end
 
     when_ "the user visits the item page" do
@@ -48,10 +46,8 @@ class ItemTest < ApplicationSystemTestCase
   test "logged in user can like and unlike an item" do
     given "an item exists and a user is logged in" do
       create_sample_items(count: 1)
-      create_sample_user(email_address: "liker@link.cuhk.edu.hk", first_name: "Like", last_name: "User")
-      visit new_session_path
-      login_user_as(email: "liker@link.cuhk.edu.hk", password: "password123")
-      assert_text "Log out"
+      user = create_sample_user(email_address: "liker@link.cuhk.edu.hk", first_name: "Like", last_name: "User")
+      system_sign_in(user)
     end
 
     given "the user visits the item page" do
@@ -83,10 +79,7 @@ class ItemTest < ApplicationSystemTestCase
   test "logged in users can add new items option" do
     given "the user is logged in" do
       create_sample_users(count: 1)
-      visit new_session_path
-      login_user_as(email: "sample_user_0@link.cuhk.edu.hk", password: "password123")
-      # Wait for the session cookie to be set before navigating away
-      assert_text "Log out"
+      system_sign_in(User.find_by!(email_address: "sample_user_0@link.cuhk.edu.hk"))
     end
 
     given "the following categories and communities exist" do

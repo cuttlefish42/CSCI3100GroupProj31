@@ -27,14 +27,7 @@ class OfferStatusFlowTest < ApplicationSystemTestCase
 
   def as(user, &block)
     using_session(user.email_address) do
-      # Sign in once per session
-      unless page.has_text?("Log out", wait: 0)
-        visit new_session_path
-        fill_in "Email", with: user.email_address
-        fill_in "Password", with: "password123"
-        click_button "Sign in"
-        assert_text "Log out"
-      end
+      system_sign_in(user) unless page.has_text?("Log out", wait: 0)
       block.call
     end
   end

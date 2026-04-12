@@ -36,7 +36,7 @@ class NewNotifyItemsMailTest < ApplicationSystemTestCase
     end
 
     then_ "the seller receives a notification email" do
-      assert_equal 1, ActionMailer::Base.deliveries.count, "Expected 1 email to be sent"
+      assert_equal 1, delivered_emails_count, "Expected 1 email to be sent"
       
       mail = last_email
       assert_equal [@seller.email_address], mail.to

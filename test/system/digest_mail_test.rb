@@ -46,7 +46,7 @@ class DigestMailTest < ApplicationSystemTestCase
     end
 
     then_ "the email is addressed to the user and includes only recent items" do
-      assert_equal 1, ActionMailer::Base.deliveries.count, "Expected 1 email to be sent"
+      assert_equal 1, delivered_emails_count, "Expected 1 email to be sent"
       
       mail = last_email
       assert_equal [@user.email_address], mail.to

@@ -21,7 +21,7 @@ class PasswordResetFlowTest < ApplicationSystemTestCase
     end
 
     then_ "I receive a reset email" do
-      assert_equal 1, ActionMailer::Base.deliveries.count, "Expected 1 email to be sent"
+      assert_equal 1, delivered_emails_count, "Expected 1 email to be sent"
       
       # Verify email sender and contents
       mail = last_email

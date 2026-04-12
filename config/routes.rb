@@ -29,6 +29,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # Communities
+  resources :communities, only: [ :index, :show, :update ]
+
   # Dashboard
   resource :dashboard, only: [ :show ]
 

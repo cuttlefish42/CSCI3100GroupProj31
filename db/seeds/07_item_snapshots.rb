@@ -8,8 +8,8 @@ hours = 7.days / 1.hour # 168 data points
 Item.find_each do |item|
   snapshots = hours.to_i.times.map do |i|
     recorded_at = now - (hours - i).hours
-    views = (i * rand(1..3)).clamp(0, item.views_count)
-    likes = (i / 10.0 * rand(0.5..1.5)).floor.clamp(0, item.likes_count)
+    views = i * rand(1..3)
+    likes = (i / 10.0 * rand(0.5..1.5)).floor
 
     {
       item_id: item.id,

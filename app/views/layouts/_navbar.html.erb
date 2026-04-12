@@ -10,7 +10,12 @@
       <li><%= link_to "Conversations", conversations_path %></li>
     </ul>
   </div>
-  <div class="flex-none">
+  <div class="flex-none" data-controller="theme">
+    <label class="swap swap-rotate btn btn-ghost btn-circle">
+      <input type="checkbox" data-theme-target="toggle" data-action="theme#switch">
+      <%= lucide_icon("moon", class: "swap-off w-5 h-5") %>
+      <%= lucide_icon("sun", class: "swap-on w-5 h-5") %>
+    </label>
     <ul class="menu menu-horizontal px-1">
       <% if authenticated? %>
         <li><%= button_to "Log out", session_path, method: :delete, form: { data: { turbo: false } }, class: "text-error font-semibold btn btn-ghost" %></li>

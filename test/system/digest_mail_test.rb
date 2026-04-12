@@ -37,6 +37,10 @@ class DigestMailTest < ApplicationSystemTestCase
   end
 
   test "daily digest contains only recently created items" do
+    given "there are items of different ages in the marketplace" do
+      # Items already created in setup
+    end
+
     when_ "the daily digest is generated for the user" do
       DigestMailer.daily_digest(@user).deliver_now
     end

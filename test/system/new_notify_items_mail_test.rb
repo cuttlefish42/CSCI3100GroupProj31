@@ -28,9 +28,11 @@ class NewNotifyItemsMailTest < ApplicationSystemTestCase
     end
 
     when_ "the buyer submits an offer" do
-      click_on "Make an Offer"
-      fill_in "Your Offer ($)", with: 95
-      click_button "Submit Offer"
+      perform_enqueued_jobs do
+        click_on "Make an Offer"
+        fill_in "Your Offer ($)", with: 95
+        click_button "Submit Offer"
+      end
     end
 
     then_ "the seller receives a notification email" do

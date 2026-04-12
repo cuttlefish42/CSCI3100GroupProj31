@@ -14,11 +14,28 @@ class PasswordResetFlowTest < ApplicationSystemTestCase
 
     when_ "I submit my email address" do
       fill_in "Email", with: @user.email_address
-      click_button "Email reset instructions"
+      
+      perform_enqueued_jobs do
+        click_button "Email reset instructions"
+      end
     end
 
     then_ "I receive a reset email" do
       assert_equal 1, ActionMailer::Base.deliveries.count, "Expected 1 email to be sent"
+      
+      # Verify email sender and contents
+      mail = last_email
+      assert_equal [@user.email_address], mail.to
+      assert_match "password", mail.subject.downcase
+      assert_match "reset", mail.body.encoded.downcase
+    end
+
+    then_ "I can use the reset link to set a new password" do
+      # Extract reset link from email
+      mail = last_email
+      reset_url = mail.body.encoded.match(%r{/passwords/[\w-]+/edit})[0]
+      
+      visit reset_url
       
       fill_in "New password", with: "brand-new-password-123"
       fill_in "Confirm new password", with: "brand-new-password-123"

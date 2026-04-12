@@ -17,7 +17,9 @@ class RegistrationFlowTest < ApplicationSystemTestCase
       fill_in "Password", with: "pro-level-password"
       fill_in "Password confirmation", with: "pro-level-password"
       
-      click_button "Sign up"
+      perform_enqueued_jobs do
+        click_button "Sign up"
+      end
     end
 
     then_ "I should see a success message" do

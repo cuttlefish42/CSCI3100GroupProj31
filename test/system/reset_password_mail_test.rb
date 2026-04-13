@@ -41,12 +41,18 @@ class PasswordResetFlowTest < ApplicationSystemTestCase
 
     when_ "they follow the link and set a new password" do
       visit @reset_url
+      
+      # Match the labels exactly as they appear in your HTML
       fill_in "New password", with: "NewSecurePass123!"
-      fill_in "Confirm new password", with: "NewSecurePass123!"
-      click_button "Update password"
+      fill_in "Confirm password", with: "NewSecurePass123!"
+      
+      # Match the button text exactly: "Save"
+      click_button "Save"
     end
 
     then_ "their password is changed" do
+      # Make sure this matches your redirect's success message
+      # Based on your HTML's h1, you are likely redirected to login or dashboard
       assert_text "Password has been reset" 
     end
   end

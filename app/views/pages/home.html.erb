@@ -50,9 +50,7 @@
       <h2 class="text-3xl font-bold text-center mb-12">Recently Listed</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <% @featured_items.each do |item| %>
-          <%= link_to item_path(item), class: "no-underline" do %>
-            <%= render item %>
-          <% end %>
+          <%= render item, link_title: true %>
         <% end %>
       </div>
       <div class="text-center mt-8">

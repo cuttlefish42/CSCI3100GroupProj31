@@ -52,7 +52,6 @@ env:
     secret:
         - RAILS_MASTER_KEY
         - POSTGRES_PASSWORD
-        - DATABASE_URL
     clear:
         REDIS_URL: redis://csci3100_group_proj31-redis:6379/0
 

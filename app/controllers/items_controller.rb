@@ -4,14 +4,21 @@ class ItemsController < ApplicationController
   allow_unauthenticated_access only: %i[ index show ]
 
   def index
+    params.permit(:keyword, :min_price, :max_price, :start_date, :end_date, :sort_by, :sort_direction, :feed, :community_id)
     @show_sidebar = true
-    @items = Item.where(status: :available).order(created_at: :desc)
+    @items = Item.all
+      .search_by_keyword(params[:keyword])
+      .by_price_range(params[:min_price], params[:max_price])
+      .by_date_range(params[:start_date], params[:end_date])
+      .sorted(params[:sort_by] || "date", params[:sort_direction] || "desc")
+      .includes(:category, :community, :seller)
+      .where(status: :available)
 
     if params[:feed] == "my" && Current.user
-      @items = @items.where(community_id: Current.user.community_ids)
+      @items = @items.by_community(Current.user.community_ids)
       @active_feed = "my"
-    elsif params[:community_id].present?
-      @items = @items.where(community_id: params[:community_id])
+    else
+      @items = @items.by_community(params[:community_id])
       @active_community_id = params[:community_id].to_i
     end
   end

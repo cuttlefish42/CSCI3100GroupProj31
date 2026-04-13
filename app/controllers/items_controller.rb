@@ -4,6 +4,7 @@ class ItemsController < ApplicationController
   allow_unauthenticated_access only: %i[ index show ]
 
   def index
+<<<<<<< HEAD
     @items = Item.all
       .search_by_keyword(params[:keyword])
       .by_community(params[:community_id])
@@ -11,6 +12,18 @@ class ItemsController < ApplicationController
       .by_date_range(params[:start_date], params[:end_date])
       .sorted(params[:sort_by] || "date", params[:sort_direction] || "desc")
       .includes(:category, :community, :seller)
+=======
+    @show_sidebar = true
+    @items = Item.where(status: :available).order(created_at: :desc)
+
+    if params[:feed] == "my" && Current.user
+      @items = @items.where(community_id: Current.user.community_ids)
+      @active_feed = "my"
+    elsif params[:community_id].present?
+      @items = @items.where(community_id: params[:community_id])
+      @active_community_id = params[:community_id].to_i
+    end
+>>>>>>> 97c5c7d9485168458b3160515ab9f510a9c2bdf8
   end
 
   def show
@@ -34,6 +47,7 @@ class ItemsController < ApplicationController
   def create
     @item = Item.new(item_params)
     @item.seller = Current.user
+    @item.status = :available
 
     if @item.save
       redirect_to @item, notice: "Item created."
@@ -87,10 +101,12 @@ class ItemsController < ApplicationController
     end
 
     def authorize_owner!
-      redirect_to items_path, alert: "Not authorized." unless @item.seller == Current.user
+      return if @item.seller == Current.user
+      return if @item.community&.admin?(Current.user)
+      redirect_to items_path, alert: "Not authorized."
     end
 
     def item_params
-      params.expect(item: [ :title, :price, :condition, :status, :category_id, :community_id, :photo, :latitude, :longitude, :meetup_note ])
+      params.expect(item: [ :title, :description, :price, :condition, :status, :category_id, :community_id, :photo, :latitude, :longitude, :meetup_note ])
     end
 end

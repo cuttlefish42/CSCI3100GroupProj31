@@ -35,6 +35,13 @@
     <% if flash[:alert] %>
       <div class="alert alert-error shadow-lg mb-4"><%= flash[:alert] %></div>
     <% end %>
-    <%= yield %>
+    <% if @show_sidebar %>
+      <div class="flex min-h-[calc(100vh-5rem)]">
+        <%= render "layouts/sidebar" %>
+        <main class="flex-1"><%= yield %></main>
+      </div>
+    <% else %>
+      <%= yield %>
+    <% end %>
   </body>
 </html>

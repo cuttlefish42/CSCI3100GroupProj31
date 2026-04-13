@@ -93,11 +93,11 @@ class ItemTest < ApplicationSystemTestCase
 
     when_ "the user fills in the form and submits it" do
       fill_in "Title", with: "New Item"
+      fill_in "Description", with: "A brand new item"
       fill_in "Price", with: 100
       select "Books", from: "Category"
       select "Chung Chi College", from: "Community"
       select "Good", from: "Condition"
-      select "Available", from: "Status"
       click_button "Create Item"
     end
 

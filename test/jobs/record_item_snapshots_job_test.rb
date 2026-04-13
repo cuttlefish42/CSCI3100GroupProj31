@@ -15,7 +15,7 @@ class RecordItemSnapshotsJobTest < ActiveJob::TestCase
 
   test "skips sold items" do
     sold = Item.create!(
-      title: "Sold Thing", price: 5, condition: :good, status: :sold,
+      title: "Sold Thing", description: "Gone", price: 5, condition: :good, status: :sold,
       category: categories(:one), seller: users(:one)
     )
 

@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_12_173719) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_12_185531) do
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -52,6 +62,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_173719) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "community_memberships", force: :cascade do |t|
+    t.integer "community_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "role", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["community_id", "user_id"], name: "index_community_memberships_on_community_id_and_user_id", unique: true
+    t.index ["community_id"], name: "index_community_memberships_on_community_id"
+    t.index ["user_id"], name: "index_community_memberships_on_user_id"
+  end
+
   create_table "conversations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "receiver_id", null: false
@@ -77,6 +98,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_173719) do
     t.integer "community_id"
     t.integer "condition", default: 0
     t.datetime "created_at", null: false
+    t.text "description"
     t.decimal "latitude"
     t.integer "likes_count", default: 0, null: false
     t.decimal "longitude"
@@ -172,6 +194,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_173719) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "community_memberships", "communities"
+  add_foreign_key "community_memberships", "users"
   add_foreign_key "conversations", "users", column: "receiver_id"
   add_foreign_key "conversations", "users", column: "sender_id"
   add_foreign_key "item_snapshots", "items"

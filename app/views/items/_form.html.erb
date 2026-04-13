@@ -18,6 +18,11 @@
   </div>
 
   <div class="form-control">
+    <%= form.label :description, class: "label font-semibold" %>
+    <%= form.text_area :description, required: true, rows: 4, class: "textarea textarea-bordered w-full" %>
+  </div>
+
+  <div class="form-control">
     <%= form.label :price, class: "label font-semibold" %>
     <%= form.number_field :price, step: 0.1, min: 0, required: true, class: "w-full" %>
   </div>
@@ -35,12 +40,6 @@
   <div class="form-control">
     <%= form.label :condition, class: "label font-semibold" %>
     <%= form.select :condition, Item.conditions.keys.map { |c| [c.humanize, c] }, {}, required: true, class: "w-full" %>
-  </div>
-
-  <%# TODO: Status would be by default Available. Change after state management is implemented. %>
-  <div class="form-control">
-    <%= form.label :status, class: "label font-semibold" %>
-    <%= form.select :status, Item.statuses.keys.map { |s| [s.humanize, s] }, {}, required: true, class: "w-full" %>
   </div>
 
   <div class="form-control">

@@ -29,11 +29,19 @@ Rails.application.routes.draw do
     end
   end
 
+  # Communities
+  resources :communities, only: [ :index, :show, :update ] do
+    member do
+      post :join
+      delete :leave
+    end
+  end
+
   # Dashboard
   resource :dashboard, only: [ :show ]
 
   # User profiles
-  resources :users, only: [ :show ]
+  resources :users, only: [ :show, :edit, :update ]
 
   resources :conversations, only: [ :index, :show, :create ] do
     resources :messages, only: [ :create ]

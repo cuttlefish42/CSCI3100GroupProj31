@@ -29,6 +29,11 @@
             <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password" %>
           </div>
 
+          <div>
+            <%= form.label :default_community_id, "Default Community", class: "label font-semibold" %>
+            <%= form.collection_select :default_community_id, Community.order(:name), :id, :name, { include_blank: "None" }, class: "w-full select select-bordered" %>
+          </div>
+
           <div class="mt-2">
             <%= form.submit "Sign up", class: "btn btn-primary w-full" %>
           </div>

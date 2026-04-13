@@ -1,21 +1,37 @@
-<%# locals: (item:, link_title: false, large_photo: false) %>
+<%# locals: (item:, link_title: false, large_photo: false, admin: false, show_seller: true) %>
 
 <div class="card bg-base-100 border border-base-200 overflow-hidden <%= large_photo ? 'w-full max-w-2xl' : '' %>">
-  <%# Seller info top bar %>
-  <div class="flex items-center gap-3 px-4 py-3">
-    <%= render "shared/user_avatar", user: item.seller, size: "sm" %>
-    <div class="flex-1 min-w-0">
-      <p class="text-sm font-semibold truncate"><%= item.seller.full_name %></p>
-      <p class="text-xs text-base-content/50"><%= time_ago(item.created_at) %></p>
+  <% if show_seller %>
+    <%# Seller info top bar %>
+    <div class="flex items-center gap-3 px-4 py-3">
+      <%= render "shared/user_avatar", user: item.seller, size: "sm" %>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold truncate"><%= link_to item.seller.full_name, user_path(item.seller), class: "link link-hover" %></p>
+        <p class="text-xs text-base-content/50"><%= time_ago(item.created_at) %></p>
+      </div>
+      <% unless item.available? %>
+        <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
+      <% end %>
+      <% if admin %>
+        <%= button_to item_path(item),
+              method: :patch,
+              params: { item: { status: "sold" } },
+              class: "btn btn-ghost btn-xs btn-circle text-error",
+              data: { turbo_confirm: "Take down '#{item.title}'?" } do %>
+          <%= lucide_icon("x", class: "w-4 h-4") %>
+        <% end %>
+      <% end %>
     </div>
-    <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
-  </div>
+  <% end %>
 
   <%# Edge-to-edge photo %>
   <% if item.photo.attached? %>
-    <figure>
+    <figure class="relative">
       <% variant = large_photo ? ResizeImagesJob::PREVIEW_VARIANT : ResizeImagesJob::THUMBNAIL_VARIANT %>
       <%= image_tag item.photo.variant(variant), class: "w-full #{large_photo ? 'max-h-96 object-contain' : 'max-h-56 object-cover'}" %>
+      <% if !show_seller && !item.available? %>
+        <span class="badge badge-sm <%= item_status_badge_class(item) %> absolute top-2 right-2"><%= item.status.humanize %></span>
+      <% end %>
     </figure>
   <% end %>
 
@@ -29,6 +45,7 @@
     </h2>
 
     <p class="text-lg font-bold text-secondary"><%= price(item.price) %></p>
+    <p class="text-sm line-clamp-2"><%= item.description %></p>
     <p class="text-xs text-base-content/60"><%= item.condition.humanize %></p>
 
     <div class="flex items-center gap-2 mt-2">

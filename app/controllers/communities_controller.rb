@@ -4,19 +4,15 @@ class CommunitiesController < ApplicationController
   allow_unauthenticated_access only: %i[index show]
 
   def index
-    communities = Community.order(:community_type, :name)
-      .select("communities.*,
-        (SELECT COUNT(*) FROM items WHERE items.community_id = communities.id AND items.status = 0) AS items_count,
-        (SELECT COUNT(*) FROM community_memberships WHERE community_memberships.community_id = communities.id) AS members_count")
-    @communities_by_type = communities.group_by(&:community_type)
+    @communities_by_type = Community.grouped_by_type_with_counts
   end
 
   def show
     @show_sidebar = true
     @active_community_id = @community.id
     @items = @community.items.where(status: :available).order(created_at: :desc)
-    @is_member = Current.user && @community.community_memberships.exists?(user: Current.user)
-    @is_admin = Current.user && @community.community_memberships.exists?(user: Current.user, role: :admin)
+    @is_member = Current.user && @community.member?(Current.user)
+    @is_admin = Current.user && @community.admin?(Current.user)
   end
 
   def join
@@ -51,7 +47,7 @@ class CommunitiesController < ApplicationController
   end
 
   def authorize_admin!
-    redirect_to @community, alert: "Not authorized." unless Current.user && @community.admins.include?(Current.user)
+    redirect_to @community, alert: "Not authorized." unless Current.user && @community.admin?(Current.user)
   end
 
   def community_params

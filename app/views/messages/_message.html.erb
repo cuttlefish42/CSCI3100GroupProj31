@@ -19,7 +19,7 @@
   <% end %>
 
   <% if message.content.present? %>
-    <div class="chat-bubble <%= is_mine ? 'chat-bubble-primary' : '' %>" <% if has_attachment %>style="grid-row: 3"<% end %>>
+    <div class="chat-bubble <%= is_mine ? 'chat-bubble-primary' : 'bg-base-300 text-base-content' %>" <% if has_attachment %>style="grid-row: 3"<% end %>>
       <%= message.content %>
     </div>
   <% end %>

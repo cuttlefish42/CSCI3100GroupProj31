@@ -2,6 +2,7 @@ require "application_system_test_case"
 
 class RegistrationFlowTest < ApplicationSystemTestCase
   setup do
+    include ActiveJob::TestHelper
     # Clear out any emails sent before this test starts
     ActionMailer::Base.deliveries.clear
   end
@@ -19,8 +20,10 @@ class RegistrationFlowTest < ApplicationSystemTestCase
       fill_in "Password confirmation", with: "password123"
       
       # We assert that clicking 'Sign up' triggers exactly 1 email
-      assert_emails 1 do
-        click_button "Sign up"
+      perform_enqueued_jobs do
+        assert_emails 1 do
+            click_button "Sign up"
+        end
       end
     end
 

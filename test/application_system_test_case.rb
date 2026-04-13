@@ -23,6 +23,7 @@ end
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include BddSteps
   include SetupHelper
+  include ActionMailer::TestHelper
 
   parallelize(workers: 1)
   driven_by :custom_headless_chrome

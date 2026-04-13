@@ -37,6 +37,7 @@ class ItemsController < ApplicationController
   def create
     @item = Item.new(item_params)
     @item.seller = Current.user
+    @item.status = :available
 
     if @item.save
       redirect_to @item, notice: "Item created."

@@ -16,7 +16,7 @@ class OfferStatusFlowTest < ApplicationSystemTestCase
     )
     category = Category.first || Category.create!(name: "Books")
     @item = Item.create!(
-      title: "Test Textbook", price: 100, condition: :good,
+      title: "Test Textbook", description: "test textbook", price: 100, condition: :good,
       status: :available, category: category, seller: @seller
     )
   end

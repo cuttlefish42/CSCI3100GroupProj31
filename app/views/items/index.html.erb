@@ -15,7 +15,7 @@
 
   <% if @items.any? %>
       <%# Grid layout %>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
       <% @items.each do |item| %>
         <%= render item, link_title: true %>
       <% end %>

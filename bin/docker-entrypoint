@@ -3,7 +3,6 @@
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
-  env DISABLE_DATABASE_ENVIRONMENT_CHECK=1 ./bin/rails db:schema:load:cache db:schema:load:queue db:schema:load:cable 2>/dev/null || true
 fi
 
 exec "${@}"

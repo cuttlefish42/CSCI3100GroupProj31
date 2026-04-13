@@ -32,16 +32,10 @@ production:
     password: <%= ENV["POSTGRES_PASSWORD"] %>
   cache:
     <<: *production_primary
-    database: csci3100_production_cache
     migrations_paths: db/cache_migrate
-    schema_dump: false
   queue:
     <<: *production_primary
-    database: csci3100_production_queue
     migrations_paths: db/queue_migrate
-    schema_dump: false
   cable:
     <<: *production_primary
-    database: csci3100_production_cable
     migrations_paths: db/cable_migrate
-    schema_dump: false

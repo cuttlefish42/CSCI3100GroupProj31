@@ -27,18 +27,16 @@ class PasswordResetFlowTest < ApplicationSystemTestCase
       end
     end
 
-    then_ "they receive an email" do
+    then_ "they receive an email with the 'Reset Password' link" do
       mail = ActionMailer::Base.deliveries.last
+      assert_not_nil mail, "No email was sent!"
       
-      # If mail is nil, this will fail FAST instead of hanging
-      assert_not_nil mail, "No email sent!"
+      # Extract the path part only (everything after the host)
+      # This changes "http://example.com/passwords/token/edit" to "/passwords/token/edit"
+      relative_url = mail.body.encoded.match(/href="http:\/\/example\.com([^"]+)"/)[1]
       
-      # Use a more specific link search
-      link = mail.body.encoded.match(/href="(?<url>.+?)"/)
-      assert link, "No link found in email"
-      
-      @reset_url = link[:url]
-      puts "\n[DEBUG] Visiting URL: #{@reset_url}" # So you can see it in the log
+      puts "\n[DEBUG] Visiting Relative URL: #{relative_url}"
+      visit relative_url # Capybara will now use the correct local Puma port!
     end
 
     when_ "they follow the link and set a new password" do

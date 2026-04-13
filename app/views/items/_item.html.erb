@@ -10,15 +10,13 @@
     </div>
     <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
     <% if admin %>
-      <div class="tooltip tooltip-left" data-tip="Take down">
-        <%= button_to item_path(item),
-              method: :patch,
-              params: { item: { status: "sold" } },
-              class: "btn btn-error btn-xs btn-circle",
-              data: { turbo_confirm: "Take down '#{item.title}'?" } do %>
-          <%= lucide_icon("x", class: "w-3 h-3") %>
-        <% end %>
-      </div>
+      <%= button_to item_path(item),
+            method: :patch,
+            params: { item: { status: "sold" } },
+            class: "btn btn-ghost btn-xs btn-circle text-error",
+            data: { turbo_confirm: "Take down '#{item.title}'?" } do %>
+        <%= lucide_icon("x", class: "w-4 h-4") %>
+      <% end %>
     <% end %>
   </div>
 

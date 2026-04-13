@@ -140,7 +140,7 @@
         <% if params[:community_id].present? %>
           <span class="badge badge-info">
             Community: <%= Community.find(params[:community_id]).name %>
-            <%= link_to "×", items_path(params.except(:community_id)), class: "ml-1 cursor-pointer" %>
+            <%= link_to "×", items_path(item_filter_params.except(:community_id)), class: "ml-1 cursor-pointer" %>
           </span>
         <% end %>
         <% if params[:min_price].present? %>

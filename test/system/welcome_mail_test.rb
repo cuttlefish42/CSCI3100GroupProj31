@@ -8,7 +8,7 @@ class RegistrationFlowTest < ApplicationSystemTestCase
 
   test "user registers and receives a welcome email" do
     given "a guest is on the registration page" do
-      visit user_path # Adjust this path to match your routes
+      visit new_user_path # Adjust this path to match your routes
     end
 
     when_ "they fill out the registration form" do

@@ -3,11 +3,8 @@ class ItemsController < ApplicationController
   before_action :authorize_owner!, only: %i[ edit update destroy analytics ]
   allow_unauthenticated_access only: %i[ index show ]
 
-  def item_filter_params
-    params.permit(:keyword, :min_price, :max_price, :start_date, :end_date, :sort_by, :sort_direction, :feed, :community_id)
-  end
-
   def index
+    params.permit(:keyword, :min_price, :max_price, :start_date, :end_date, :sort_by, :sort_direction, :feed, :community_id)
     @show_sidebar = true
     @items = Item.all
       .search_by_keyword(params[:keyword])

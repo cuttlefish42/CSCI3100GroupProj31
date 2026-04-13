@@ -1,5 +1,5 @@
 # db/seeds/04_items.rb
-require "open-uri"
+require "vips"
 
 items = [
   # Books
@@ -60,10 +60,14 @@ items.each do |item_attr|
 
     unless cache_path.exist?
       cache_path.dirname.mkpath
-      label = item_attr[:title].gsub(" ", "+")
-      url = "https://placehold.co/400x300.png?text=#{label}"
-      IO.copy_stream(URI.open(url), cache_path)
-      puts "  Downloaded #{filename}"
+      # Generate placeholder image locally with libvips
+      text = Vips::Image.text(item_attr[:title], dpi: 150, font: "sans")
+      bg = Vips::Image.black(400, 300).colourspace(:srgb) + [204, 204, 204]
+      x = [(400 - text.width) / 2, 0].max
+      y = [(300 - text.height) / 2, 0].max
+      img = bg.composite(text.colourspace(:srgb).invert, :over, x: x, y: y)
+      img.pngsave(cache_path.to_s)
+      puts "  Generated #{filename}"
     end
 
     item.photo.attach(

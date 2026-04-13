@@ -13,7 +13,7 @@
         <% end %>
       <% end %>
       <% if @is_admin %>
-        <%= link_to "Edit Rules", "#rules-form", class: "btn btn-outline btn-sm" %>
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('rules-form').classList.toggle('hidden')">Edit Rules</button>
       <% end %>
     </div>
   </div>
@@ -27,9 +27,9 @@
     </div>
   <% end %>
 
-  <%# Admin: edit rules form %>
+  <%# Admin: edit rules form (hidden by default, toggled by "Edit Rules" button) %>
   <% if @is_admin %>
-    <div id="rules-form" class="card bg-base-100 shadow-md mb-6">
+    <div id="rules-form" class="card bg-base-100 shadow-md mb-6 hidden">
       <div class="card-body">
         <h3 class="card-title text-base">Edit Listing Rules</h3>
         <%= form_with model: @community do |f| %>

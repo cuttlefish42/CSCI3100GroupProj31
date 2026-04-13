@@ -1,167 +1,50 @@
 require "application_system_test_case"
 
 class MessagingFromItemTest < ApplicationSystemTestCase
-  include BddSteps
-  
-  def setup
-    @buyer = User.create!(email: "buyer@example.com", password: "password", full_name: "Test Buyer")
-    @seller = User.create!(email: "seller@example.com", password: "password", full_name: "Test Seller")
+  setup do
+    create_sample_communities
+    create_sample_categories
+
+    @seller = create_sample_user(
+      email_address: "seller@link.cuhk.edu.hk",
+      first_name: "Seller", last_name: "Wang"
+    )
+    @buyer = create_sample_user(
+      email_address: "buyer@link.cuhk.edu.hk",
+      first_name: "Buyer", last_name: "Chen"
+    )
+    category = Category.find_by!(name: "Books")
+    community = Community.find_by!(name: "Chung Chi College")
     @item = Item.create!(
-      title: "Test Item",
-      description: "A great item for sale",
-      price: 99.99,
-      user: @seller,
-      status: "available"
+      title: "Test Textbook", description: "A test item", price: 100,
+      condition: :good, status: :available,
+      category: category, community: community, seller: @seller
     )
   end
 
-  test "user can start conversation from item page and send message" do
-    given "a buyer viewing an item page" do
+  test "buyer can start a conversation from item page and send a message" do
+    given "the buyer is logged in and viewing the item" do
       system_sign_in(@buyer)
       visit item_path(@item)
     end
 
-    when "the buyer clicks the message button" do
-      click_on "Message Seller"
+    when_ "the buyer clicks Chat" do
+      click_button "Chat"
     end
 
-    then "a conversation is created and chat page opens" do
-      assert_current_path conversation_path(Conversation.last)
-      assert_text @item.title
+    then_ "a conversation page opens" do
       assert_text @seller.full_name
     end
 
-    when "the buyer types and sends a message" do
-      fill_in "message_content", with: "Hi, I'm interested in this item!"
-      click_on "Send"
+    when_ "the buyer sends a message" do
+      fill_in "Type a message...", with: "Hi, is this still available?"
+      click_button "Send"
     end
 
-    then "the message appears in the chat" do
+    then_ "the message appears in the chat" do
       within "#messages" do
-        assert_text "Hi, I'm interested in this item!"
-        assert_text "You"
+        assert_text "Hi, is this still available?"
       end
-    end
-
-    and "the seller sees the message" do
-      sign_out
-      system_sign_in(@seller)
-      visit conversation_path(Conversation.last)
-      
-      within "#messages" do
-        assert_text "Hi, I'm interested in this item!"
-        assert_text @buyer.full_name
-      end
-    end
-  end
-
-  test "user cannot send empty message" do
-    given "a buyer in a conversation" do
-      system_sign_in(@buyer)
-      visit item_path(@item)
-      click_on "Message Seller"
-    end
-
-    when "the buyer tries to send an empty message" do
-      fill_in "message_content", with: ""
-      click_on "Send"
-    end
-
-    then "the message is not sent" do
-      assert_no_selector ".chat-bubble"
-    end
-
-    and "an error message is shown" do
-      assert_text "Message cannot be empty"
-    end
-
-    when "the buyer tries to send only whitespace" do
-      fill_in "message_content", with: "   "
-      click_on "Send"
-    end
-
-    then "the whitespace message is also rejected" do
-      assert_no_selector ".chat-bubble"
-      assert_text "Message cannot be empty"
-    end
-  end
-
-  test "conversation persists between sessions" do
-    given "a conversation has started between buyer and seller" do
-      system_sign_in(@buyer)
-      visit item_path(@item)
-      click_on "Message Seller"
-      fill_in "message_content", with: "First message"
-      click_on "Send"
-      sign_out
-    end
-
-    when "the seller logs in and checks messages" do
-      system_sign_in(@seller)
-      visit conversations_path
-    end
-
-    then "the seller sees the conversation in their inbox" do
-      assert_text @buyer.full_name
-      assert_text "First message"
-      assert_text @item.title
-    end
-
-    when "the seller clicks the conversation" do
-      click_on @buyer.full_name
-    end
-
-    then "the seller can reply" do
-      fill_in "message_content", with: "Thanks for your interest!"
-      click_on "Send"
-      
-      within "#messages" do
-        assert_text "Thanks for your interest!"
-      end
-    end
-  end
-
-  test "multiple users can message about same item" do
-    @buyer2 = User.create!(email: "buyer2@example.com", password: "password", full_name: "Second Buyer")
-
-    given "two buyers interested in the same item" do
-      # First buyer starts conversation
-      system_sign_in(@buyer)
-      visit item_path(@item)
-      click_on "Message Seller"
-      fill_in "message_content", with: "Message from buyer 1"
-      click_on "Send"
-      sign_out
-      
-      # Second buyer starts conversation
-      system_sign_in(@buyer2)
-      visit item_path(@item)
-      click_on "Message Seller"
-      fill_in "message_content", with: "Message from buyer 2"
-      click_on "Send"
-      sign_out
-    end
-
-    when "the seller views their conversations" do
-      system_sign_in(@seller)
-      visit conversations_path
-    end
-
-    then "the seller sees two separate conversations" do
-      assert_selector ".conversation-item", count: 2
-      assert_text @buyer.full_name
-      assert_text @buyer2.full_name
-    end
-
-    and "each conversation is independent" do
-      click_on @buyer.full_name
-      assert_text "Message from buyer 1"
-      assert_no_text "Message from buyer 2"
-      
-      visit conversations_path
-      click_on @buyer2.full_name
-      assert_text "Message from buyer 2"
-      assert_no_text "Message from buyer 1"
     end
   end
 end

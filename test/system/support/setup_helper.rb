@@ -75,4 +75,11 @@ module SetupHelper
     login_user_as(email: user.email_address, password: "password123")
     assert_text "Log out"
   end
+
+  def login_as(user, password: "P@ssword123!")
+  visit new_session_path
+  fill_in "Email", with: user.email_address
+  fill_in "Password", with: password
+  click_button "Sign in"
+  end
 end

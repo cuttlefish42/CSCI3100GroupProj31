@@ -116,4 +116,26 @@ class ItemTest < ApplicationSystemTestCase
       assert_current_path item_path(created_item), ignore_query: true
     end
   end
+
+  test "items can be filtered by community" do
+    given "items exist in different communities" do
+      create_sample_communities
+      create_sample_categories
+      seller = create_sample_user(email_address: "filtertest@link.cuhk.edu.hk", first_name: "Filter", last_name: "Test")
+      category = Category.find_by!(name: "Books")
+      cc = Community.find_by!(name: "Chung Chi College")
+      na = Community.find_by!(name: "New Asia College")
+      Item.create!(title: "CC Item", description: "In Chung Chi", price: 10, condition: :good, status: :available, category: category, community: cc, seller: seller)
+      Item.create!(title: "NA Item", description: "In New Asia", price: 20, condition: :good, status: :available, category: category, community: na, seller: seller)
+    end
+
+    when_ "the user filters by Chung Chi College" do
+      visit items_path(community_id: Community.find_by!(name: "Chung Chi College").id)
+    end
+
+    then_ "only Chung Chi items are shown" do
+      assert_text "CC Item"
+      assert_no_text "NA Item"
+    end
+  end
 end

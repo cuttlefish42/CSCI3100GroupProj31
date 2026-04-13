@@ -5,7 +5,6 @@ class ItemsController < ApplicationController
 
   def index
     @show_sidebar = true
-    
     @items = Item.all
       .search_by_keyword(params[:keyword])
       .by_price_range(params[:min_price], params[:max_price])
@@ -17,7 +16,7 @@ class ItemsController < ApplicationController
     if params[:feed] == "my" && Current.user
       @items = @items.by_community(Current.user.community_ids)
       @active_feed = "my"
-    elsif params[:community_id].present?
+    else
       @items = @items.by_community(params[:community_id])
       @active_community_id = params[:community_id].to_i
     end

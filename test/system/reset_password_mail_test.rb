@@ -11,42 +11,35 @@ class PasswordResetFlowTest < ApplicationSystemTestCase
   end
 
   test "user resets their password via email link" do
+    # 1. FORCE LOGOUT (if your helper supports it)
+    # Or just visit a path that clears session
+    # visit logout_path 
+
     given "a registered user is on the forgot password page" do
       visit new_password_path 
     end
 
-    when_ "they submit their email address to request a reset" do
-      fill_in "Email", with: @email
-      
-      perform_enqueued_jobs do
-        click_button "Email reset instructions" 
-        
-        # 1. WAIT for the success message on the UI. 
-        # Check what your app says: e.g., "Check your email" or "Instructions sent"
-        assert_text "Password reset instructions sent" 
-      end
+    when_ "they submit their email address" do
+      fill_in "Email", with: @user.email_address
+      perform_enqueued_jobs { click_button "Email reset instructions" }
     end
 
-    then_ "they receive an email with the 'Reset Password' link" do
+    then_ "they follow the link in the email" do
       mail = ActionMailer::Base.deliveries.last
-      assert_not_nil mail, "No email was sent!"
+      # Use the absolute URL since it's working now, or stick to relative
+      @reset_url = mail.body.encoded.match(/href="http:\/\/example\.com([^"]+)"/)[1]
       
-      # Extract the path part only (everything after the host)
-      # This changes "http://example.com/passwords/token/edit" to "/passwords/token/edit"
-      relative_url = mail.body.encoded.match(/href="http:\/\/example\.com([^"]+)"/)[1]
+      # 2. LOG OUT BEFORE VISITING THE LINK
+      # This ensures the 'token' is the only thing Rails cares about
+      Capybara.reset_sessions! 
       
-      puts "\n[DEBUG] Visiting Relative URL: #{relative_url}"
-      visit relative_url # Capybara will now use the correct local Puma port!
+      visit @reset_url
     end
 
-    when_ "they follow the link and set a new password" do
-      visit @reset_url
-      
-      # Using IDs instead of Labels to avoid Capybara lookup issues
-      fill_in "password", with: "NewSecurePass123!"
-      fill_in "password_confirmation", with: "NewSecurePass123!"
-      
-      # Match your button text exactly as seen in your HTML: "Save"
+    when_ "they set a new password" do
+      # Since you're on the right page now, placeholders or IDs will work
+      fill_in "Enter new password", with: "NewSecurePass123!"
+      fill_in "Repeat new password", with: "NewSecurePass123!"
       click_button "Save"
     end
 

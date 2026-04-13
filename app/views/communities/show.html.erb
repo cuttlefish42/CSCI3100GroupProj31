@@ -47,9 +47,7 @@
   <% if @items.any? %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
       <% @items.each do |item| %>
-        <%= link_to item_path(item), class: "no-underline block" do %>
-          <%= render item, link_title: true, admin: @is_admin %>
-        <% end %>
+        <%= render item, link_title: true, admin: @is_admin %>
       <% end %>
     </div>
   <% else %>

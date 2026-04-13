@@ -22,6 +22,8 @@ servers:
         hosts:
             - <%= deploy_host %>
         cmd: bundle exec sidekiq
+        options:
+            volume: csci3100_group_proj31_storage:/rails/storage
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
 # If used with Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.

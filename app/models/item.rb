@@ -23,7 +23,13 @@ class Item < ApplicationRecord
 
   # Scopes for filtering and searching
   scope :search_by_keyword, ->(keyword) {
-    where("title ILIKE ?", "%#{keyword}%") if keyword.present?
+    if keyword.present?
+      if ActiveRecord::Base.connection.adapter_name == "SQLite"
+        where("title LIKE ?", "%#{keyword}%")
+      else
+        where("title ILIKE ?", "%#{keyword}%")
+      end
+    end
   }
 
   scope :by_community, ->(community_id) {

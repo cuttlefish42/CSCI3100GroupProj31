@@ -50,9 +50,10 @@ registry:
 env:
     secret:
         - RAILS_MASTER_KEY
+        - POSTGRES_PASSWORD
     clear:
-        # Sidekiq talks to the Redis accessory below over the kamal docker network.
         REDIS_URL: redis://csci3100_group_proj31-redis:6379/0
+        DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@csci3100_group_proj31-db:5432/csci3100_production
 
         # Set number of cores available to the application on each server (default: 1).
         # WEB_CONCURRENCY: 2
@@ -103,6 +104,17 @@ builder:
 
 # Use accessory services (secrets come from .kamal/secrets).
 accessories:
+    db:
+        image: postgres:16
+        host: <%= deploy_host %>
+        port: "127.0.0.1:5432:5432"
+        env:
+            clear:
+                POSTGRES_DB: csci3100_production
+            secret:
+                - POSTGRES_PASSWORD
+        directories:
+            - postgres_data:/var/lib/postgresql/data
     redis:
         image: redis:7
         host: <%= deploy_host %>

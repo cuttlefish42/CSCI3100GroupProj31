@@ -8,7 +8,9 @@
       <p class="text-sm font-semibold truncate"><%= item.seller.full_name %></p>
       <p class="text-xs text-base-content/50"><%= time_ago(item.created_at) %></p>
     </div>
-    <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
+    <% unless item.available? %>
+      <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
+    <% end %>
     <% if admin %>
       <%= button_to item_path(item),
             method: :patch,

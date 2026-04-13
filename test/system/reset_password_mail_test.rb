@@ -8,7 +8,7 @@ class PasswordResetFlowTest < ApplicationSystemTestCase
 
   test "user resets their password via email link" do
     given "a registered user requests a password reset" do
-      visit new_password_reset_path # Adjust this to your 'forgot password' route
+      visit new_password_path # Adjust this to your 'forgot password' route
     end
 
     when_ "they submit their email address" do

@@ -134,25 +134,25 @@
         <% if params[:keyword].present? %>
           <span class="badge badge-info">
             Keyword: <%= params[:keyword] %>
-            <%= link_to "×", items_path(params.except(:keyword)), class: "ml-1 cursor-pointer" %>
+            <%= link_to "×", items_path(request.query_parameters.except(:keyword)), class: "ml-1 cursor-pointer" %>
           </span>
         <% end %>
         <% if params[:community_id].present? %>
           <span class="badge badge-info">
             Community: <%= Community.find(params[:community_id]).name %>
-            <%= link_to "×", items_path(params.except(:community_id)), class: "ml-1 cursor-pointer" %>
+            <%= link_to "×", items_path(request.query_parameters.except(:community_id)), class: "ml-1 cursor-pointer" %>
           </span>
         <% end %>
         <% if params[:min_price].present? %>
           <span class="badge badge-info">
             Min: $<%= params[:min_price] %>
-            <%= link_to "×", items_path(params.except(:min_price)), class: "ml-1 cursor-pointer" %>
+            <%= link_to "×", items_path(request.query_parameters.except(:min_price)), class: "ml-1 cursor-pointer" %>
           </span>
         <% end %>
         <% if params[:max_price].present? %>
           <span class="badge badge-info">
             Max: $<%= params[:max_price] %>
-            <%= link_to "×", items_path(params.except(:max_price)), class: "ml-1 cursor-pointer" %>
+            <%= link_to "×", items_path(request.query_parameters.except(:max_price)), class: "ml-1 cursor-pointer" %>
           </span>
         <% end %>
       </div>

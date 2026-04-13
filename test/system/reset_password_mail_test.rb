@@ -1,58 +1,42 @@
 require "application_system_test_case"
 
 class PasswordResetFlowTest < ApplicationSystemTestCase
-  include ActiveJob::TestHelper 
+  include ActiveJob::TestHelper
 
   setup do
-    # Use a unique, lowercase email every time
-    @email = "user_#{SecureRandom.hex(4)}@link.cuhk.edu.hk".downcase
-    @user = User.create!(
-      first_name: "Test",
-      last_name: "User",
-      email_address: @email,
-      password: "P@ssword123!",
-      password_confirmation: "P@ssword123!"
-    )
+    @user = create_sample_user(email_address: "reset@link.cuhk.edu.hk")
     ActionMailer::Base.deliveries.clear
   end
 
   test "user resets their password via email link" do
-    given "a registered user is on the forgot password page" do
-      visit new_password_path 
+    given "the user is on the forgot password page" do
+      visit new_password_path
     end
 
-    when_ "they submit their email address to request a reset" do
-      fill_in "Email", with: @email
-      
+    when_ "they submit their email address" do
+      fill_in "Email", with: "reset@link.cuhk.edu.hk"
       perform_enqueued_jobs do
         click_button "Email reset instructions"
-        # This WAIT is the most important part!
-        # It ensures the server finishes before we check the mailbox.
-        assert_text "Password reset instructions sent" 
+        assert_text "Password reset instructions sent"
       end
     end
 
-    then_ "they receive an email with the link" do
+    then_ "they receive an email with a reset link" do
       mail = ActionMailer::Base.deliveries.last
-      assert_not_nil mail, "Mailer was never called! Check if User.find_by(email_address: '#{@email}') works."
-      
-      # Use a robust regex to get the path
+      assert_not_nil mail
       @reset_url = mail.body.encoded.match(/href="http:\/\/example\.com([^"]+)"/)[1]
-      
-      # Clear session to ensure we are a 'guest' when clicking the link
-      Capybara.reset_sessions!
-      visit @reset_url
     end
 
-    when_ "they set a new password" do
-      # Use placeholders from your HTML to be 100% sure
-      fill_in "Enter new password", with: "NewSecurePass123!"
-      fill_in "Repeat new password", with: "NewSecurePass123!"
+    when_ "they visit the reset link and set a new password" do
+      Capybara.reset_sessions!
+      visit @reset_url
+      fill_in "New password", with: "newpassword456"
+      fill_in "Confirm password", with: "newpassword456"
       click_button "Save"
     end
 
     then_ "their password is changed" do
-      assert_text "Password has been reset" 
+      assert_text "Password has been reset"
     end
   end
 end

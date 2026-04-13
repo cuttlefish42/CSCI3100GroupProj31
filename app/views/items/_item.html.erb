@@ -6,7 +6,7 @@
     <div class="flex items-center gap-3 px-4 py-3">
       <%= render "shared/user_avatar", user: item.seller, size: "sm" %>
       <div class="flex-1 min-w-0">
-        <p class="text-sm font-semibold truncate"><%= item.seller.full_name %></p>
+        <p class="text-sm font-semibold truncate"><%= link_to item.seller.full_name, user_path(item.seller), class: "link link-hover" %></p>
         <p class="text-xs text-base-content/50"><%= time_ago(item.created_at) %></p>
       </div>
       <% unless item.available? %>

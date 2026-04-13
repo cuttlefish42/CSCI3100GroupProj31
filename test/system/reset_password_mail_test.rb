@@ -42,17 +42,17 @@ class PasswordResetFlowTest < ApplicationSystemTestCase
     when_ "they follow the link and set a new password" do
       visit @reset_url
       
-      # Match the labels exactly as they appear in your HTML
-      fill_in "New password", with: "NewSecurePass123!"
-      fill_in "Confirm password", with: "NewSecurePass123!"
+      # Using IDs instead of Labels to avoid Capybara lookup issues
+      fill_in "password", with: "NewSecurePass123!"
+      fill_in "password_confirmation", with: "NewSecurePass123!"
       
-      # Match the button text exactly: "Save"
+      # Match your button text exactly as seen in your HTML: "Save"
       click_button "Save"
     end
 
     then_ "their password is changed" do
-      # Make sure this matches your redirect's success message
-      # Based on your HTML's h1, you are likely redirected to login or dashboard
+      # This usually redirects to the login page or home
+      # If this fails, check what message appears after clicking 'Save'
       assert_text "Password has been reset" 
     end
   end

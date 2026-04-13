@@ -5,7 +5,7 @@
       <div class="card-body">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <h1 class="card-title text-4xl mb-2"><%= @user.username %></h1>
+            <h1 class="card-title text-4xl mb-2"><%= @user.full_name %></h1>
             <div class="text-base-content/70 space-y-1">
               <p><strong>Email:</strong> <%= @user.email_address %></p>
               <p><strong>Member since:</strong> <%= @user.created_at.strftime("%B %d, %Y") %></p>
@@ -15,9 +15,6 @@
             <div class="badge badge-lg" style="background-color: hsl(var(--s)); color: hsl(var(--sc));">
               Karma: <%= @user.karma || 0 %>
             </div>
-            <% if current_user == @user %>
-              <%= link_to "Edit Profile", edit_user_path(@user), class: "btn btn-primary btn-sm" %>
-            <% end %>
           </div>
         </div>
       </div>
@@ -66,9 +63,9 @@
                       <h3 class="font-semibold text-lg"><%= link_to trade.item.title, item_path(trade.item), class: "link link-primary" %></h3>
                       <p class="text-base-content/70 text-sm">
                         <% if @user == trade.buyer %>
-                          Bought from <strong><%= trade.item.seller.username %></strong>
+                          Bought from <strong><%= trade.item.seller.full_name %></strong>
                         <% else %>
-                          Sold to <strong><%= trade.buyer.username %></strong>
+                          Sold to <strong><%= trade.buyer.full_name %></strong>
                         <% end %>
                       </p>
                     </div>
@@ -103,7 +100,7 @@
                   <div class="flex justify-between items-start">
                     <div>
                       <div class="flex items-center gap-2 mb-2">
-                        <h4 class="font-semibold"><%= link_to review.reviewer.username, user_path(review.reviewer), class: "link link-primary" %></h4>
+                        <h4 class="font-semibold"><%= link_to review.reviewer.full_name, user_path(review.reviewer), class: "link link-primary" %></h4>
                         <div class="badge badge-sm" style="background-color: hsl(var(--p)); color: hsl(var(--pc));">
                           <%= review.seller_review? ? "Seller Review" : "Buyer Review" %>
                         </div>

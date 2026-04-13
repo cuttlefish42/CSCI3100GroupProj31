@@ -52,9 +52,9 @@ env:
     secret:
         - RAILS_MASTER_KEY
         - POSTGRES_PASSWORD
+        - DATABASE_URL
     clear:
         REDIS_URL: redis://csci3100_group_proj31-redis:6379/0
-        DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@csci3100_group_proj31-db:5432/csci3100_production
 
         # Set number of cores available to the application on each server (default: 1).
         # WEB_CONCURRENCY: 2

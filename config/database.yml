@@ -23,21 +23,25 @@ test:
 # Store production database in the storage/ directory, which by default
 # is mounted as a persistent Docker volume in config/deploy.yml.
 production:
-  primary:
+  primary: &production_primary
     adapter: postgresql
-    url: <%= ENV["DATABASE_URL"] %>
+    host: <%= ENV.fetch("DB_HOST", "csci3100_group_proj31-db") %>
+    port: 5432
+    database: csci3100_production
+    username: postgres
+    password: <%= ENV["POSTGRES_PASSWORD"] %>
   cache:
-    adapter: postgresql
-    url: <%= ENV["DATABASE_URL"] %>
+    <<: *production_primary
+    database: csci3100_production_cache
     migrations_paths: db/cache_migrate
     schema_dump: false
   queue:
-    adapter: postgresql
-    url: <%= ENV["DATABASE_URL"] %>
+    <<: *production_primary
+    database: csci3100_production_queue
     migrations_paths: db/queue_migrate
     schema_dump: false
   cable:
-    adapter: postgresql
-    url: <%= ENV["DATABASE_URL"] %>
+    <<: *production_primary
+    database: csci3100_production_cable
     migrations_paths: db/cable_migrate
     schema_dump: false

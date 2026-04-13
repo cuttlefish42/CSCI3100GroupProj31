@@ -22,6 +22,8 @@ servers:
         hosts:
             - <%= deploy_host %>
         cmd: bundle exec sidekiq
+        options:
+            volume: csci3100_group_proj31_storage:/rails/storage
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
 # If used with Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
@@ -30,9 +32,8 @@ servers:
 #
 # Don't use this when deploying to multiple web servers (then you have to terminate SSL at your load balancer).
 #
-# proxy:
-#   ssl: true
-#   host: app.example.com
+proxy:
+  ssl: false
 
 # Where you keep your container images.
 registry:
@@ -53,7 +54,6 @@ env:
         - POSTGRES_PASSWORD
     clear:
         REDIS_URL: redis://csci3100_group_proj31-redis:6379/0
-        DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@csci3100_group_proj31-db:5432/csci3100_production
 
         # Set number of cores available to the application on each server (default: 1).
         # WEB_CONCURRENCY: 2

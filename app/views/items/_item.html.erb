@@ -22,19 +22,16 @@
         <% end %>
       <% end %>
     </div>
-  <% else %>
-    <% unless item.available? %>
-      <div class="flex justify-end px-4 pt-2">
-        <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
-      </div>
-    <% end %>
   <% end %>
 
   <%# Edge-to-edge photo %>
   <% if item.photo.attached? %>
-    <figure>
+    <figure class="relative">
       <% variant = large_photo ? ResizeImagesJob::PREVIEW_VARIANT : ResizeImagesJob::THUMBNAIL_VARIANT %>
       <%= image_tag item.photo.variant(variant), class: "w-full #{large_photo ? 'max-h-96 object-contain' : 'max-h-56 object-cover'}" %>
+      <% if !show_seller && !item.available? %>
+        <span class="badge badge-sm <%= item_status_badge_class(item) %> absolute top-2 right-2"><%= item.status.humanize %></span>
+      <% end %>
     </figure>
   <% end %>
 

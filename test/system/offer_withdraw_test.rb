@@ -57,6 +57,26 @@ class OfferWithdrawTest < ApplicationSystemTestCase
     end
   end
 
+  test "happy path: buyer edits offer price from dashboard" do
+    given "the buyer has a pending offer" do
+      @offer = Offer.create!(item: @item, buyer: @buyer, price_offered: 80, status: :pending)
+      system_sign_in(@buyer)
+    end
+
+    when_ "they edit the price on the dashboard" do
+      visit dashboard_path
+      within "tr#sent_offer_#{@offer.id}" do
+        fill_in "offer[price_offered]", with: 95
+        click_button "Edit"
+      end
+    end
+
+    then_ "the offer is updated" do
+      assert_text "Offer updated"
+      assert_equal 95, @offer.reload.price_offered.to_i
+    end
+  end
+
   test "sad path: buyer cannot offer on unavailable item" do
     given "the item is sold" do
       @item.update!(status: :sold)

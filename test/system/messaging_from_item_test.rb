@@ -22,6 +22,22 @@ class MessagingFromItemTest < ApplicationSystemTestCase
     )
   end
 
+  test "happy path: user sees conversations in inbox" do
+    given "a conversation exists" do
+      conversation = Conversation.find_or_create_between(@buyer, @seller)
+      conversation.messages.create!(sender: @buyer, content: "Hello there")
+      system_sign_in(@buyer)
+    end
+
+    when_ "they visit the inbox" do
+      visit conversations_path
+    end
+
+    then_ "they see the conversation" do
+      assert_text @seller.full_name
+    end
+  end
+
   test "buyer can start a conversation from item page and send a message" do
     given "the buyer is logged in and viewing the item" do
       system_sign_in(@buyer)

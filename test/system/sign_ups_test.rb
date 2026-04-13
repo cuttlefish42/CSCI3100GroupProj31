@@ -1,0 +1,78 @@
+require "application_system_test_case"
+
+class SignUpsTest < ApplicationSystemTestCase
+  setup do
+    # Assuming you need this for your database constraints,
+    # even if it's hidden or set automatically in the form.
+    @default_community = Community.first || Community.create!(name: "Default Community", community_type: "public")
+  end
+
+  test "happy path: user signs up successfully" do
+    visit sign_up_path
+
+    fill_in "First name", with: "Jane"
+    fill_in "Last name", with: "Doe"
+    fill_in "Email address", with: "jane@example.com"
+    fill_in "Password", with: "password123"
+    fill_in "Password confirmation", with: "password123"
+
+    # If community is a visible dropdown in your form, uncomment the next line:
+    # select @default_community.name, from: "Community"
+
+    click_on "Sign up" # Adjust this to match your actual button text
+
+    # Asserts the redirect and the flash notice from your controller
+    assert_text "Welcome! Please check your email for confirmation."
+    assert_current_path root_path
+  end
+
+  test "sad path: mismatched password" do
+    visit sign_up_path
+
+    fill_in "First name", with: "Jane"
+    fill_in "Last name", with: "Doe"
+    fill_in "Email address", with: "jane@example.com"
+    fill_in "Password", with: "password123"
+    fill_in "Password confirmation", with: "different_password"
+
+    click_on "Sign up"
+
+    assert_text "Password confirmation doesn't match"
+  end
+
+  test "sad path: duplicate email" do
+    # 1. Create an existing user first
+    User.create!(
+      first_name: "Existing",
+      last_name: "User",
+      email_address: "duplicate@example.com",
+      password: "password123",
+      password_confirmation: "password123"
+      # default_community_id: @default_community.id # Uncomment if required at DB level
+    )
+
+    # 2. Attempt to sign up with the same email
+    visit sign_up_path
+
+    fill_in "First name", with: "New"
+    fill_in "Last name", with: "Person"
+    fill_in "Email address", with: "duplicate@example.com"
+    fill_in "Password", with: "password123"
+    fill_in "Password confirmation", with: "password123"
+
+    click_on "Sign up"
+
+    # Asserts the validation error
+    assert_text "Email address has already been taken"
+  end
+
+  test "sad path: missing fields" do
+    visit sign_up_path
+
+    # Leave all fields blank and submit
+    click_on "Sign up"
+
+    message = page.find("#user_first_name").native.attribute("validationMessage")
+    assert_equal "Please fill out this field.", message
+  end
+end

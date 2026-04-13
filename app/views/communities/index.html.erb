@@ -9,8 +9,8 @@
           <div class="card-body">
             <h3 class="card-title"><%= community.name %></h3>
             <div class="flex gap-4 text-sm text-base-content/60">
-              <span><%= community.items.where(status: :available).count %> items</span>
-              <span><%= community.members.count %> members</span>
+              <span><%= community.items_count %> items</span>
+              <span><%= community.members_count %> members</span>
             </div>
           </div>
         <% end %>

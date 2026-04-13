@@ -6,7 +6,7 @@
     </div>
     <div class="flex gap-2">
       <% if authenticated? %>
-        <% if Current.user.communities.include?(@community) %>
+        <% if @is_member %>
           <%= button_to "Leave", leave_community_path(@community), method: :delete, class: "btn btn-outline btn-sm" %>
         <% else %>
           <%= button_to "Join", join_community_path(@community), method: :post, class: "btn btn-primary btn-sm" %>

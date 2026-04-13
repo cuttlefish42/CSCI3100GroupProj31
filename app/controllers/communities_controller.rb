@@ -4,14 +4,19 @@ class CommunitiesController < ApplicationController
   allow_unauthenticated_access only: %i[index show]
 
   def index
-    @communities_by_type = Community.grouped_by_type
+    communities = Community.order(:community_type, :name)
+      .select("communities.*,
+        (SELECT COUNT(*) FROM items WHERE items.community_id = communities.id AND items.status = 0) AS items_count,
+        (SELECT COUNT(*) FROM community_memberships WHERE community_memberships.community_id = communities.id) AS members_count")
+    @communities_by_type = communities.group_by(&:community_type)
   end
 
   def show
     @show_sidebar = true
     @active_community_id = @community.id
     @items = @community.items.where(status: :available).order(created_at: :desc)
-    @is_admin = Current.user && @community.admins.include?(Current.user)
+    @is_member = Current.user && @community.community_memberships.exists?(user: Current.user)
+    @is_admin = Current.user && @community.community_memberships.exists?(user: Current.user, role: :admin)
   end
 
   def join

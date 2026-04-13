@@ -33,6 +33,22 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
     end
   end
 
+  test "user can log out" do
+    given "a logged-in user" do
+      create_sample_users(count: 1)
+      system_sign_in(User.find_by!(email_address: "sample_user_0@link.cuhk.edu.hk"))
+    end
+
+    when_ "the user clicks Log out" do
+      click_on "Log out"
+    end
+
+    then_ "they are redirected to the login page" do
+      assert_current_path new_session_path, ignore_query: true
+      assert_no_text "Log out"
+    end
+  end
+
   test "user tries to sign in with invalid password" do
     given "an existing user" do
       create_sample_users(count: 1)

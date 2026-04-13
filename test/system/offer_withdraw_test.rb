@@ -38,6 +38,25 @@ class OfferWithdrawTest < ApplicationSystemTestCase
     end
   end
 
+  test "happy path: buyer re-submits offer on same item updates existing offer" do
+    given "the buyer already has a pending offer" do
+      Offer.create!(item: @item, buyer: @buyer, price_offered: 80, status: :pending)
+      system_sign_in(@buyer)
+    end
+
+    when_ "they submit a new offer on the same item" do
+      visit new_item_offer_path(@item)
+      find("#offer_price_offered").fill_in with: 90
+      click_button "Submit Offer"
+    end
+
+    then_ "the existing offer is updated" do
+      assert_text "Offer updated"
+      assert_equal 1, @item.offers.where(buyer: @buyer).count
+      assert_equal 90, @item.offers.find_by(buyer: @buyer).price_offered.to_i
+    end
+  end
+
   test "sad path: buyer cannot offer on unavailable item" do
     given "the item is sold" do
       @item.update!(status: :sold)

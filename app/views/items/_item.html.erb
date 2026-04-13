@@ -1,26 +1,34 @@
-<%# locals: (item:, link_title: false, large_photo: false, admin: false) %>
+<%# locals: (item:, link_title: false, large_photo: false, admin: false, show_seller: true) %>
 
 <div class="card bg-base-100 border border-base-200 overflow-hidden <%= large_photo ? 'w-full max-w-2xl' : '' %>">
-  <%# Seller info top bar %>
-  <div class="flex items-center gap-3 px-4 py-3">
-    <%= render "shared/user_avatar", user: item.seller, size: "sm" %>
-    <div class="flex-1 min-w-0">
-      <p class="text-sm font-semibold truncate"><%= item.seller.full_name %></p>
-      <p class="text-xs text-base-content/50"><%= time_ago(item.created_at) %></p>
-    </div>
-    <% unless item.available? %>
-      <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
-    <% end %>
-    <% if admin %>
-      <%= button_to item_path(item),
-            method: :patch,
-            params: { item: { status: "sold" } },
-            class: "btn btn-ghost btn-xs btn-circle text-error",
-            data: { turbo_confirm: "Take down '#{item.title}'?" } do %>
-        <%= lucide_icon("x", class: "w-4 h-4") %>
+  <% if show_seller %>
+    <%# Seller info top bar %>
+    <div class="flex items-center gap-3 px-4 py-3">
+      <%= render "shared/user_avatar", user: item.seller, size: "sm" %>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold truncate"><%= item.seller.full_name %></p>
+        <p class="text-xs text-base-content/50"><%= time_ago(item.created_at) %></p>
+      </div>
+      <% unless item.available? %>
+        <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
       <% end %>
+      <% if admin %>
+        <%= button_to item_path(item),
+              method: :patch,
+              params: { item: { status: "sold" } },
+              class: "btn btn-ghost btn-xs btn-circle text-error",
+              data: { turbo_confirm: "Take down '#{item.title}'?" } do %>
+          <%= lucide_icon("x", class: "w-4 h-4") %>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <% unless item.available? %>
+      <div class="flex justify-end px-4 pt-2">
+        <span class="badge badge-sm <%= item_status_badge_class(item) %>"><%= item.status.humanize %></span>
+      </div>
     <% end %>
-  </div>
+  <% end %>
 
   <%# Edge-to-edge photo %>
   <% if item.photo.attached? %>

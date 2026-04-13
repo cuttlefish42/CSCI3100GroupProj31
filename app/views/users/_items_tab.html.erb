@@ -1,0 +1,14 @@
+<%# locals: (items:) %>
+
+<% if items.any? %>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% items.each do |item| %>
+      <%= render item, link_title: true, show_seller: false %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="flex items-center gap-2 text-base-content/50 py-4">
+    <%= lucide_icon("package", class: "w-5 h-5") %>
+    <span>No items listed yet.</span>
+  </div>
+<% end %>

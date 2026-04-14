@@ -63,15 +63,13 @@ class OfferStatusFlowTest < ApplicationSystemTestCase
       assert @item.reload.reserved?
     end
 
-    then_ "the seller dashboard does NOT show a review button" do
+    then_ "both buyer and seller see the review button" do
       as(@seller) do
         visit dashboard_path
         assert_text "Accepted"
-        assert_no_link "Leave a Review"
+        assert_link "Leave a Review"
       end
-    end
 
-    then_ "the buyer sees the review button on the dashboard" do
       as(@buyer) do
         visit dashboard_path
         assert_link "Leave a Review"
@@ -88,10 +86,26 @@ class OfferStatusFlowTest < ApplicationSystemTestCase
       end
     end
 
+    then_ "the offer is still accepted (waiting for seller review)" do
+      assert offer.reload.accepted?
+      assert @item.reload.reserved?
+    end
+
+    when_ "the seller submits a review of the buyer" do
+      as(@seller) do
+        visit new_item_offer_review_path(@item, offer)
+        assert_text "Rate"
+        choose "+1 Karma"
+        click_button "Submit Review"
+        assert_text "karma updated"
+      end
+    end
+
     then_ "the offer is completed, item is sold, and karma is updated" do
       assert offer.reload.completed?
       assert @item.reload.sold?
       assert_equal 1, @seller.reload.karma
+      assert_equal 1, @buyer.reload.karma
     end
 
     then_ "both dashboards show no pending actions" do
@@ -147,8 +161,13 @@ class OfferStatusFlowTest < ApplicationSystemTestCase
       assert @item.reload.reserved?
     end
 
-    when_ "the buyer reviews the seller" do
+    when_ "both parties submit reviews" do
       as(@buyer) do
+        visit new_item_offer_review_path(@item, offer)
+        choose "+1 Karma"
+        click_button "Submit Review"
+      end
+      as(@seller) do
         visit new_item_offer_review_path(@item, offer)
         choose "+1 Karma"
         click_button "Submit Review"
@@ -158,10 +177,6 @@ class OfferStatusFlowTest < ApplicationSystemTestCase
     then_ "the transaction is completed and item is sold" do
       assert offer.reload.completed?
       assert @item.reload.sold?
-      as(@buyer) do
-        visit dashboard_path
-        assert_text "no pending actions"
-      end
     end
   end
 
@@ -266,10 +281,15 @@ class OfferStatusFlowTest < ApplicationSystemTestCase
       end
     end
 
-    when_ "the winner submits a negative review" do
+    when_ "both parties submit reviews" do
       as(@buyer) do
         visit new_item_offer_review_path(@item, offer_winner)
         choose "-1 Karma"
+        click_button "Submit Review"
+      end
+      as(@seller) do
+        visit new_item_offer_review_path(@item, offer_winner)
+        choose "+1 Karma"
         click_button "Submit Review"
       end
     end
@@ -278,6 +298,7 @@ class OfferStatusFlowTest < ApplicationSystemTestCase
       assert offer_winner.reload.completed?
       assert @item.reload.sold?
       assert_equal(-1, @seller.reload.karma)
+      assert_equal 1, @buyer.reload.karma
     end
   end
 end

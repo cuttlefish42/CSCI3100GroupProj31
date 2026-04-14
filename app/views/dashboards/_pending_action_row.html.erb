@@ -9,13 +9,14 @@
   <td><%= time_ago(offer.updated_at) %></td>
   <td>
     <div class="flex flex-col gap-2 items-center justify-center">
-      <% if Current.user.id == offer.buyer_id %>
-        <% if offer.reviewable_by?(Current.user) %>
-          <%= link_to "Leave a Review",
-                new_item_offer_review_path(offer.item, offer),
-                class: "btn btn-sm btn-success w-full" %>
-        <% else %>
-          <span class="badge badge-ghost">Reviewed</span>
+      <% if offer.reviewable_by?(Current.user) %>
+        <%= link_to "Leave a Review",
+              new_item_offer_review_path(offer.item, offer),
+              class: "btn btn-sm btn-success w-full" %>
+      <% else %>
+        <span class="badge badge-ghost">Reviewed</span>
+        <% unless offer.completed? %>
+          <span class="text-xs text-base-content/50">Waiting for other party</span>
         <% end %>
       <% end %>
       <%= link_to "View Details", item_path(offer.item), class: "btn btn-sm btn-primary w-full" %>

@@ -42,7 +42,8 @@ class Review < ApplicationRecord
   end
 
   def complete_transaction
-    return unless seller_review? && offer.accepted?
+    return unless offer.accepted?
+    return unless offer.reviews.where(role: [ :seller_review, :buyer_review ]).count == 2
 
     offer.completed!
     offer.item.sold!

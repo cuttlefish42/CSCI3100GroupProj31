@@ -53,7 +53,7 @@
   transition("countered", "rejected", label: buyer-label[POST .../counter_rejection], curve: 0, stroke: buyer-color)
   transition("countered", "pending", label: buyer-label[PATCH .../offers/:id], curve: 0.5, stroke: buyer-color)
   loop("pending", label: buyer-label[PATCH .../offers/:id], anchor: bottom, stroke: buyer-color)
-  transition("accepted", "completed", label: buyer-label[POST .../review (buyer)], curve: 0, stroke: buyer-color)
+  transition("accepted", "completed", label: text(size: 8pt, font: "DejaVu Sans Mono")[Both reviews submitted], curve: 0)
 })
 
 #v(1cm)
@@ -88,7 +88,7 @@
   state((20, 0), "sold", label: "Sold", final: true)
 
   transition("available", "reserved", label: item-label[Offer accepted], curve: 0, stroke: item-color)
-  transition("reserved", "sold", label: item-label[Buyer submits review], curve: 0, stroke: item-color)
+  transition("reserved", "sold", label: item-label[Both reviews submitted], curve: 0, stroke: item-color)
 })
 
 #v(1cm)
@@ -150,9 +150,9 @@
     text(fill: buyer-color)[Buyer],
 
     [`POST .../offers/:offer_id/review`],
-    [Accepted #sym.arrow Completed],
+    [Accepted #sym.arrow Completed \ (when both reviews exist)],
     text(fill: item-color)[Reserved #sym.arrow Sold],
     [`ReviewsController#create`],
-    text(fill: buyer-color)[Buyer],
+    [Buyer or Seller],
   )
 ]

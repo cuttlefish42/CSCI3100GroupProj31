@@ -43,6 +43,39 @@ class ReviewsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to dashboard_path
   end
 
+  test "seller can create review" do
+    sign_in_as @seller
+    assert_difference "Review.count", 1 do
+      post item_offer_review_path(@item, @offer), params: {
+        review: { rating: -1, comment: "Difficult buyer" }
+      }
+    end
+    assert_redirected_to dashboard_path
+  end
+
+  test "offer not completed after only buyer review" do
+    sign_in_as @buyer
+    post item_offer_review_path(@item, @offer), params: {
+      review: { rating: 1, comment: "Great seller!" }
+    }
+    assert @offer.reload.accepted?, "Offer should still be accepted after one review"
+  end
+
+  test "offer completed after both reviews" do
+    # Buyer reviews seller
+    Review.create!(offer: @offer, reviewer: @buyer, reviewee: @seller,
+                   role: :seller_review, rating: 1, comment: "Great")
+
+    # Seller reviews buyer
+    sign_in_as @seller
+    post item_offer_review_path(@item, @offer), params: {
+      review: { rating: 1, comment: "Good buyer" }
+    }
+
+    assert @offer.reload.completed?, "Offer should be completed after both reviews"
+    assert @item.reload.sold?, "Item should be sold after both reviews"
+  end
+
   test "prevents duplicate review" do
     sign_in_as @buyer
     Review.create!(

@@ -52,8 +52,11 @@ env:
     secret:
         - RAILS_MASTER_KEY
         - POSTGRES_PASSWORD
+        - SMTP_USERNAME
+        - SMTP_PASSWORD
     clear:
         REDIS_URL: redis://csci3100_group_proj31-redis:6379/0
+        MAILER_HOST: server1.li-exponential.ts.net
 
         # Set number of cores available to the application on each server (default: 1).
         # WEB_CONCURRENCY: 2

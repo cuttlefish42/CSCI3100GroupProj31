@@ -87,14 +87,12 @@
             <td>
               <% if offer.buyer == Current.user && offer.countered? %>
                 <div class="flex flex-col gap-2 items-center justify-center">
-                  <%= button_to "Accept Counter", item_offer_path(item, offer),
-                        method: :patch,
-                        params: { offer: { status: "accept_counter" } },
+                  <%= button_to "Accept Counter", item_offer_counter_acceptance_path(item, offer),
+                        method: :post,
                         class: "btn btn-sm btn-success w-full",
                         data: { turbo_confirm: "Accept the counter-offer of #{number_to_currency(offer.counter_price)}?" } %>
-                  <%= button_to "Reject Counter", item_offer_path(item, offer),
-                        method: :patch,
-                        params: { offer: { status: "reject_counter" } },
+                  <%= button_to "Reject Counter", item_offer_counter_rejection_path(item, offer),
+                        method: :post,
                         class: "btn btn-sm btn-error w-full",
                         data: { turbo_confirm: "Reject the counter-offer? You can make a new offer afterwards." } %>
                   <%= button_to "Withdraw", item_offer_path(item, offer),

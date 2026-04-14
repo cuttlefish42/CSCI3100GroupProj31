@@ -14,7 +14,7 @@ class Message < ApplicationRecord
   def broadcast_to_participants
     conversation.participants.each do |user|
       broadcast_append_to(
-        [user, conversation],
+        [ user, conversation ],
         target: "messages",
         locals: { message: self, current_user: user }
       )

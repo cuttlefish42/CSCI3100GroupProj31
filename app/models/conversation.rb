@@ -14,7 +14,7 @@ class Conversation < ApplicationRecord
   end
 
   def participants
-    [sender, receiver]
+    [ sender, receiver ]
   end
 
   # class methods

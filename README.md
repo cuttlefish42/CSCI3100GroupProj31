@@ -58,21 +58,70 @@ Sidekiq worker via `Procfile.dev`. Make sure Redis is running first.
 Preview mails at http://localhost:3000/letter_opener/
 
 # Deployment
-The deployment is automated via github actions and kamal. It would be automatically pushed to production server after it passes all the tests.
+The deployment is automated via GitHub Actions and Kamal. Pushes to `main`
+that pass all tests are automatically deployed to the production server.
+
+## Production stack
+- **Database**: PostgreSQL 16 (Kamal accessory)
+- **Cache / Queue / Cable**: SolidCache, SolidQueue, SolidCable — all sharing
+  the same Postgres database (single-DB setup configured in `database.yml`)
+- **Background jobs**: Sidekiq (separate Kamal worker container) + Redis 7
+- **HTTPS**: Tailscale Funnel or kamal-proxy Let's Encrypt (see below)
+- **Mailer**: Gmail SMTP (app password)
 
 ## Running `kamal deploy` locally
-For one-off deploys from your machine, you need a few env variables that the
-GitHub Actions pipeline normally provides. Copy `.env.example` to `.env` and
-fill in:
+Copy `.env.example` to `.env` and fill in all values:
 
-- `RAILS_MASTER_KEY` — contents of `config/master.key`
-- `EC2_INSTANCE_ADDRESS` — SSH host/IP of the production server
-- `KAMAL_REGISTRY_PASSWORD` — GitHub PAT with `write:packages`
-- `GITHUB_TOKEN` — GitHub PAT with `read:packages` (can be the same token)
+| Variable                | Description                                              |
+| ----------------------- | -------------------------------------------------------- |
+| `RAILS_MASTER_KEY`      | Contents of `config/master.key`                          |
+| `EC2_INSTANCE_ADDRESS`  | SSH host/IP of the production server                     |
+| `KAMAL_REGISTRY_PASSWORD` | GitHub PAT with `write:packages` scope                 |
+| `GITHUB_TOKEN`          | GitHub PAT with `read:packages` (can be the same token)  |
+| `POSTGRES_PASSWORD`     | Password for the PostgreSQL accessory                    |
+| `SMTP_USERNAME`         | Gmail address for sending emails                         |
+| `SMTP_PASSWORD`         | Gmail app password                                       |
 
-`config/deploy.yml` auto-loads `.env` via dotenv, so just running
-`bin/kamal deploy` afterwards picks them up. The first time you deploy,
-boot the Redis accessory once: `bin/kamal accessory boot redis`.
+`config/deploy.yml` auto-loads `.env` via dotenv, so `bin/kamal deploy`
+picks them up automatically.
+
+### First-time setup
+```bash
+bin/kamal setup          # boots all accessories (postgres, redis) and deploys
+```
+
+The Docker entrypoint runs `db:prepare` and
+`db:migrate:cache db:migrate:queue db:migrate:cable` on every boot, so
+database setup is automatic.
+
+### Subsequent deploys
+```bash
+bin/kamal deploy
+```
+
+### HTTPS setup
+
+#### Option A: Tailscale Funnel (current production setup)
+Tailscale Funnel terminates HTTPS outside of Kamal. `config/deploy.yml` has
+`ssl: false` so kamal-proxy does not request its own certificate.
+
+If port 443 conflicts on first setup:
+```bash
+tailscale serve reset    # free port 443 for kamal-proxy
+bin/kamal setup
+tailscale funnel 443     # re-enable funnel after kamal-proxy binds
+```
+
+#### Option B: kamal-proxy Let's Encrypt (no Tailscale)
+If deploying to a server with a public IP and DNS A-record, kamal-proxy can
+handle HTTPS itself via Let's Encrypt. Change `config/deploy.yml`:
+```yaml
+proxy:
+  ssl: true
+  host: your-domain.com
+```
+Make sure ports 80 and 443 are open and no other process (nginx, Tailscale)
+is binding them. Then deploy normally with `bin/kamal setup`.
 
 # Features
 

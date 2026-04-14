@@ -83,12 +83,12 @@ boot the Redis accessory once: `bin/kamal accessory boot redis`.
 | Real-Time Updates | | | Turbo Streams (turbo-rails), Action Cable (solid_cable) |
 | Background Jobs | | | Sidekiq, Redis, Whenever (cron scheduler) |
 | Analytics API | | | Chart.js |
-| User Authentication | | | bcrypt (has_secure_password), Rails session cookies |
-| Photo Upload | | | image_processing (libvips), Sidekiq |
 | Item Search, Filtering & Sorting | | | |
 | Review & Karma System | | | |
-| Offer lifecycle and state machine | | | |
+| Offer lifecycle & state machine | | | |
+| Photo Upload | | | image_processing (libvips), Sidekiq |
+| User Authentication | | | bcrypt (has_secure_password), Rails session cookies |
 | UI/UX | | | Tailwind CSS, daisyUI, Stimulus (stimulus-rails), lucide-rails |
 | CI/CD & Deployment | | | GitHub Actions, Kamal, Docker, Puma, Thruster, Solid Queue/Cache/Cable, pg |
-| Code Quality | | | Brakeman, bundler-audit, Rubocop, Lefthook |
+| Code Quality & Debugging | | | Brakeman, bundler-audit, Rubocop, Lefthook |
 | Test | | | SimpleCov, Capybara, Selenium WebDriver |

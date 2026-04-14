@@ -28,7 +28,7 @@ If you want to reset your local db, use `bin/rails db:reset`
 To run unit test, use `bin/rails test`.
 
 ## System test
-To run sysmtem test, use `bin/rails test:system`. (None for now)
+To run system test, use `bin/rails test:system`.
 
 # Documentation
 - [Offer & Item State Management](docs/offer_fsm.pdf) — Diagram showing offer/item status transitions and routes
@@ -73,3 +73,22 @@ fill in:
 `config/deploy.yml` auto-loads `.env` via dotenv, so just running
 `bin/kamal deploy` afterwards picks them up. The first time you deploy,
 boot the Redis accessory once: `bin/kamal accessory boot redis`.
+
+# Feature List
+
+| Feature Name | Primary Developer | Secondary Developer | Notes |
+|---|---|---|---|
+| Map & Meetup Location | | | Leaflet.js, OpenStreetMap tiles |
+| Email Notifications | | | Action Mailer, Sidekiq, Letter Opener (dev) |
+| Real-Time Updates | | | Turbo Streams (turbo-rails), Action Cable (solid_cable) |
+| Background Jobs | | | Sidekiq, Redis, Whenever (cron scheduler) |
+| Analytics API | | | Chart.js |
+| User Authentication | | | bcrypt (has_secure_password), Rails session cookies |
+| Photo Upload | | | image_processing (libvips), Sidekiq |
+| Item Search, Filtering & Sorting | | | |
+| Review & Karma System | | | |
+| Offer lifecycle and state machine | | | |
+| UI/UX | | | Tailwind CSS, daisyUI, Stimulus (stimulus-rails), lucide-rails |
+| CI/CD & Deployment | | | GitHub Actions, Kamal, Docker, Puma, Thruster, Solid Queue/Cache/Cable, pg |
+| Code Quality | | | Brakeman, bundler-audit, Rubocop, Lefthook |
+| Test | | | SimpleCov, Capybara, Selenium WebDriver |

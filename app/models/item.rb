@@ -49,14 +49,13 @@ class Item < ApplicationRecord
   }
 
   scope :sorted, ->(sort_by = "date", sort_direction = "desc") {
-    direction = sort_direction.to_sym
+    direction = %w[asc desc].include?(sort_direction) ? sort_direction.to_sym : :desc
     case sort_by
-    when "price"
-      order(price: direction)
-    when "date"
-      order(created_at: direction)
-    else
-      order(created_at: direction)
+    when "price" then order(price: direction)
+    when "views" then order(views_count: direction)
+    when "likes" then order(likes_count: direction)
+    when "title" then order(title: direction)
+    else order(created_at: direction)
     end
   }
 

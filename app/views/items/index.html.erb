@@ -7,179 +7,104 @@
     <% end %>
   </div>
 
-  <!-- Sorting & Filtering Section -->
-  <div class="card bg-base-100 shadow-md mb-6">
-    <div class="card-body">
-      <h3 class="card-title text-lg mb-4">Search & Filter</h3>
-
-      <%= form_with url: items_path, method: :get, local: true, class: "space-y-4" do |f| %>
-        <!-- Row 1: Keyword Search & Community Filter -->
+  <%# Search & Filter — collapsible %>
+  <% has_filters = params[:keyword].present? || params[:community_id].present? ||
+      params[:min_price].present? || params[:max_price].present? ||
+      params[:start_date].present? || params[:end_date].present? %>
+  <div class="collapse collapse-arrow bg-base-100 shadow-md mb-6 <%= 'collapse-open' if has_filters %>">
+    <input type="checkbox" <%= "checked" if has_filters %> />
+    <div class="collapse-title font-semibold flex items-center gap-2">
+      <%= lucide_icon("sliders-horizontal", class: "w-4 h-4") %> Search & Filter
+    </div>
+    <div class="collapse-content">
+      <%= form_with url: items_path, method: :get, data: { turbo: false }, class: "space-y-4" do |f| %>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Keyword Search -->
           <div class="form-control">
-            <%= f.label :keyword, "Search by keyword", class: "label" %>
-            <%= f.text_field :keyword, 
-                placeholder: "Search items...", 
-                value: params[:keyword],
+            <%= f.label :keyword, "Search", class: "label text-xs" %>
+            <%= f.text_field :keyword, placeholder: "Search items...", value: params[:keyword],
                 class: "input input-bordered input-sm" %>
           </div>
-
-          <!-- Community Filter -->
           <div class="form-control">
-            <%= f.label :community_id, "Filter by community", class: "label" %>
-            <%= f.select :community_id, 
-                options_for_select(
-                  [["All Communities", ""]] + Community.pluck(:name, :id),
-                  params[:community_id]
-                ),
-                { include_blank: false },
-                class: "select select-bordered select-sm" %>
+            <%= f.label :community_id, "Community", class: "label text-xs" %>
+            <%= f.select :community_id,
+                options_for_select([["All", ""]] + Community.pluck(:name, :id), params[:community_id]),
+                { include_blank: false }, class: "select select-bordered select-sm" %>
           </div>
         </div>
 
-        <!-- Row 2: Price Range Filter -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Min Price -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div class="form-control">
-            <%= f.label :min_price, "Min Price ($)", class: "label" %>
-            <%= f.number_field :min_price,
-                placeholder: "0",
-                value: params[:min_price],
-                step: 0.01,
-                class: "input input-bordered input-sm" %>
+            <%= f.label :min_price, "Min $", class: "label text-xs" %>
+            <%= f.number_field :min_price, placeholder: "0", value: params[:min_price],
+                step: 0.01, class: "input input-bordered input-sm" %>
           </div>
-
-          <!-- Max Price -->
           <div class="form-control">
-            <%= f.label :max_price, "Max Price ($)", class: "label" %>
-            <%= f.number_field :max_price,
-                placeholder: "999999",
-                value: params[:max_price],
-                step: 0.01,
-                class: "input input-bordered input-sm" %>
+            <%= f.label :max_price, "Max $", class: "label text-xs" %>
+            <%= f.number_field :max_price, placeholder: "∞", value: params[:max_price],
+                step: 0.01, class: "input input-bordered input-sm" %>
           </div>
-        </div>
-
-        <!-- Row 3: Date Range Filter -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Start Date -->
           <div class="form-control">
-            <%= f.label :start_date, "From Date", class: "label" %>
-            <%= f.datetime_local_field :start_date,
-                value: params[:start_date],
-                class: "input input-bordered input-sm" %>
-          </div>
-
-          <!-- End Date -->
-          <div class="form-control">
-            <%= f.label :end_date, "To Date", class: "label" %>
-            <%= f.datetime_local_field :end_date,
-                value: params[:end_date],
-                class: "input input-bordered input-sm" %>
-          </div>
-        </div>
-
-        <!-- Row 4: Sorting Options -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Sort By -->
-          <div class="form-control">
-            <%= f.label :sort_by, "Sort by", class: "label" %>
+            <%= f.label :sort_by, "Sort by", class: "label text-xs" %>
             <%= f.select :sort_by,
-                options_for_select(
-                  [
-                    ["Date", "date"],
-                    ["Price", "price"],
-                    ["Popularity (Views)", "views"],
-                    ["Likes", "likes"],
-                    ["Title A-Z", "title"]
-                  ],
-                  params[:sort_by] || "date"
-                ),
-                { include_blank: false },
-                class: "select select-bordered select-sm" %>
+                options_for_select([["Date", "date"], ["Price", "price"], ["Views", "views"],
+                  ["Likes", "likes"], ["Title", "title"]], params[:sort_by] || "date"),
+                { include_blank: false }, class: "select select-bordered select-sm" %>
           </div>
-
-          <!-- Sort Direction -->
           <div class="form-control">
-            <%= f.label :sort_direction, "Order", class: "label" %>
+            <%= f.label :sort_direction, "Order", class: "label text-xs" %>
             <%= f.select :sort_direction,
-                options_for_select(
-                  [
-                    ["Newest First", "desc"],
-                    ["Oldest First", "asc"]
-                  ],
-                  params[:sort_direction] || "desc"
-                ),
-                { include_blank: false },
-                class: "select select-bordered select-sm" %>
+                options_for_select([["Descending", "desc"], ["Ascending", "asc"]], params[:sort_direction] || "desc"),
+                { include_blank: false }, class: "select select-bordered select-sm" %>
           </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="flex gap-2 pt-4">
-          <%= f.submit "Apply Filters", class: "btn btn-primary btn-sm" %>
-          <%= link_to "Reset Filters", items_path, class: "btn btn-ghost btn-sm" %>
+        <div class="flex gap-2">
+          <%= f.submit "Apply", class: "btn btn-primary btn-sm" %>
+          <%= link_to "Reset", items_path, class: "btn btn-ghost btn-sm", data: { turbo: false } %>
         </div>
       <% end %>
     </div>
   </div>
 
-  <!-- Active Filter Tags -->
-  <% if params[:keyword].present? || params[:community_id].present? || 
-        params[:min_price].present? || params[:max_price].present? || 
-        params[:start_date].present? || params[:end_date].present? %>
-    <div class="mb-4 p-3 bg-info/20 rounded-lg">
-      <div class="flex flex-wrap gap-2 items-center">
-        <span class="text-sm font-semibold">Active Filters:</span>
-        <% if params[:keyword].present? %>
-          <span class="badge badge-info">
-            Keyword: <%= params[:keyword] %>
-            <%= link_to "×", items_path(request.query_parameters.except(:keyword)), class: "ml-1 cursor-pointer" %>
-          </span>
+  <% if has_filters %>
+    <div class="flex flex-wrap gap-2 mb-4">
+      <% if params[:keyword].present? %>
+        <%= link_to items_path(request.query_parameters.except(:keyword)), class: "badge badge-info gap-1", data: { turbo: false } do %>
+          Keyword: <%= params[:keyword] %> ×
         <% end %>
-        <% if params[:community_id].present? %>
-          <span class="badge badge-info">
-            Community: <%= Community.find(params[:community_id]).name %>
-            <%= link_to "×", items_path(request.query_parameters.except(:community_id)), class: "ml-1 cursor-pointer" %>
-          </span>
+      <% end %>
+      <% if params[:community_id].present? %>
+        <%= link_to items_path(request.query_parameters.except(:community_id)), class: "badge badge-info gap-1", data: { turbo: false } do %>
+          <%= Community.find_by(id: params[:community_id])&.name %> ×
         <% end %>
-        <% if params[:min_price].present? %>
-          <span class="badge badge-info">
-            Min: $<%= params[:min_price] %>
-            <%= link_to "×", items_path(request.query_parameters.except(:min_price)), class: "ml-1 cursor-pointer" %>
-          </span>
+      <% end %>
+      <% if params[:min_price].present? %>
+        <%= link_to items_path(request.query_parameters.except(:min_price)), class: "badge badge-info gap-1", data: { turbo: false } do %>
+          Min: $<%= params[:min_price] %> ×
         <% end %>
-        <% if params[:max_price].present? %>
-          <span class="badge badge-info">
-            Max: $<%= params[:max_price] %>
-            <%= link_to "×", items_path(request.query_parameters.except(:max_price)), class: "ml-1 cursor-pointer" %>
-          </span>
+      <% end %>
+      <% if params[:max_price].present? %>
+        <%= link_to items_path(request.query_parameters.except(:max_price)), class: "badge badge-info gap-1", data: { turbo: false } do %>
+          Max: $<%= params[:max_price] %> ×
         <% end %>
-      </div>
+      <% end %>
     </div>
   <% end %>
 
-  <!-- Results Count -->
-  <div class="mb-4">
-    <p class="text-sm text-neutral/70">
-      Showing <span class="font-semibold"><%= @items.count %></span> item<%= @items.count != 1 ? "s" : "" %>
-    </p>
-  </div>
+  <p class="text-sm text-base-content/60 mb-4">
+    Showing <span class="font-semibold"><%= @items.count %></span> item<%= @items.count != 1 ? "s" : "" %>
+  </p>
 
-  <!-- Items Display -->
   <% if @items.any? %>
-    <%# Grid layout %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <% @items.each do |item| %>
         <%= render item, link_title: true %>
       <% end %>
     </div>
   <% else %>
-    <div class="alert alert-info">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-      </svg>
-      <span>No items found matching your filters. Try adjusting your search criteria.</span>
+    <div class="flex items-center gap-2 text-base-content/50 py-8 justify-center">
+      <%= lucide_icon("search-x", class: "w-5 h-5") %>
+      <span>No items found. Try adjusting your filters.</span>
     </div>
   <% end %>
 </div>

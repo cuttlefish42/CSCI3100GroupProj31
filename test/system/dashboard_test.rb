@@ -29,7 +29,7 @@ class DashboardTest < ApplicationSystemTestCase
     then_ "they see empty states" do
       assert_text "Dashboard"
       assert_text "No items listed yet"
-      assert_text "no pending actions"
+      assert_text "No pending actions"
     end
   end
 

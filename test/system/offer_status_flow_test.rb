@@ -111,12 +111,12 @@ class OfferStatusFlowTest < ApplicationSystemTestCase
     then_ "both dashboards show no pending actions" do
       as(@buyer) do
         visit dashboard_path
-        assert_text "no pending actions"
+        assert_text "No pending actions"
       end
 
       as(@seller) do
         visit dashboard_path
-        assert_text "no pending actions"
+        assert_text "No pending actions"
       end
     end
   end
@@ -225,12 +225,12 @@ class OfferStatusFlowTest < ApplicationSystemTestCase
         assert_text "cannot review"
 
         visit dashboard_path
-        assert_text "no pending actions"
+        assert_text "No pending actions"
       end
 
       as(@seller) do
         visit dashboard_path
-        assert_text "no pending actions"
+        assert_text "No pending actions"
       end
     end
   end
@@ -273,7 +273,7 @@ class OfferStatusFlowTest < ApplicationSystemTestCase
     then_ "the loser sees their rejected offer and cannot review" do
       as(@buyer2) do
         visit dashboard_path
-        assert_text "no pending actions"
+        assert_text "No pending actions"
         assert_text "Rejected"
 
         visit new_item_offer_review_path(@item, offer_loser)

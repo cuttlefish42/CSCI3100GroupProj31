@@ -43,6 +43,3 @@
 /dump.rdb
 /coverage
 /coverage-data
-
-# Cached seed placeholder images
-/db/seeds/images

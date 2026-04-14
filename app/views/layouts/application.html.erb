@@ -1,25 +1,21 @@
 <!DOCTYPE html>
-<html data-theme="light">
+<html data-theme="cuhk">
   <head>
-    <script>document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "light")</script>
-    <title><%= content_for(:title) || "Csci3100 Group Proj31" %></title>
+    <script>document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "cuhk")</script>
+    <title><%= content_for(:title) || "CUHK Marketplace" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Csci3100 Group Proj31">
+    <meta name="application-name" content="CUHK Marketplace">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -29,14 +25,20 @@
 
   <body>
     <%= render "layouts/navbar" %>
+
     <% if flash[:notice] %>
-      <div class="alert alert-success shadow-lg mb-4"><%= flash[:notice] %></div>
+      <div class="max-w-xl mx-auto w-full px-4 mt-4">
+        <div class="alert alert-success shadow-sm"><%= flash[:notice] %></div>
+      </div>
     <% end %>
     <% if flash[:alert] %>
-      <div class="alert alert-error shadow-lg mb-4"><%= flash[:alert] %></div>
+      <div class="max-w-xl mx-auto w-full px-4 mt-4">
+        <div class="alert alert-error shadow-sm"><%= flash[:alert] %></div>
+      </div>
     <% end %>
+
     <% if @show_sidebar %>
-      <div class="flex min-h-[calc(100vh-5rem)]">
+      <div class="flex min-h-[calc(100vh-4rem)]">
         <%= render "layouts/sidebar" %>
         <main class="flex-1"><%= yield %></main>
       </div>

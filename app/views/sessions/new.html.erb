@@ -1,8 +1,8 @@
-<div class="container mx-auto p-4 max-w-sm">
-  <h1>Sign In</h1>
-
-  <div class="card card-border bg-base-100 shadow-xl">
+<div class="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
+  <div class="card bg-base-100 shadow-xl w-full max-w-md">
     <div class="card-body">
+      <h1 class="text-2xl font-bold text-center mb-4">Sign In</h1>
+
       <%= form_with url: session_path, data: { turbo: false }, class: "flex flex-col gap-4" do |form| %>
         <div class="form-control">
           <%= form.label :email_address, "Email", class: "label font-semibold" %>
@@ -17,8 +17,8 @@
         </div>
       <% end %>
       <div class="flex flex-col gap-2 text-center mt-2">
-          <%= link_to "Create an account", sign_up_path, class: "text-sm" %>
-          <%= link_to "Forgot password?", new_password_path, class: "text-sm" %>
+        <%= link_to "Create an account", sign_up_path, class: "text-sm link link-primary" %>
+        <%= link_to "Forgot password?", new_password_path, class: "text-sm link link-hover" %>
       </div>
     </div>
   </div>

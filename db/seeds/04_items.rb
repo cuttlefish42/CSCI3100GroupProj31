@@ -1,5 +1,4 @@
 # db/seeds/04_items.rb
-require "vips"
 
 items = [
   # Books
@@ -55,28 +54,18 @@ items.each do |item_attr|
   end
 
   unless item.photo.attached?
-    filename = "#{item_attr[:title].parameterize}.png"
-    cache_path = Rails.root.join("db", "seeds", "images", filename)
+    filename = "#{item_attr[:title].parameterize}.jpg"
+    image_path = Rails.root.join("db", "seeds", "images", filename)
 
-    unless cache_path.exist?
-      cache_path.dirname.mkpath
-      # Generate placeholder image locally with libvips
-      bg = Vips::Image.black(400, 300).colourspace(:srgb) + [ 204, 204, 204 ]
-      text = Vips::Image.text(item_attr[:title], dpi: 300, font: "sans bold")
-      text = text.resize(350.0 / text.width) if text.width > 350
-      overlay = text.new_from_image([ 80, 80, 80 ]).copy(interpretation: :srgb).bandjoin(text)
-      x = (400 - overlay.width) / 2
-      y = (300 - overlay.height) / 2
-      img = bg.bandjoin(255).composite(overlay, :over, x: [ x ], y: [ y ])
-      img.flatten(background: [ 204, 204, 204 ]).pngsave(cache_path.to_s)
-      puts "  Generated #{filename}"
+    if image_path.exist?
+      item.photo.attach(
+        io: File.open(image_path),
+        filename: filename,
+        content_type: "image/jpeg"
+      )
+      puts "  Attached photo for #{item_attr[:title]}"
+    else
+      puts "  WARNING: Missing image #{filename}"
     end
-
-    item.photo.attach(
-      io: File.open(cache_path),
-      filename: filename,
-      content_type: "image/png"
-    )
-    puts "  Attached photo for #{item_attr[:title]}"
   end
 end

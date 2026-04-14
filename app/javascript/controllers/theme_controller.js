@@ -4,13 +4,13 @@ export default class extends Controller {
   static targets = ["toggle"]
 
   connect() {
-    const saved = localStorage.getItem("theme") || "light"
+    const saved = localStorage.getItem("theme") || "cuhk"
     this.applyTheme(saved)
   }
 
   switch() {
     const current = document.documentElement.getAttribute("data-theme")
-    const next = current === "dark" ? "light" : "dark"
+    const next = current === "dark" ? "cuhk" : "dark"
     this.applyTheme(next)
     localStorage.setItem("theme", next)
   }

@@ -1,15 +1,15 @@
 <div class="min-h-screen bg-base-200 py-8 px-4">
   <div class="max-w-4xl mx-auto">
     <%# Profile Header %>
-    <div class="card bg-base-100 shadow-lg mb-8">
+    <div class="card bg-gradient-to-r from-primary/10 to-accent/10 shadow-lg mb-8">
       <div class="card-body">
         <div class="flex items-center gap-4">
-          <%= render "shared/user_avatar", user: @user, size: "lg" %>
+          <%= render "shared/user_avatar", user: @user, size: "xl" %>
           <div class="flex-1">
             <h1 class="text-3xl font-bold"><%= @user.full_name %></h1>
             <p class="text-base-content/60">Member since <%= @user.created_at.strftime("%B %Y") %></p>
           </div>
-          <div class="badge badge-lg badge-primary">Karma: <%= @user.karma %></div>
+          <div class="badge badge-accent badge-lg font-bold">Karma: <%= @user.karma %></div>
         </div>
       </div>
     </div>

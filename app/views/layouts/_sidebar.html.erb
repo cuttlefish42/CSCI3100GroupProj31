@@ -1,35 +1,33 @@
-<aside class="w-64 shrink-0 bg-base-200 p-4 overflow-y-auto hidden lg:block">
-  <ul class="menu menu-sm w-full mb-4">
+<aside class="w-56 shrink-0 bg-base-100 border-r border-base-200 py-6 px-4 overflow-y-auto hidden lg:block">
+  <ul class="menu menu-sm w-full gap-1 mb-6">
     <% if authenticated? %>
       <li>
         <%= link_to items_path(feed: "my"),
-              class: "#{@active_feed == 'my' ? 'active' : ''} font-semibold" do %>
+              class: "#{@active_feed == 'my' ? 'bg-primary/10 text-primary font-bold' : ''} font-semibold" do %>
           <%= lucide_icon("home", class: "w-4 h-4") %> My Feed
         <% end %>
       </li>
     <% end %>
     <li>
       <%= link_to items_path,
-            class: "#{@active_feed.nil? && @active_community_id.nil? ? 'active' : ''} font-semibold" do %>
+            class: "#{@active_feed.nil? && @active_community_id.nil? ? 'bg-primary/10 text-primary font-bold' : ''} font-semibold" do %>
         <%= lucide_icon("globe", class: "w-4 h-4") %> All Items
       <% end %>
     </li>
   </ul>
 
-  <div class="divider my-1"></div>
-
-  <h3 class="font-bold text-sm uppercase tracking-wide text-base-content/50 mb-3">Communities</h3>
+  <p class="text-xs font-bold uppercase tracking-widest text-base-content/40 mb-3 px-2">Communities</p>
 
   <% Community.grouped_by_type.each do |type, communities| %>
-    <div class="collapse collapse-arrow bg-base-100 mb-2">
+    <div class="collapse collapse-arrow mb-1">
       <input type="checkbox" checked />
-      <div class="collapse-title font-semibold text-sm"><%= type || "Other" %></div>
+      <div class="collapse-title text-sm font-semibold py-2 min-h-0"><%= type || "Other" %></div>
       <div class="collapse-content p-0">
-        <ul class="menu menu-sm">
+        <ul class="menu menu-xs gap-0.5">
           <% communities.each do |community| %>
             <li>
               <%= link_to community.name, community_path(community),
-                    class: "#{community.id == @active_community_id ? 'active' : ''}" %>
+                    class: "#{community.id == @active_community_id ? 'bg-primary/10 text-primary font-semibold' : 'text-base-content/70'}" %>
             </li>
           <% end %>
         </ul>
@@ -37,7 +35,7 @@
     </div>
   <% end %>
 
-  <div class="mt-4">
-    <%= link_to "All Communities", communities_path, class: "btn btn-ghost btn-sm btn-block" %>
+  <div class="mt-6 px-2">
+    <%= link_to "All Communities", communities_path, class: "btn btn-ghost btn-xs btn-block text-base-content/60" %>
   </div>
 </aside>

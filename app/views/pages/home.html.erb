@@ -1,60 +1,70 @@
-<%# Hero section %>
-<div class="hero min-h-[70vh] bg-base-200">
-  <div class="hero-content text-center">
-    <div class="max-w-2xl">
-      <h1 class="text-5xl font-bold">CUHK Marketplace</h1>
-      <p class="py-6 text-lg text-base-content/70">
-        Buy and sell second-hand items within the CUHK community.
-        Textbooks, electronics, furniture, and more — all from fellow students.
+<%# Hero section — full-width purple gradient %>
+<div class="relative overflow-hidden">
+  <div class="bg-gradient-to-br from-primary via-secondary to-primary min-h-[75vh] flex items-center">
+    <div class="container mx-auto px-8 text-center text-primary-content">
+      <p class="text-sm font-semibold uppercase tracking-widest text-accent mb-4">CUHK's Student Marketplace</p>
+      <h1 class="text-6xl font-extrabold leading-tight mb-6">
+        Buy & Sell<br>Within Campus
+      </h1>
+      <p class="text-xl text-primary-content/75 max-w-xl mx-auto mb-10">
+        Textbooks, electronics, furniture, and more — all from fellow students you can meet on campus.
       </p>
       <div class="flex gap-4 justify-center">
-        <%= link_to "Browse Items", items_path, class: "btn btn-primary btn-lg" %>
-        <%= link_to "Sign Up", sign_up_path, class: "btn btn-outline btn-lg" %>
+        <%= link_to items_path, class: "btn btn-accent btn-lg shadow-lg px-8 text-lg" do %>
+          <%= lucide_icon("shopping-bag", class: "w-5 h-5") %> Browse Items
+        <% end %>
+        <%= link_to sign_up_path, class: "btn btn-lg bg-white/15 border-white/30 text-primary-content hover:bg-white/25 px-8 text-lg" do %>
+          Get Started
+        <% end %>
       </div>
     </div>
   </div>
 </div>
 
-<%# How it works %>
-<div class="container mx-auto px-4 py-16">
-  <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-    <div class="card bg-base-100 shadow-md">
-      <div class="card-body items-center text-center">
-        <%= lucide_icon("camera", class: "w-12 h-12 text-primary mb-4") %>
-        <h3 class="card-title">1. List Your Item</h3>
-        <p class="text-base-content/60">Take a photo, set your price, and publish in seconds.</p>
+<%# How it works — clean section with accent icons %>
+<div class="container mx-auto px-8 py-20">
+  <p class="text-center text-sm font-semibold uppercase tracking-widest text-secondary mb-3">Simple & Fast</p>
+  <h2 class="text-4xl font-bold text-center mb-16">How It Works</h2>
+  <div class="grid grid-cols-3 gap-12 max-w-4xl mx-auto">
+    <div class="text-center">
+      <div class="bg-accent/15 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <%= lucide_icon("camera", class: "w-9 h-9 text-accent-content") %>
       </div>
+      <h3 class="text-lg font-bold mb-2">List Your Item</h3>
+      <p class="text-sm text-base-content/60">Take a photo, set your price, and publish in seconds.</p>
     </div>
-    <div class="card bg-base-100 shadow-md">
-      <div class="card-body items-center text-center">
-        <%= lucide_icon("message-circle", class: "w-12 h-12 text-primary mb-4") %>
-        <h3 class="card-title">2. Negotiate & Chat</h3>
-        <p class="text-base-content/60">Receive offers, counter, and message buyers directly.</p>
+    <div class="text-center">
+      <div class="bg-primary/10 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <%= lucide_icon("message-circle", class: "w-9 h-9 text-primary") %>
       </div>
+      <h3 class="text-lg font-bold mb-2">Negotiate & Chat</h3>
+      <p class="text-sm text-base-content/60">Receive offers, counter, and message buyers directly.</p>
     </div>
-    <div class="card bg-base-100 shadow-md">
-      <div class="card-body items-center text-center">
-        <%= lucide_icon("handshake", class: "w-12 h-12 text-primary mb-4") %>
-        <h3 class="card-title">3. Meet & Trade</h3>
-        <p class="text-base-content/60">Agree on a meetup spot on campus and complete the deal.</p>
+    <div class="text-center">
+      <div class="bg-success/10 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <%= lucide_icon("handshake", class: "w-9 h-9 text-success") %>
       </div>
+      <h3 class="text-lg font-bold mb-2">Meet & Trade</h3>
+      <p class="text-sm text-base-content/60">Pick a meetup spot on campus and complete the deal.</p>
     </div>
   </div>
 </div>
 
 <%# Featured items %>
 <% if @featured_items.any? %>
-  <div class="bg-base-200 py-16">
-    <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center mb-12">Recently Listed</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <% @featured_items.each do |item| %>
+  <div class="bg-base-100 py-20">
+    <div class="container mx-auto px-8">
+      <p class="text-center text-sm font-semibold uppercase tracking-widest text-secondary mb-3">Fresh Finds</p>
+      <h2 class="text-4xl font-bold text-center mb-12">Recently Listed</h2>
+      <div class="grid grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <% @featured_items.first(6).each do |item| %>
           <%= render item, link_title: true %>
         <% end %>
       </div>
-      <div class="text-center mt-8">
-        <%= link_to "View All Items", items_path, class: "btn btn-primary" %>
+      <div class="text-center mt-12">
+        <%= link_to items_path, class: "btn btn-primary btn-lg px-10" do %>
+          View All Items <%= lucide_icon("arrow-right", class: "w-5 h-5") %>
+        <% end %>
       </div>
     </div>
   </div>

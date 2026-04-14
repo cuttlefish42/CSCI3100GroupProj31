@@ -1,9 +1,9 @@
 <%# locals: (item:, link_title: false, large_photo: false, admin: false, show_seller: true) %>
 
-<div class="card bg-base-100 border border-base-200 overflow-hidden <%= large_photo ? 'w-full max-w-2xl' : '' %>">
+<div class="card bg-base-100 shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-200 <%= large_photo ? 'w-full max-w-2xl' : '' %>">
   <% if show_seller %>
     <%# Seller info top bar %>
-    <div class="flex items-center gap-3 px-4 py-3">
+    <div class="flex items-center gap-3 px-4 py-2">
       <%= render "shared/user_avatar", user: item.seller, size: "sm" %>
       <div class="flex-1 min-w-0">
         <p class="text-sm font-semibold truncate"><%= link_to item.seller.full_name, user_path(item.seller), class: "link link-hover" %></p>
@@ -28,29 +28,34 @@
   <% if item.photo.attached? %>
     <figure class="relative">
       <% variant = large_photo ? ResizeImagesJob::PREVIEW_VARIANT : ResizeImagesJob::THUMBNAIL_VARIANT %>
-      <%= image_tag item.photo.variant(variant), class: "w-full #{large_photo ? 'max-h-96 object-contain' : 'max-h-56 object-cover'}" %>
+      <%= image_tag item.photo.variant(variant), class: "w-full #{large_photo ? 'max-h-96 object-contain' : 'aspect-square object-cover'}" %>
       <% if !show_seller && !item.available? %>
         <span class="badge badge-sm <%= item_status_badge_class(item) %> absolute top-2 right-2"><%= item.status.humanize %></span>
       <% end %>
     </figure>
   <% end %>
 
-  <div class="card-body gap-1 px-4 py-2">
-    <h2 class="card-title text-lg !mt-0 !mb-0">
+  <div class="card-body gap-1 px-4 py-3">
+    <h2 class="card-title text-base !mt-0 !mb-0">
       <% if link_title %>
-        <%= link_to item.title, item %>
+        <%= link_to item.title, item, class: "hover:text-primary" %>
       <% else %>
         <%= item.title %>
       <% end %>
     </h2>
 
-    <p class="text-lg font-bold text-secondary"><%= price(item.price) %></p>
-    <p class="text-sm line-clamp-2"><%= item.description %></p>
-    <p class="text-xs text-base-content/60"><%= item.condition.humanize %></p>
+    <p class="text-xl font-bold text-primary"><%= price(item.price) %></p>
 
-    <div class="flex items-center gap-2 mt-2">
-      <span class="badge badge-ghost badge-sm"><%= item.views_count %> views</span>
-      <%= render "items/like_button", item: item %>
+    <% if large_photo %>
+      <p class="text-sm line-clamp-2"><%= item.description %></p>
+    <% end %>
+
+    <div class="flex items-center gap-2 mt-1">
+      <span class="badge badge-ghost badge-xs"><%= item.condition.humanize %></span>
+      <% if large_photo %>
+        <span class="badge badge-ghost badge-xs"><%= item.views_count %> views</span>
+        <%= render "items/like_button", item: item %>
+      <% end %>
     </div>
   </div>
 </div>

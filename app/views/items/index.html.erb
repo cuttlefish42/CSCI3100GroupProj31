@@ -22,13 +22,13 @@
           <div class="form-control">
             <%= f.label :keyword, "Search", class: "label text-xs" %>
             <%= f.text_field :keyword, placeholder: "Search items...", value: params[:keyword],
-                class: "input input-bordered input-sm" %>
+                class: "input input-bordered input-sm w-full" %>
           </div>
           <div class="form-control">
             <%= f.label :community_id, "Community", class: "label text-xs" %>
             <%= f.select :community_id,
                 options_for_select([["All", ""]] + Community.pluck(:name, :id), params[:community_id]),
-                { include_blank: false }, class: "select select-bordered select-sm" %>
+                { include_blank: false }, class: "select select-bordered select-sm w-full" %>
           </div>
         </div>
 
@@ -36,25 +36,25 @@
           <div class="form-control">
             <%= f.label :min_price, "Min $", class: "label text-xs" %>
             <%= f.number_field :min_price, placeholder: "0", value: params[:min_price],
-                step: 0.01, class: "input input-bordered input-sm" %>
+                step: 0.01, class: "input input-bordered input-sm w-full" %>
           </div>
           <div class="form-control">
             <%= f.label :max_price, "Max $", class: "label text-xs" %>
             <%= f.number_field :max_price, placeholder: "∞", value: params[:max_price],
-                step: 0.01, class: "input input-bordered input-sm" %>
+                step: 0.01, class: "input input-bordered input-sm w-full" %>
           </div>
           <div class="form-control">
             <%= f.label :sort_by, "Sort by", class: "label text-xs" %>
             <%= f.select :sort_by,
                 options_for_select([["Date", "date"], ["Price", "price"], ["Views", "views"],
                   ["Likes", "likes"], ["Title", "title"]], params[:sort_by] || "date"),
-                { include_blank: false }, class: "select select-bordered select-sm" %>
+                { include_blank: false }, class: "select select-bordered select-sm w-full" %>
           </div>
           <div class="form-control">
             <%= f.label :sort_direction, "Order", class: "label text-xs" %>
             <%= f.select :sort_direction,
                 options_for_select([["Descending", "desc"], ["Ascending", "asc"]], params[:sort_direction] || "desc"),
-                { include_blank: false }, class: "select select-bordered select-sm" %>
+                { include_blank: false }, class: "select select-bordered select-sm w-full" %>
           </div>
         </div>
 

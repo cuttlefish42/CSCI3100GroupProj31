@@ -18,27 +18,13 @@
   <% if existing_offer %>
     <div class="alert bg-base-200 text-base-content text-sm">
       <div>
-        <p class="font-semibold">You already have an active offer on this item</p>
+        <p class="font-semibold">You have an active offer on this item</p>
         <p class="text-xs"><%= price(existing_offer.price_offered) %> &mdash; <%= existing_offer.status.humanize %></p>
+        <% if existing_offer.countered? && existing_offer.counter_price %>
+          <p class="text-xs text-warning font-semibold mt-1">Seller countered: <%= price(existing_offer.counter_price) %></p>
+        <% end %>
       </div>
-      <% if existing_offer.countered? && existing_offer.counter_price %>
-        <div class="mt-2">
-          <span class="text-warning-content font-bold block mb-2">The seller has countered with <%= price(existing_offer.counter_price) %>.</span>
-          <div class="flex gap-2">
-            <%= button_to "Accept Counter", item_offer_counter_acceptance_path(item, existing_offer),
-                  method: :post,
-                  class: "btn btn-success btn-sm",
-                  data: { turbo_confirm: "Accept the counter-offer of #{number_to_currency(existing_offer.counter_price)}?" } %>
-            <%= button_to "Reject Counter", item_offer_counter_rejection_path(item, existing_offer),
-                  method: :post,
-                  class: "btn btn-error btn-sm",
-                  data: { turbo_confirm: "Reject the counter-offer? You can make a new offer afterwards." } %>
-          </div>
-        </div>
-      <% end %>
     </div>
-
-    <%= link_to "Edit Your Offer", new_item_offer_path(item), class: "btn btn-outline w-full my-2" %>
 
   <% else %>
     <%= link_to "Make an Offer", new_item_offer_path(item), class: "btn btn-outline w-full my-2" %>

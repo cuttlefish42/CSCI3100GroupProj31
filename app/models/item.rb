@@ -23,7 +23,7 @@ class Item < ApplicationRecord
 
   # Scopes for filtering and searching
   scope :search_by_keyword, ->(keyword) {
-    where("title ILIKE ?", "%#{keyword}%") if keyword.present?
+    where("title LIKE ?", "%#{keyword}%") if keyword.present?
   }
 
   scope :by_community, ->(community_id) {

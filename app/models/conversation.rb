@@ -13,6 +13,10 @@ class Conversation < ApplicationRecord
     sender_id == user.id || receiver_id == user.id
   end
 
+  def participants
+    [sender, receiver]
+  end
+
   # class methods
   def self.between(user1, user2)
     where(sender: user1, receiver: user2).or(where(sender: user2, receiver: user1)).first

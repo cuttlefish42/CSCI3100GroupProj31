@@ -1,6 +1,7 @@
-<%# locals: (message:) %>
+<%# locals: (message:, current_user: nil) %>
 
-<% is_mine = message.sender == Current.user %>
+<% current_user ||= Current.user %>
+<% is_mine = message.sender == current_user %>
 <% has_attachment = message.offer.present? || message.item.present? %>
 
 <div id="<%= dom_id(message) %>" class="chat <%= is_mine ? 'chat-end' : 'chat-start' %>">

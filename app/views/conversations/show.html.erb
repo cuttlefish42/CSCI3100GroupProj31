@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <%= turbo_stream_from @conversation %>
+  <%= turbo_stream_from [Current.user, @conversation] %>
   <%= turbo_stream_from "user_#{Current.user.id}_offer_updates" %>
 
   <% if @item %>

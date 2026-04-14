@@ -40,8 +40,7 @@
                         class: "btn btn-sm btn-error w-full",
                         data: { turbo_confirm: "Reject this offer?" } %>
                   <%= form_with url: item_offer_counter_path(offer.item, offer), method: :post, class: "flex gap-2 w-full" do |f| %>
-                    <%= f.hidden_field :status, value: "countered", name: "offer[status]" %>
-                    <%= f.number_field :counter_price, step: 0.01, min: 0.01, placeholder: "Counter $", name: "offer[counter_price]", class: "input-sm flex-1" %>
+                    <%= f.number_field :counter_price, step: 0.01, min: 0.01, placeholder: "Counter $", name: "counter_price", class: "input-sm flex-1" %>
                     <%= f.submit "Counter", class: "btn btn-sm btn-warning" %>
                   <% end %>
                 </div>

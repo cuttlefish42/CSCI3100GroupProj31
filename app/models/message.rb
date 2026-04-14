@@ -6,6 +6,18 @@ class Message < ApplicationRecord
   belongs_to :item, optional: true
   belongs_to :offer, optional: true
 
-  # update <div id="messages">
-  after_create_commit -> { broadcast_append_to conversation, target: "messages" }
+  # Broadcast to each participant separately so is_mine renders correctly per user
+  after_create_commit :broadcast_to_participants
+
+  private
+
+  def broadcast_to_participants
+    conversation.participants.each do |user|
+      broadcast_append_to(
+        [user, conversation],
+        target: "messages",
+        locals: { message: self, current_user: user }
+      )
+    end
+  end
 end
